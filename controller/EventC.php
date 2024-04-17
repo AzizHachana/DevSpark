@@ -50,33 +50,21 @@ class EventC
             echo 'Error: ' . $e->getMessage();
         }
     }
-    public function updateEvent($id, $nom, $date, $lieu, $description, $prix,$image)
+    public function updateEvent($id, $nom, $dateE, $lieu,$descriptionE, $prix,$image)
     {
+        $sql = "UPDATE events SET Nom=:nom, DateE=:dateE, Lieu=:lieu, DescriptionE=:descriptionE, Prix=:prix, image=:image WHERE id=:id";
         $db = config::getConnexion();
         try {
-            if (!empty($image)) { // Si une nouvelle image est fournie
-                $sql = "UPDATE events SET Nom=:Nom,DateE=DateE,Lieu=Lieu,DescriptionE=DescriptionE,Prix=Prix, ?image=:image WHERE id=:id";
-            } else { // Si aucune nouvelle image n'est fournie
-                // Récupérer l'image existante à partir de la base de données
-                $existingImage = $this->getEventById($id)['image'];
-                $sql = "UPDATE events SET Nom=:Nom,DateE=DateE,Lieu=Lieu,DescriptionE=DescriptionE,Prix=Prix,image=:existingImage WHERE id=:id";
-            }
-
             $query = $db->prepare($sql);
             $query->bindParam(':id', $id);
-            $query->bindParam(':Nom', $nom);
-            $query->bindParam(':Date', $date);
-            $query->bindParam(':Lieu', $Lieu);
-            $query->bindParam(':DescriptionE', $description);
-            $query->bindParam(':Prix', $prix);
-            if (!empty($image)) { // Si une nouvelle image est fournie
-                $query->bindParam(':image', $image);
-            } else { // Si aucune nouvelle image n'est fournie
-                $query->bindParam(':existingImage', $existingImage);
-            }
+            $query->bindParam(':nom', $nom);
+            $query->bindParam(':dateE', $dateE);
+            $query->bindParam(':lieu', $lieu);
+            $query->bindParam(':descriptionE', $descriptionE);
+            $query->bindParam(':prix', $prix);
+            $query->bindParam(':image', $image);
 
             $query->execute();
-            echo $query->rowCount() . " records updated successfully";
         } catch (Exception $e) {
             die('Error: ' . $e->getMessage());
         }
@@ -91,6 +79,15 @@ class EventC
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
-
+    public function getEvent($id) 
+    {
+        // Assurez-vous d'utiliser une requête SQL sécurisée pour éviter les injections SQL
+        $sql = "SELECT * FROM events WHERE id = :id";
+        $db = config::getConnexion();
+        $query = $db->prepare($sql);
+        $query->bindParam(':id', $id);
+        $query->execute();
+        return $query->fetch(PDO::FETCH_ASSOC);
+    }
 }
 ?>

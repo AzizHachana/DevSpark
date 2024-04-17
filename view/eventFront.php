@@ -1,6 +1,6 @@
 <?php
  // Inclure le fichier config.php
-include '../controller/EventC.php';
+include 'C:/xampp/htdocs/eventC/controller/EventC.php';
 $c = new EventC();
 $tab = $c->listEvents();
 

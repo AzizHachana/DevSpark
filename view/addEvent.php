@@ -90,25 +90,7 @@ if (
                     <li>
                         <a href="../examples/dashboard.php">
                             <i class="now-ui-icons design_app"></i>
-                            <p>List</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./icons.html">
-                            <i class="now-ui-icons education_atom"></i>
-                            <p>Icons</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./map.html">
-                            <i class="now-ui-icons location_map-big"></i>
-                            <p>Maps</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./notifications.html">
-                            <i class="now-ui-icons ui-1_bell-53"></i>
-                            <p>Notifications</p>
+                            <p>Dashboard</p>
                         </a>
                     </li>
                     <li class="active ">
@@ -117,19 +99,7 @@ if (
                             <p>Add</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="./tables.html">
-                            <i class="now-ui-icons design_bullet-list-67"></i>
-                           
-                            <p>Table List</p>
-                    </a>
-                </li>
-                <li class="active-pro">
-                    <a href="./upgrade.html">
-                        <i class="now-ui-icons arrows-1_cloud-download-93"></i>
-                        <p>Upgrade to PRO</p>
-                    </a>
-                </li>
+                
             </ul>
         </div>
     </div>
@@ -342,18 +312,35 @@ if (
 <script>
     function validateForm() {
         var nom = document.forms["myForm"]["Nom"].value;
-        var adresse = document.forms["myForm"]["Adresse"].value;
-        var ville = document.forms["myForm"]["Ville"].value;
-        var codePostal = document.forms["myForm"]["Code_postal"].value;
-        var pays = document.forms["myForm"]["Pays"].value;
-        var tel = document.forms["myForm"]["Tel"].value;
-        var email = document.forms["myForm"]["Email"].value;
+        var date = document.forms["myForm"]["DateE"].value;
+        var lieu = document.forms["myForm"]["Lieu"].value;
+        var Description = document.forms["myForm"]["DescriptionE"].value;
+        var prix = document.forms["myForm"]["Prix"].value;
+       
         var image = document.forms["myForm"]["image"].value;
-        if (nom == "" || adresse == "" || ville == "" || codePostal == "" || pays == "" || tel == "" || email == "" || image == "") {
+        if (nom == "" || date == "" || lieu == "" || Description == "" || prix == "" || image == "") {
             alert("Tous les champs doivent être remplis");
             return false;
         }
-        return true;
+        
+        if (!/^[A-Z]/.test(nom)) {
+        alert("Le nom doit commencer par une majuscule.");
+        return false;
+    }
+    if (!validateName(nom)) {
+        return false;
+    }
+    if (!validateLieu(lieu)) {
+        return false;
+    }
+
+    
+   
+    if (!/^(\d+(\.\d{1,2})?)$/.test(prix)) {
+    alert("Le prix doit contenir uniquement des chiffres");
+    return false;
+}
+return true;
     }
 
     function previewImage(event) {
@@ -364,6 +351,22 @@ if (
         }
         reader.readAsDataURL(event.target.files[0]);
     }
+    function validateName(nom) {
+    var regex = /^[a-zA-ZÀ-ÿ\- ]+$/;
+    if (!regex.test(nom)) {
+        alert("Le nom ne doit contenir que des lettres, des espaces et des tirets.");
+        return false;
+    }
+    return true;
+}
+function validateLieu(lieu) {
+    var regex = /^[a-zA-ZÀ-ÿ\- ]+$/;
+    if (!regex.test(lieu)) {
+        alert("Le Lieu ne doit contenir que des lettres, des espaces et des tirets.");
+        return false;
+    }
+    return true;
+}
 </script>
 </body>
 
