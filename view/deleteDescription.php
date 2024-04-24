@@ -9,4 +9,3 @@ if (isset($_GET["id"])) {
 }
 
 header('Location:../examples/dashboard.php');
-

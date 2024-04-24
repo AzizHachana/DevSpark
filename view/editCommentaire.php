@@ -1,55 +1,45 @@
 <?php
 include '../config.php';
 include '../controller/PaysC.php';
+include '../controller/CommentaireC.php';
 
-$PaysC = new PaysC();
+$CommentaireC = new CommentaireC();
 $error = "";
 
-// Fonction pour vérifier si une chaîne ne contient que des lettres et des espaces
-function containsOnlyLettersAndSpaces($str)
-{
-    return preg_match('/^[a-zA-Z\s]+$/', $str);
-}
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if ($_FILES["image"]["size"] != 0) {
-        $original_name = $_FILES["image"]["name"];
-        $imageName = uniqid() . time() . "." . pathinfo($original_name, PATHINFO_EXTENSION);
-        move_uploaded_file($_FILES["image"]["tmp_name"], "./images/uploads/" . $imageName);
-        $image = $imageName;
-    } else {
-        $image = $_POST['image_old'];
-    }
 
-    if (isset($_POST["NomP"])) {
-
-        $id = $_POST['id'];
-        $NomP = $_POST['NomP'];
-
-        if (!containsOnlyLettersAndSpaces($NomP)) {
-            $error = "Le nom du pays ne doit contenir que des lettres et des espaces.";
-        } else {
-            $Pays = $PaysC->getPaysById($id);
-            // Mettre à jour le pays
-            $PaysC->updatePays($id, $NomP, $image);
-            header('Location:../examples/dashboard.php');
-            exit;
-        }
-    } else {
-        $error = "Tous les champs doivent être remplis";
-    }
-}
-
-// Récupérer les informations du pays à mettre à jour
-if (isset($_GET['id'])) {
-    $Pays = $PaysC->getPays($_GET['id']);
-    if (!$Pays) {
-        echo "Pays non trouvé.";
+if (isset($_GET['id_com'])) {
+    $Commentaire = $CommentaireC->getCommentById($_GET['id_com']);
+    if (!$Commentaire) {
+        echo "Commentaire non trouvé.";
         exit;
     }
 } else {
-    echo "ID du Pays non spécifié.";
+    echo "ID du Commentaire non spécifié.";
     exit;
+}
+
+if (
+    isset($_GET["id_com"]) &&
+    isset($_POST["Commentaire"]) &&
+    isset($_POST["Date_commentaire"])
+) {
+    if (
+        !empty($_GET["id_com"]) &&
+        !empty($_POST["Commentaire"]) &&
+        !empty($_POST["Date_commentaire"])
+    ) {
+        $id_com = $_GET['id_com'];
+        $commentText = $_POST['Commentaire'];  // Renommé pour éviter la confusion avec la variable $Commentaire
+        $Date_commentaire = $_POST['Date_commentaire'];
+
+
+        $CommentaireC->updateCommentaire($id_com, $id_pays, $commentText, $Date_commentaire);
+        header('Location:../examples/dashboard.php');
+        exit;
+    } else {
+        $error = "Tous les champs doivent être remplis";
+    }
 }
 ?>
 
@@ -63,7 +53,7 @@ if (isset($_GET['id'])) {
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>Update Pays</title>
+    <title>Update Description</title>
     <!-- Include necessary CSS files -->
     <!-- Fonts and icons -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
@@ -73,7 +63,7 @@ if (isset($_GET['id'])) {
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../assets/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
     <!-- Include your custom CSS file -->
-    <link rel="stylesheet" href="./css/style.css">
+
 </head>
 
 <body>
@@ -89,79 +79,65 @@ if (isset($_GET['id'])) {
                 </a>
             </div>
 
-            <div class="sidebar" data-color="blue">
-                <!-- Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow" -->
-                <div class="logo">
-                    <a href="http://www.learnes.com" class="simple-text logo-mini">
-                        LR
-                    </a>
-                    <a href="http://www.learnes.com" class="simple-text logo-normal">
-                        Learner
-                    </a>
+            <div class="sidebar-wrapper ps" id="sidebar-wrapper">
+                <ul class="nav">
+                    <li>
+                        <a href="../examples/dashboard.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../examples/icons.html">
+                            <i class="now-ui-icons education_atom"></i>
+                            <p>Icons</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../examples/map.html">
+                            <i class="now-ui-icons location_map-big"></i>
+                            <p>Maps</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../examples/notifications.html">
+                            <i class="now-ui-icons ui-1_bell-53"></i>
+                            <p>Notifications</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../examples/user.html">
+                            <i class="now-ui-icons users_single-02"></i>
+                            <p>User Profile</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../examples/tables.html">
+                            <i class="now-ui-icons design_bullet-list-67"></i>
+                            <p>Table List</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../examples/typography.html">
+                            <i class="now-ui-icons text_caps-small"></i>
+                            <p>Typography</p>
+                        </a>
+                    </li>
+                    <li class="active-pro">
+                        <a href="../examples/upgrade.html">
+                            <i class="now-ui-icons arrows-1_cloud-download-93"></i>
+                            <p>Upgrade to PRO</p>
+                        </a>
+                    </li>
+                </ul>
+                <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                    <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
                 </div>
-
-                <div class="sidebar-wrapper ps" id="sidebar-wrapper">
-                    <ul class="nav">
-                        <li>
-                            <a href="../examples/dashboard.php">
-                                <i class="now-ui-icons design_app"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../examples/icons.html">
-                                <i class="now-ui-icons education_atom"></i>
-                                <p>Icons</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../examples/map.html">
-                                <i class="now-ui-icons location_map-big"></i>
-                                <p>Maps</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../examples/notifications.html">
-                                <i class="now-ui-icons ui-1_bell-53"></i>
-                                <p>Notifications</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../examples/user.html">
-                                <i class="now-ui-icons users_single-02"></i>
-                                <p>User Profile</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../examples/tables.html">
-                                <i class="now-ui-icons design_bullet-list-67"></i>
-                                <p>Table List</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../examples/typography.html">
-                                <i class="now-ui-icons text_caps-small"></i>
-                                <p>Typography</p>
-                            </a>
-                        </li>
-                        <li class="active-pro">
-                            <a href="./upgrade.html">
-                                <i class="now-ui-icons arrows-1_cloud-download-93"></i>
-                                <p>Upgrade to PRO</p>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
-                        <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
-                    </div>
-                    <div class="ps__rail-y" style="top: 0px; right: 0px;">
-                        <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
-                    </div>
+                <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                    <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
                 </div>
             </div>
-
         </div>
-
         <div class="main-panel" id="main-panel">
             <div class="panel-header panel-header-lg">
                 <!-- Navbar -->
@@ -175,7 +151,7 @@ if (isset($_GET['id'])) {
                                     <span class="navbar-toggler-bar bar3"></span>
                                 </button>
                             </div>
-                            <a class="navbar-brand" href="#pablo">Modification des Pays</a>
+                            <a class="navbar-brand" href="#pablo">Modification des Commentaires</a>
                         </div>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
                             aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
@@ -232,56 +208,50 @@ if (isset($_GET['id'])) {
                     </div>
                 </nav>
                 <!-- End Navbar -->
-
             </div>
-
-            <div class="container">
-                <div class="col-md-12 pt-4">
+            <div class="content">
+                <div class="col-md-12 pt-5">
                     <div class="card p-4">
                         <?php if (!empty($error)) : ?>
                         <div class="alert alert-danger">
                             <?php echo $error; ?>
                         </div>
                         <?php endif; ?>
-                        <div class="card-header d-flex justify-content-between align-items-center ">
-                            <h5 class="title">Modifier le Pays</h5>
-                            <a href="../examples/dashboard.php" class="btn btn-primary btn-round">Back to list</a>
-                        </div>
-                        <div class="card-body">
 
+                        <div class="card-header d-flex justify-content-between align-items-center ">
+                            <?php $PaysC = new PaysC();
+                            $Pays = $PaysC->getPaysById($Commentaire['id_pays']); ?>
+                            <h5 class="title">Modifier le commentaire pour le pays :
+                                <strong><?php echo $Pays['NomP'] ?></strong>
+                            </h5>
+                            <a href="../examples/dashboard.php" class="btn btn-primary btn-round"
+                                style="color: white;">Back to list</a>
+                        </div>
+
+
+                        <div class="card-body">
+                            <!-- Form for updating professeur -->
                             <form action="" method="POST" name="myForm" enctype="multipart/form-data"
                                 onsubmit="return validateForm()">
-                                <input type="hidden" name="id" value="<?php echo $Pays['id']; ?>">
                                 <div class="row">
-                                    <div class="col-md-4 px-1">
-                                        <div class="form-group">
-                                            <label>NomP</label>
-                                            <input type="text" name="NomP" class="form-control"
-                                                value="<?php echo $Pays['NomP']; ?>" placeholder="NomP">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <!-- Add other fields similarly -->
-                                    <!--<div class="row">-->
                                     <div class="col-md-4 pl-1">
                                         <div class="form-group">
-                                            <label>Image</label>
-                                            <input type="file" name="image" class="form-control"
-                                                onchange="previewImage(event)">
-                                            <input type="hidden" name="image_old" value="<?php echo $Pays['image']; ?>">
-
-
-                                            <div class="img-container" style="margin-top: 10px; text-align: center;">
-                                                <img id="preview"
-                                                    src="../assets/img/uploads/<?php echo $Pays['image']; ?>"
-                                                    alt="Pays Image"
-                                                    style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
-                                            </div>
+                                            <label>Commentaire</label>
+                                            <input type="text" name="Commentaire" class="form-control"
+                                                value="<?php echo $Commentaire['Commentaire']; ?>"
+                                                placeholder="Commentaire">
                                         </div>
-
+                                    </div>
+                                    <div class="col-md-4 px-1">
+                                        <div class="form-group">
+                                            <label>Date_commentaire</label>
+                                            <input type="date" name="Date_commentaire" class="form-control"
+                                                value="<?php echo $Commentaire['Date_commentaire']; ?>"
+                                                placeholder="Date_commentaire">
+                                        </div>
                                     </div>
                                 </div>
+
                                 <button type="submit" class="btn btn-primary btn-round">Save</button>
                             </form>
                         </div>
@@ -291,17 +261,6 @@ if (isset($_GET['id'])) {
         </div>
     </div>
 
-
-    <script>
-    function previewImage(event) {
-        var reader = new FileReader();
-        reader.onload = function() {
-            var output = document.getElementById('preview');
-            output.src = reader.result;
-        }
-        reader.readAsDataURL(event.target.files[0]);
-    }
-    </script>
     <!-- Include necessary JavaScript files -->
     <script src="../assets/js/core/jquery.min.js"></script>
     <script src="../assets/js/core/popper.min.js"></script>

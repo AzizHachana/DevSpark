@@ -1,26 +1,25 @@
 <?php
-    class config
+class config
+{
+    private static $pdo = null;
+
+    public static function getConnexion()
     {
-        private static $pdo = null;
-    
-        public static function getConnexion()
-        {
-            if (!isset(self::$pdo)) {
-                try {
-                    self::$pdo = new PDO(
-                        'mysql:host=localhost;dbname=infos',
-                        'root',
-                        '',
-                        [
-                            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-                        ]
-                    );
-                } catch (PDOException $e) {
-                    die('Database connection failed: ' . $e->getMessage());
-                }
+        if (!isset(self::$pdo)) {
+            try {
+                self::$pdo = new PDO(
+                    'mysql:host=localhost;dbname=info',
+                    'root',
+                    '',
+                    [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                    ]
+                );
+            } catch (PDOException $e) {
+                die('Database connection failed: ' . $e->getMessage());
             }
-            return self::$pdo;
         }
+        return self::$pdo;
     }
-?>    
+}

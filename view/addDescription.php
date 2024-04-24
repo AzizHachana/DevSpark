@@ -23,8 +23,8 @@ if (
         !empty($_POST["Attractions_touristiques"]) &&
         !empty($_POST["Activites"])
     ) {
-        // Fonction pour vérifier si le champ contient uniquement des lettres et des espaces
-        function isValidText($text) {
+        function isValidText($text)
+        {
             return preg_match('/^[a-zA-Z\s]+$/', $text);
         }
 
@@ -51,7 +51,6 @@ if (
     }
 }
 ?>
-
 
 <!-- Le reste du code HTML reste inchangé -->
 
@@ -94,43 +93,43 @@ if (
             <div class="sidebar-wrapper" id="sidebar-wrapper">
                 <ul class="nav">
                     <li>
-                        <a href="./dashboard.php">
+                        <a href="../examples/dashboard.php">
                             <i class="now-ui-icons design_app"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
                     <li>
-                        <a href="./icons.html">
+                        <a href="../examples/icons.html">
                             <i class="now-ui-icons education_atom"></i>
                             <p>Icons</p>
                         </a>
                     </li>
                     <li>
-                        <a href="./map.html">
+                        <a href="../examples/map.html">
                             <i class="now-ui-icons location_map-big"></i>
                             <p>Maps</p>
                         </a>
                     </li>
                     <li>
-                        <a href="./notifications.html">
+                        <a href="../examples/notifications.html">
                             <i class="now-ui-icons ui-1_bell-53"></i>
                             <p>Notifications</p>
                         </a>
                     </li>
                     <li>
-                        <a href="./user.html">
+                        <a href="../examples/user.html">
                             <i class="now-ui-icons users_single-02"></i>
                             <p>User Profile</p>
                         </a>
                     </li>
                     <li class>
-                        <a href="./tables.html">
+                        <a href="../examples/tables.html">
                             <i class="now-ui-icons design_bullet-list-67"></i>
                             <p>Description</p>
                         </a>
                     </li>
                     <li class="active-pro">
-                        <a href="./upgrade.html">
+                        <a href="../examples/upgrade.html">
                             <i class="now-ui-icons arrows-1_cloud-download-93"></i>
                             <p>Upgrade to PRO</p>
                         </a>
@@ -209,7 +208,7 @@ if (
 
             <!-- End Navbar -->
             <!-- error handlers -->
-            
+
 
             <div class="panel-header panel-header-sm">
             </div>
@@ -221,15 +220,15 @@ if (
                                 <h5 class="title">Ajouter une description</h5>
                             </div>
                             <?php if (!empty($error)) : ?>
-                                 <div class="alert alert-danger">
-                                    <?php echo $error; ?>
-                                 </div>
+                            <div class="alert alert-danger">
+                                <?php echo $error; ?>
+                            </div>
                             <?php endif; ?>
                             <div class="card-body">
                                 <button type="button" class="btn btn-primary btn-round"><a
                                         href="../examples/dashboard.php" style="color: white;">Retour à la
                                         liste</a></button>
-            
+
 
                                 <form action="" method="POST" name="myForm" enctype="multipart/form-data"
                                     onsubmit="return validateForm()">

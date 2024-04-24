@@ -3,11 +3,13 @@
 
 <head>
 
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Pays</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/now-ui-dashboard.css?v=1.5.0">
+    <link rel="stylesheet" href="../assets/demo/demo.css">
     <style>
         body {
             font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto,
@@ -19,9 +21,9 @@
         }
 
         .container {
-            width: 80%; /* Largeur de la boîte */
+            width: 80%;
             margin: 20px auto;
-            background-color: #AB889F; /* Nouvelle couleur de fond */
+            background-color: #AB889F;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -47,16 +49,16 @@
         }
 
         .country p {
-             margin: 0;
-    text-align: center;
-    font-weight: bold;
-    font-family: 'Open Sans', 𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎; /* Exemple d'une autre police */
+            margin: 0;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'Open Sans', 𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎;
         }
 
         h1 {
             text-align: center;
             color: #ff69b4;
-            font-size: 5em; /* Exemple d'agrandissement de la taille du texte */
+            font-size: 5em;
         }
     </style>
 </head>
@@ -79,17 +81,24 @@
 
         <?php foreach ($Pays as $Pays) : ?>
             <div class="country">
-                <img src="<?php echo ("./images/uploads/" . $Pays['image']); ?>" alt="" class="preview_img">
+                <img src="<?php echo ("../assets/img/uploads/" . $Pays['image']); ?>" alt="" class="preview_img">
                 <p>ID: <?= $Pays['id']; ?></p>
                 <p>Nom Pays: <?= $Pays['NomP']; ?></p>
             </div>
         <?php endforeach; ?>
     </div>
 
-    <!-- Ajout du script jQuery pour la prévisualisation de l'image -->
+    <script src="../assets/js/core/jquery.min.js"></script>
+    <script src="../assets/js/core/popper.min.js"></script>
+    <script src="../assets/js/core/bootstrap.min.js"></script>
+    <script src="../assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+    <script src="../assets/js/plugins/chartjs.min.js"></script>
+    <script src="../assets/js/plugins/bootstrap-notify.js"></script>
+    <script src="../assets/js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
+    <script src="../assets/demo/demo.js"></script>
     <script>
         $(document).ready(function() {
-            // function to display image before upload
             $("input.image").change(function() {
                 var file = this.files[0];
                 var url = URL.createObjectURL(file);

@@ -1,47 +1,39 @@
 <?php
 include '../config.php';
+include '../controller/CommentaireC.php';
 include '../controller/PaysC.php';
-$PaysC = new PaysC();
-
+$CommentaireC = new CommentaireC();
 $error = "";
 
 if (
-    isset($_POST["NomP"]) &&
-    isset($_FILES["image"])
+    isset($_POST["id_pays"]) &&
+    isset($_POST["Commentaire"]) &&
+    isset($_POST["Date_commentaire"])
 ) {
     if (
-        !empty($_POST['NomP']) &&
-        $_FILES["image"]["size"] != 0
+        !empty($_POST["id_pays"]) &&
+        !empty($_POST["Commentaire"]) &&
+        !empty($_POST["Date_commentaire"])
     ) {
-        // Vérification du nom du pays
-        if (preg_match('/^[a-zA-Z\s]+$/', $_POST['NomP'])) {
-            // Renommer l'image avant de l'enregistrer dans la base de données
-            $original_name = $_FILES["image"]["name"];
-            $imageName = uniqid() . time() . "." . pathinfo($original_name, PATHINFO_EXTENSION);
-            move_uploaded_file($_FILES["image"]["tmp_name"], "../assets/img/uploads/" . $imageName);
 
-            // Créer une instance de la classe Pays avec les données fournies
-            $Pays = new Pays(
-                null, // Laissez null pour que l'ID soit auto-incrémenté
-                $_POST['NomP'],
-                $imageName // Utilisez le nom de l'image nouvellement téléchargée
-            );
 
-            // Ajouter le pays
-            echo "hello";
-            $PaysC->ajouterPays($Pays);
 
-            // Rediriger vers une page de succès ou effectuer une autre action en cas d'ajout réussi
-            header('Location:../examples/dashboard.php');
-            exit;
-        } else {
-            $error = "Le nom du pays ne doit contenir que des lettres et des espaces.";
-        }
+        $Commentaire = new Commentaire(
+            $_POST['id_pays'],
+            $_POST['Commentaire'],
+            $_POST['Date_commentaire']
+        );
+
+        $CommentaireC->ajouterCommentaire($Commentaire);
+
+        header('Location: ../examples/dashboard.php');
+        exit;
     } else {
         $error = "Tous les champs doivent être remplis";
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,10 +45,12 @@ if (
     <title>
         Now UI Dashboard by Learnes
     </title>
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no"
+        name="viewport" />
     <!-- Fonts and icons -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <!-- CSS Files -->
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../assets/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
@@ -64,10 +58,9 @@ if (
     <link href="../assets/demo/demo.css" rel="stylesheet" />
 </head>
 
-<body class="Pays">
+<body class="user-profile">
     <div class="wrapper ">
         <div class="sidebar" data-color="blue">
-            <!-- Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow" -->
             <div class="logo">
                 <a href="http://www.creative-tim.com" class="simple-text logo-mini">
                     LR
@@ -85,37 +78,37 @@ if (
                         </a>
                     </li>
                     <li>
-                        <a href="./icons.html">
+                        <a href="../examples/icons.html">
                             <i class="now-ui-icons education_atom"></i>
                             <p>Icons</p>
                         </a>
                     </li>
                     <li>
-                        <a href="./map.html">
+                        <a href="../examples/map.html">
                             <i class="now-ui-icons location_map-big"></i>
                             <p>Maps</p>
                         </a>
                     </li>
                     <li>
-                        <a href="./notifications.html">
+                        <a href="../examples/notifications.html">
                             <i class="now-ui-icons ui-1_bell-53"></i>
                             <p>Notifications</p>
                         </a>
                     </li>
-                    <li class="">
-                        <a href="./user.html">
+                    <li>
+                        <a href="../examples/user.html">
                             <i class="now-ui-icons users_single-02"></i>
-                            <p> User Profile</p>
+                            <p>User Profile</p>
                         </a>
                     </li>
                     <li>
-                        <a href="./tables.html">
+                        <a href="../examples/tables.html">
                             <i class="now-ui-icons design_bullet-list-67"></i>
-                            <p>Table List</p>
+                            <p>Description</p>
                         </a>
                     </li>
                     <li class="active-pro">
-                        <a href="./upgrade.html">
+                        <a href="../examples/upgrade.html">
                             <i class="now-ui-icons arrows-1_cloud-download-93"></i>
                             <p>Upgrade to PRO</p>
                         </a>
@@ -135,9 +128,10 @@ if (
                                 <span class="navbar-toggler-bar bar3"></span>
                             </button>
                         </div>
-                        <a class="navbar-brand" href="#pablo">Les Pays</a>
+                        <a class="navbar-brand" href="#pablo">Les Commentaires</a>
                     </div>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+                        aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-bar navbar-kebab"></span>
                         <span class="navbar-toggler-bar navbar-kebab"></span>
                         <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -164,7 +158,8 @@ if (
                             </li>
 
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
                                     <i class="now-ui-icons location_world"></i>
                                     <p>
                                         <span class="d-lg-none d-md-block">Some Actions</span>
@@ -195,45 +190,68 @@ if (
 
 
             <div class="panel-header panel-header-sm">
-
             </div>
             <div class="content">
                 <div class="row">
                     <div class="col-md-8">
                         <div class="card">
                             <div class="card-header">
-                                <?php if (!empty($error)) : ?>
-                                    <div class="alert alert-danger">
-                                        <?php echo $error; ?>
-                                    </div>
-                                <?php endif; ?>
-                                <h5 class="title">Ajouter un Pays</h5>
+                                <h5 class="title">Ajouter un commentaire</h5>
                             </div>
+                            <?php if (!empty($error)) : ?>
+                            <div class="alert alert-danger">
+                                <?php echo $error; ?>
+                            </div>
+                            <?php endif; ?>
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary btn-round"><a href="../examples/dashboard.php" style="color: white;">Retour à la
+                                <button type="button" class="btn btn-primary btn-round"><a
+                                        href="../examples/dashboard.php" style="color: white;">Retour à la
                                         liste</a></button>
 
-                                <form action="" method="POST" name="myForm" enctype="multipart/form-data" onsubmit="return validateForm()">
+
+                                <form action="" method="POST" name="myForm" enctype="multipart/form-data"
+                                    onsubmit="return validateForm()">
                                     <div class="row">
                                         <div class="col-md-4 px-1">
                                             <div class="form-group">
-                                                <label>Nom_Pays</label>
-                                                <input type="text" name="NomP" class="form-control" placeholder="NomP">
+                                                <label>Pays</label>
+                                                <select name="id_pays" class="form-control">
+                                                    <option value="">Select a country</option>
+                                                    <?php
+                                                    $PaysC = new PaysC();
+                                                    $countries = $PaysC->listPays();
+                                                    foreach ($countries as $country) {
+                                                        echo "<option value=" . $country['id'] . ">" . $country['NomP'] . "</option>";
+                                                    }
+                                                    ?>
+                                                </select>
                                             </div>
                                         </div>
+
+
                                         <div class="col-md-4 pl-1">
                                             <div class="form-group">
-                                                <label>Image</label>
-                                                <input type="file" name="image" class="form-control" onchange="previewImage(event)">
-                                                <div class="img-container" style="margin-top: 10px; text-align: center;">
-                                                    <img id="preview" src="../assets/img/default_profile.jpg" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
-                                                </div>
+                                                <label>Commentaire</label>
+                                                <input type="text" name="Commentaire" class="form-control"
+                                                    placeholder="Commentaire">
                                             </div>
                                         </div>
-                                    </div>
 
+                                        <div class="col-md-4 px-1">
+                                            <div class="form-group">
+                                                <label>Date du commentaire</label>
+                                                <input type="date" name="Date_commentaire" class="form-control"
+                                                    placeholder="Date_commentaire">
+                                            </div>
+                                        </div>
+
+
+                                    </div>
                                     <button type="submit" class="btn btn-primary btn-round">Enregistrer</button>
                                 </form>
+
+
+
                             </div>
                         </div>
                     </div>
@@ -244,45 +262,45 @@ if (
     </div>
 
     <style>
-        .quantity {
-            display: flex;
-            align-items: center;
-        }
+    .quantity {
+        display: flex;
+        align-items: center;
+    }
 
-        .quantity button {
-            background-color: #3498db !important;
-            border: 1px solid #3498db;
-            padding: 5px;
-            cursor: pointer;
-            border-radius: 50%;
-        }
+    .quantity button {
+        background-color: #3498db !important;
+        border: 1px solid #3498db;
+        padding: 5px;
+        cursor: pointer;
+        border-radius: 50%;
+    }
 
-        .quantity input {
-            width: 30px;
-            text-align: center;
-            margin: 0 5px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }
+    .quantity input {
+        width: 30px;
+        text-align: center;
+        margin: 0 5px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
 
-        .delete-btn-item {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 5px;
-            cursor: pointer;
-        }
+    .delete-btn-item {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 5px;
+        cursor: pointer;
+    }
 
-        .somme {
-            margin-left: 10px;
-            font-size: 18px;
-            font-weight: bold;
-        }
+    .somme {
+        margin-left: 10px;
+        font-size: 18px;
+        font-weight: bold;
+    }
 
-        .btn-primary {
-            background-color: #007bff !important;
-            border-color: #007bff !important;
-            color: #ffffff !important;
-        }
+    .btn-primary {
+        background-color: #007bff !important;
+        border-color: #007bff !important;
+        color: #ffffff !important;
+    }
     </style>
 
     <!-- Core JS Files -->
@@ -301,24 +319,24 @@ if (
     <!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
     <script src="../assets/demo/demo.js"></script>
     <script>
-        function validateForm() {
-            var NomP = document.forms["myForm"]["NomP"].value;
-            var image = document.forms["myForm"]["image"].value;
-            if (NomP == "" || image == "") {
-                alert("Tous les champs doivent être remplis");
-                return false;
-            }
-            return true;
+    function validateForm() {
+        var Commentaire = document.forms["myForm"]["Commentaire"].value;
+        var Date_commentaire = document.forms["myForm"]["Date_commentaire"].value;
+        if (Commentaire == "" || Date_commentaire == "") {
+            alert("Tous les champs doivent être remplis");
+            return false;
         }
+        return true;
+    }
 
-        function previewImage(event) {
-            var reader = new FileReader();
-            reader.onload = function() {
-                var output = document.getElementById('preview');
-                output.src = reader.result;
-            }
-            reader.readAsDataURL(event.target.files[0]);
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.getElementById('preview');
+            output.src = reader.result;
         }
+        reader.readAsDataURL(event.target.files[0]);
+    }
     </script>
 </body>
 

@@ -77,7 +77,8 @@ if (
     <!-- Include necessary CSS files -->
     <!-- Fonts and icons -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <!-- CSS Files -->
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../assets/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
@@ -143,7 +144,7 @@ if (
                         </a>
                     </li>
                     <li class="active-pro">
-                        <a href="./upgrade.html">
+                        <a href="../assets/demo/upgrade.html">
                             <i class="now-ui-icons arrows-1_cloud-download-93"></i>
                             <p>Upgrade to PRO</p>
                         </a>
@@ -170,9 +171,10 @@ if (
                                     <span class="navbar-toggler-bar bar3"></span>
                                 </button>
                             </div>
-                            <a class="navbar-brand" href="#pablo">Dashboard</a>
+                            <a class="navbar-brand" href="#pablo">Modification des Descriptions</a>
                         </div>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+                            aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-bar navbar-kebab"></span>
                             <span class="navbar-toggler-bar navbar-kebab"></span>
                             <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -197,13 +199,15 @@ if (
                                             </a>
                                         </li>
                                         <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="now-ui-icons location_world"></i>
                                                 <p>
                                                     <span class="d-lg-none d-md-block">Some Actions</span>
                                                 </p>
                                             </a>
-                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                                            <div class="dropdown-menu dropdown-menu-right"
+                                                aria-labelledby="navbarDropdownMenuLink">
                                                 <a class="dropdown-item" href="#">Action</a>
                                                 <a class="dropdown-item" href="#">Another action</a>
                                                 <a class="dropdown-item" href="#">Something else here</a>
@@ -229,9 +233,9 @@ if (
                 <div class="col-md-12 pt-5">
                     <div class="card p-4">
                         <?php if (!empty($error)) : ?>
-                            <div class="alert alert-danger">
-                                <?php echo $error; ?>
-                            </div>
+                        <div class="alert alert-danger">
+                            <?php echo $error; ?>
+                        </div>
                         <?php endif; ?>
 
                         <div class="card-header d-flex justify-content-between align-items-center ">
@@ -240,25 +244,29 @@ if (
                             <h5 class="title">Modifier la description pour le pays :
                                 <strong><?php echo $Pays['NomP'] ?></strong>
                             </h5>
-                            <a href="../examples/dashboard.php" class="btn btn-primary btn-round" style="color: white;">Back to list</a>
+                            <a href="../examples/dashboard.php" class="btn btn-primary btn-round"
+                                style="color: white;">Back to list</a>
                         </div>
 
 
                         <div class="card-body">
                             <!-- Form for updating professeur -->
-                            <form action="" method="POST" name="myForm" enctype="multipart/form-data" onsubmit="return validateForm()">
+                            <form action="" method="POST" name="myForm" enctype="multipart/form-data"
+                                onsubmit="return validateForm()">
                                 <input type="hidden" name="id" value="<?php echo $Description['id']; ?>">
                                 <div class="row">
                                     <div class="col-md-4 pl-1">
                                         <div class="form-group">
                                             <label>Capitale</label>
-                                            <input type="text" name="Capitale" class="form-control" value="<?php echo $Description['Capitale']; ?>" placeholder="Capitale">
+                                            <input type="text" name="Capitale" class="form-control"
+                                                value="<?php echo $Description['Capitale']; ?>" placeholder="Capitale">
                                         </div>
                                     </div>
                                     <div class="col-md-4 px-1">
                                         <div class="form-group">
                                             <label>Climat</label>
-                                            <input type="text" name="Climat" class="form-control" value="<?php echo $Description['Climat']; ?>" placeholder="Climat">
+                                            <input type="text" name="Climat" class="form-control"
+                                                value="<?php echo $Description['Climat']; ?>" placeholder="Climat">
                                         </div>
                                     </div>
                                 </div>
@@ -267,13 +275,15 @@ if (
                                     <div class="col-md-4 pl-1">
                                         <div class="form-group">
                                             <label>Langue</label>
-                                            <input type="text" name="Langue" class="form-control" placeholder="Langue" value="<?php echo $Description['Langue']; ?>">
+                                            <input type="text" name="Langue" class="form-control" placeholder="Langue"
+                                                value="<?php echo $Description['Langue']; ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-4 pl-1">
                                         <div class="form-group">
                                             <label>Monnaie</label>
-                                            <input type="text" name="Monnaie" class="form-control" placeholder="Monnaie" value="<?php echo $Description['Monnaie']; ?>">
+                                            <input type="text" name="Monnaie" class="form-control" placeholder="Monnaie"
+                                                value="<?php echo $Description['Monnaie']; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -281,13 +291,17 @@ if (
                                     <div class="col-md-4 px-1">
                                         <div class="form-group">
                                             <label>Attractions_touristiques</label>
-                                            <input type="text" name="Attractions_touristiques" class="form-control" placeholder="Attractions_touristiques" value="<?php echo $Description['Attractions_touristiques']; ?>">
+                                            <input type="text" name="Attractions_touristiques" class="form-control"
+                                                placeholder="Attractions_touristiques"
+                                                value="<?php echo $Description['Attractions_touristiques']; ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-4 pl-1">
                                         <div class="form-group">
                                             <label>Activites</label>
-                                            <input type="text" name="Activites" class="form-control" placeholder="Activites" value="<?php echo $Description['Activites']; ?>">
+                                            <input type="text" name="Activites" class="form-control"
+                                                placeholder="Activites"
+                                                value="<?php echo $Description['Activites']; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -306,7 +320,7 @@ if (
     <script src="../assets/js/core/bootstrap.min.js"></script>
     <script src="../assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
     <!-- Include your custom JavaScript file -->
-    <script src="./js/script.js"></script>
+    <script src="../assets/js/script.js"></script>
 </body>
 
 </html>

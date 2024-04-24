@@ -17,24 +17,25 @@ $Pays = $PaysC->listPays();
 
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
 
-    <link rel="stylesheet" href="../css/open-iconic-bootstrap.min.css">
-    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap/bootstrap-grid.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap/bootstrap-reboot.css">
+    <link rel="stylesheet" href="../assets/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/animate.css">
 
-    <link rel="stylesheet" href="../css/owl.carousel.min.css">
-    <link rel="stylesheet" href="../css/owl.theme.default.min.css">
-    <link rel="stylesheet" href="../css/magnific-popup.css">
+    <link rel="stylesheet" href="../assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../assets/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="../assets/css/magnific-popup.css">
 
-    <link rel="stylesheet" href="../css/aos.css">
+    <link rel="stylesheet" href="../assets/css/aos.css">
 
-    <link rel="stylesheet" href="../css/ionicons.min.css">
+    <link rel="stylesheet" href="../assets/css/ionicons.min.css">
 
-    <link rel="stylesheet" href="../css/bootstrap-datepicker.css">
-    <link rel="stylesheet" href="../css/jquery.timepicker.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="../assets/css/jquery.timepicker.css">
 
-
-    <link rel="stylesheet" href="../css/flaticon.css">
-    <link rel="stylesheet" href="../css/icomoon.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../assets/css/flaticon.css">
+    <link rel="stylesheet" href="../assets/css/icomoon.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 
 <body>
@@ -60,7 +61,7 @@ $Pays = $PaysC->listPays();
     </nav>
     <!-- END nav -->
 
-    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('../images/bg_1.jpg');"
+    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('../assets/img/bg_1.jpg');"
         data-stellar-background-ratio="0.5">
         <div class="overlay"></div>
         <div class="container">
@@ -77,12 +78,31 @@ $Pays = $PaysC->listPays();
 
     <section class="ftco-section">
         <div class="container">
+            <div class="row d-flex mb-4">
+                <div class="col-md-12">
+                    <form method="GET" action="Blog.php" class="form-inline">
+                        <div class="form-group mr-4">
+                            <input type="text" name="search" class="form-control" placeholder="Rechercher par nom...">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Rechercher</button>
+                    </form>
+                </div>
+            </div>
+
             <div class="row d-flex">
+                <?php
+                if (isset($_GET['search']) && !empty($_GET['search'])) {
+                    $search = $_GET['search'];
+                    $Pays = $PaysC->searchPays($search);
+                } else {
+                    $Pays = $PaysC->listPays();
+                }
+                ?>
                 <?php foreach ($Pays as $country) : ?>
                 <div class="col-lg-4 d-flex ftco-animate">
                     <div class="blog-entry justify-content-end">
                         <a href="blog-single.php?id=<?php echo $country['id'] ?>" class="block-20"
-                            style="background-image: url('./images/uploads/<?php echo $country['image']; ?>');">
+                            style="background-image: url('../assets/img/uploads/<?php echo $country['image']; ?>');">
                         </a>
                         <div class="text mt-3 float-right d-block">
                             <div class="d-flex align-items-center mb-4 topp">
@@ -91,19 +111,74 @@ $Pays = $PaysC->listPays();
                             <?php $DescriptionC = new DescriptionC();
                                 $country_desc = $DescriptionC->getDescriptById($country['id']) ?>
                             <div class="d-flex justify-content-between">
-                                <p><strong style="color: #f9ab30;">Capital: </strong>
+                                <p><strong style="color: #f9ab30;">Capitale : </strong>
                                     <?php echo $country_desc['Capitale']; ?>
                                 </p>
-                                <p><strong style="color: #f9ab30;">Language: </strong>
+                                <p><strong style="color: #f9ab30;">Langue : </strong>
                                     <?php echo $country_desc['Langue']; ?>
                                 </p>
+                            </div>
+                            <div class="d-flex justify-content-between mt-3">
+                                <!-- Bouton Like -->
+                                <button class="btn btn-success like-btn" data-id="<?php echo $country['id']; ?>">
+                                    <i class="icon-thumbs-o-up"></i> Like
+                                </button>
+                                <span class="like-count"><?php echo $country['likes']; ?></span>
+
+                                <!-- Bouton Dislike -->
+                                <button class="btn btn-danger dislike-btn" data-id="<?php echo $country['id']; ?>">
+                                    <i class="icon-thumbs-o-down"></i> Dislike
+                                </button>
+                                <span class="dislike-count"><?php echo $country['dislikes']; ?></span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <?php endforeach; ?>
             </div>
+            <script src="../assets/js/jquery.min.js"></script>
+            <script src="../assets/js/jquery-migrate-3.0.1.min.js"></script>
+            <script>
+            $(document).ready(function() {
+                $('.like-btn').click(function() {
+                    var id = $(this).data('id');
+                    $.ajax({
+                        url: '../view/ajax_like.php',
+                        method: 'POST',
+                        data: {
+                            id: id
+                        },
+                        success: function(response) {
+                            $('.like-count').each(function() {
+                                if ($(this).prev('.like-btn').data('id') == id) {
+                                    $(this).text(response);
+                                }
+                            });
+                        }
+                    });
+                });
+
+                $('.dislike-btn').click(function() {
+                    var id = $(this).data('id');
+                    $.ajax({
+                        url: '../view/ajax_dislike.php',
+                        method: 'POST',
+                        data: {
+                            id: id
+                        },
+                        success: function(response) {
+                            $('.dislike-count').each(function() {
+                                if ($(this).prev('.dislike-btn').data('id') == id) {
+                                    $(this).text(response);
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+            </script>
             <div class="row mt-5">
+
                 <div class="col text-center">
                     <div class="block-27">
                         <ul>
@@ -119,9 +194,14 @@ $Pays = $PaysC->listPays();
                 </div>
             </div>
         </div>
+
+
+
+
     </section>
 
-    <footer class="ftco-footer bg-bottom" style="background-image: url(images/footer-bg.jpg);">
+
+    <footer class="ftco-footer bg-bottom" style="background-image: url(../assets/img/footer-bg.jpg);">
         <div class="container">
             <div class="row mb-5">
                 <div class="col-md">
@@ -194,25 +274,23 @@ $Pays = $PaysC->listPays();
         </div>
     </footer>
 
-
-
-    <script src="../js/jquery.min.js"></script>
-    <script src="../js/jquery-migrate-3.0.1.min.js"></script>
-    <script src="../js/popper.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/jquery.easing.1.3.js"></script>
-    <script src="../js/jquery.waypoints.min.js"></script>
-    <script src="../js/jquery.stellar.min.js"></script>
-    <script src="../js/owl.carousel.min.js"></script>
-    <script src="../js/jquery.magnific-popup.min.js"></script>
-    <script src="../js/aos.js"></script>
-    <script src="../js/jquery.animateNumber.min.js"></script>
-    <script src="../js/bootstrap-datepicker.js"></script>
-    <script src="../js/scrollax.min.js"></script>
+    <script src="../assets/js/jquery.min.js"></script>
+    <script src="../assets/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="../assets/js/popper.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+    <script src="../assets/js/jquery.easing.1.3.js"></script>
+    <script src="../assets/js/jquery.waypoints.min.js"></script>
+    <script src="../assets/js/jquery.stellar.min.js"></script>
+    <script src="../assets/js/owl.carousel.min.js"></script>
+    <script src="../assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="../assets/js/aos.js"></script>
+    <script src="../assets/js/jquery.animateNumber.min.js"></script>
+    <script src="../assets/js/bootstrap-datepicker.js"></script>
+    <script src="../assets/js/scrollax.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false">
     </script>
-    <script src="../js/google-map.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="../assets/js/google-map.js"></script>
+    <script src="../assets/js/main.js"></script>
 
 </body>
 
