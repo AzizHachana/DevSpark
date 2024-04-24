@@ -1,7 +1,7 @@
 <?php
-include '../config.php'; // Inclure le fichier config.php
+//include '../config.php'; // Inclure le fichier config.php
 include '../Model/Hotel.php'; // Inclure le fichier Hotel.php
-
+include_once __DIR__ . '/../config.php';
 class HotelC
 {
     public function listHotels()
@@ -33,7 +33,7 @@ class HotelC
 
     public function ajouterHotel($hotel)
     {
-        $sql = "INSERT INTO hotel VALUES (NULL, :Nom, :Adresse, :Ville, :Code_postal, :Pays, :Tel, :Email, :image)";
+        $sql = "INSERT INTO hotel VALUES (NULL, :Nom, :Adresse, :Ville, :Code_postal, :Pays, :Tel, :Email, :image )";
         $db = Config::getConnexion();
         try {
             $query = $db->prepare($sql);
@@ -45,7 +45,8 @@ class HotelC
                 'Pays' => $hotel->getPays(),
                 'Tel' => $hotel->getTelephone(), // Utilisation de la méthode getTelephone() pour récupérer le numéro de téléphone
                 'Email' => $hotel->getEmail(),
-                'image' => $hotel->getImage()
+                'image' => $hotel->getImage(),
+                //'Description'=>$hotel->getDescription()
                 //'image' => $hotel->getetoile()
             ]);
             echo "Hotel ajouté avec succès.";
@@ -53,6 +54,7 @@ class HotelC
             echo 'Error: ' . $e->getMessage();
         }
     }
+    
     
 
    public function updatehotel($id, $nom, $adresse, $ville, $code_postal,$pays,$tel,$email,$image)

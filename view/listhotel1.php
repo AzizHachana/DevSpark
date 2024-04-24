@@ -1,12 +1,29 @@
 <?php
 include '../controller/HotelC.php';
+include '../controller/ReservationC.php';
+
+
+
+
+
+// Traitement du formulaire
+
 
 
 $hotelC = new HotelC();
 $hotels= $hotelC->listHotels();
 //$professeurs = $professeurC->listProfesseur();
 
-
+$reservationC = new ReservationC();
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['hotel']) && isset($_POST['search'])) {
+    $id = $_POST['hotel'];
+    $list = $reservationC->affichereservation($id);
+    
+    }
+}
+$hoteles = $reservationC->afficherhotel();
+//$reservations = $reservationC->listreservations();
 if ($hotels) {
 ?>
 <!DOCTYPE html>
@@ -31,14 +48,16 @@ if ($hotels) {
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
         crossorigin="anonymous">
     <!-- CSS Files -->
-    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../assets/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
     
-    <style>
-        /* Custom CSS styles for the table */
+    
+      <style>
+    /* Custom CSS styles for the table */
+    
+</style>
 
-    </style>
 </head>
 
 
@@ -48,16 +67,16 @@ if ($hotels) {
             <!-- Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow" -->
             <div class="logo">
                 <a href="http://www.creative-tim.com" class="simple-text logo-mini">
-                    LR
+                    
                 </a>
                 <a href="http://www.creative-tim.com" class="simple-text logo-normal">
-                    Learner
+                    Voyage et Aventures
                 </a>
             </div>
             <div class="sidebar-wrapper" id="sidebar-wrapper">
                 <ul class="nav">
                     <li>
-                        <a href="./dashboard.php">
+                        <a href="listhotel1.php">
                             <i class="now-ui-icons design_app"></i>
                             <p>Dashboard</p>
                         </a>
@@ -81,7 +100,7 @@ if ($hotels) {
                         </a>
                     </li>
                     <li class="active ">
-                        <a href="./user.html">
+                        <a href="addHotel.php">
                             <i class="now-ui-icons users_single-02"></i>
                             <p>User Profile</p>
                         </a>
@@ -229,17 +248,49 @@ if ($hotels) {
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            </div> 
         </div>
     </div>
 </div>
-    <script>
+
+<h1>Recherche des reservations par hotel</h1>
+<form action="" method="POST">
+<label for="hotel"> Sélectionnez un hotel : </label>
+<select name = "hotel" id="hotel"> 
+<?php
+                foreach ($hoteles as $hotel) {
+                    ?>
+                    <option value="<?php echo $hotel['id']?>"><?php echo $hotel['Nom']?></option>
+                <?php
+                }
+                ?>
+</select>
+<input type="submit" value="Rechercher" name="search">
+</form>
+<?php if (isset($list)) { ?>
+<br>
+<h2>Reservation correspondants au hotel sélectionné : </h2>
+<ul>
+
+<?php foreach ($list as $reservation) 
+{ ?>
+<li> <?= $reservation['DDP'] ?> - <?= $reservation['DDA'] ?> </li>
+<?php 
+} ?>
+</ul>
+<?php 
+} ?>
+
+
+ <script>
         function filterHotels() {
             // code to filter the hotels based on the input value
         }
     </script>
 </body>
-
+    
 </html>
+    
 
 
 

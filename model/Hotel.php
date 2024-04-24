@@ -11,6 +11,7 @@ class Hotel
     private ?string $telephone = null;
     private ?string $email = null;
     private ?string $image = null;
+    //private ?string $description= null;
     //private ?string $etoile = null;
 
   
@@ -25,6 +26,7 @@ class Hotel
         $telephone,
         $email,
         $image,
+    //$description,
         //$etoile,
     
     ) {
@@ -37,6 +39,7 @@ class Hotel
         $this->telephone = $telephone;
         $this->email = $email;
         $this->image = $image;
+        //$this->description = $description;
        // $this->etoile = $etoile;
     }
 
@@ -148,7 +151,18 @@ class Hotel
     {
         $this->etoile= $etoile;
         return $this;
+    }
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
     }*/
+
    
 }
 

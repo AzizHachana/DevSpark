@@ -23,7 +23,7 @@ if (
         !empty($_POST["Code_postal"]) &&
         !empty($_POST["Pays"]) &&
         !empty($_POST["Tel"]) &&
-        !empty($_POST["Email"])
+        !empty($_POST["Email"])      
     ) {
         // Vérification si un nouveau fichier est téléchargé
         if ($_FILES["image"]["size"] != 0) {
@@ -47,7 +47,7 @@ if (
             $_POST['Pays'],
             $_POST['Tel'],
             $_POST['Email'],
-            $image
+            $image,
         );
 
         // Mettre à jour l'hôtel
@@ -66,6 +66,7 @@ if (
             exit;
         } else {
             $error = "Échec de la mise à jour de l'hôtel.";
+           
         }
     } else {
         $error = "Tous les champs doivent être remplis";
@@ -109,8 +110,8 @@ if (isset($_GET['id'])) {
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
         crossorigin="anonymous">
     <!-- CSS Files -->
-    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../assets/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
    
 </head>
@@ -130,7 +131,7 @@ if (isset($_GET['id'])) {
             <div class="sidebar-wrapper" id="sidebar-wrapper">
                 <ul class="nav">
                     <li>
-                        <a href="./dashboard.php">
+                        <a href="listhotel1.php">
                             <i class="now-ui-icons design_app"></i>
                             <p>Dashboard</p>
                         </a>
@@ -154,7 +155,8 @@ if (isset($_GET['id'])) {
                         </a>
                     </li>
                     <li class="active ">
-                        <a href="./user.html">
+                        
+                        <a href="addHotel.php">
                             <i class="now-ui-icons users_single-02"></i>
                             <p>User Profile</p>
                         </a>
@@ -263,7 +265,7 @@ if (isset($_GET['id'])) {
                             </div>
                             <div class="card-body">
                                 <!-- Form for updating hotel -->
-                                <button type="button" class="btn btn-primary btn-round"><a href="../examples/dashboard.php"
+                                <button type="button" class="btn btn-primary btn-round"><a href="examples/dashboard.php"
                                         style="color: white;">Back to list</a></button>
                                 <form action="" method="POST" name="myForm" enctype="multipart/form-data"
                                     onsubmit="return validateForm()">
@@ -283,15 +285,16 @@ if (isset($_GET['id'])) {
                                                     value="<?php echo $hotel['Adresse']; ?>" placeholder="Adresse">
                                             </div>
                                         </div>
+                                        
                                     </div>
                                     <div class="row">
                                     <div class="col-md-4 px-1">
                                         <div class="form-group">
                                             <label>Ville</label>
                                             <input type="text" name="Ville" class="form-control" placeholder="Ville"
-                                            value="<?php echo $hotel['Ville']; ?>" placeholder="Ville">
+                                                value="<?php echo $hotel['Ville']; ?>" placeholder="Ville">
+                                            </div>
                                         </div>
-                                    </div>
                                     <div class="col-md-4 pl-1">
                                         <div class="form-group">
                                             <label>Code Postal</label>
@@ -353,12 +356,12 @@ if (isset($_GET['id'])) {
     </div>
 
     <!-- Include necessary JavaScript files -->
-    <script src="../assets/js/core/jquery.min.js"></script>
-    <script src="../assets/js/core/popper.min.js"></script>
-    <script src="../assets/js/core/bootstrap.min.js"></script>
-    <script src="../assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+    <script src="assets/js/core/jquery.min.js"></script>
+    <script src="assets/js/core/popper.min.js"></script>
+    <script src="assets/js/core/bootstrap.min.js"></script>
+    <script src="assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
     <!-- Include your custom JavaScript file -->
-    <script src="./js/script.js"></script>
+    <script src="js/script.js"></script>
     <script>
      
      function validateForm() {
@@ -373,6 +376,14 @@ if (isset($_GET['id'])) {
     // Vérification du nom (doit commencer par une majuscule)
     if (!/^[A-Z]/.test(nom)) {
         alert("Le nom doit commencer par une majuscule.");
+        return false;
+    }
+    if (!/^[A-Z][a-zA-Z\s]*$/.test(adresse)) {
+    alert("L'adresse doit contenir uniquement des caractères et commencer par une majuscule");
+    return false;
+}
+if (!/^[A-Z]/.test(pays)) {
+        alert("Pays doit contenir uniquement des caractéres et commencer par une majuscule");
         return false;
     }
 

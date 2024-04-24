@@ -24,7 +24,7 @@ if (
         !empty($_POST["Pays"]) &&
         !empty($_POST["Tel"]) &&
         !empty($_POST["Email"]) &&
-        $_FILES["image"]["size"] != 0 
+        $_FILES["image"]["size"] != 0   
        // $_FILES["etoile"]["size"] != 0
     ) {
         // Renommer l'image avant de l'enregistrer dans la base de données
@@ -71,8 +71,8 @@ if (
 
 <head>
     <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-    <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>
         Now UI Dashboard by Learnes
@@ -85,8 +85,8 @@ if (
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
         crossorigin="anonymous">
     <!-- CSS Files -->
-    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../assets/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
    
 </head>
@@ -97,16 +97,16 @@ if (
             <!-- Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow" -->
             <div class="logo">
                 <a href="http://www.creative-tim.com" class="simple-text logo-mini">
-                    LR
+               
                 </a>
                 <a href="http://www.creative-tim.com" class="simple-text logo-normal">
-                    Learner
+                Voyage et Aventures
                 </a>
             </div>
             <div class="sidebar-wrapper" id="sidebar-wrapper">
                 <ul class="nav">
                     <li>
-                        <a href="./dashboard.php">
+                        <a href="listhotel1.php">
                             <i class="now-ui-icons design_app"></i>
                             <p>Dashboard</p>
                         </a>
@@ -241,7 +241,8 @@ if (
                                     <div class="col-md-4 px-1">
                                         <div class="form-group">
                                             <label>Nom</label>
-                                            <input type="text" name="Nom" class="form-control" placeholder="Nom">
+                                            <input type="text" name="Nom" class="form-control" placeholder="Nom" >
+                                          
                                         </div>
                                     </div>
                                     <div class="col-md-4 pl-1">
@@ -251,6 +252,8 @@ if (
                                                 placeholder="Adresse">
                                         </div>
                                     </div>
+                                   
+                                    
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 px-1">
@@ -298,7 +301,10 @@ if (
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                               
+
+                                    
+                             </div>
                                 <!--<div class="row">
                                     <div class="col-md-4 pl-1">
                                         <div class="form-group">
@@ -366,26 +372,28 @@ if (
         /* Couleur du texte */
     }
     
+    
 </style>
 
 <!--   Core JS Files   -->
-<script src="../assets/js/core/jquery.min.js"></script>
-<script src="../assets/js/core/popper.min.js"></script>
-<script src="../assets/js/core/bootstrap.min.js"></script>
-<script src="../assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+<script src="assets/js/core/jquery.min.js"></script>
+<script src="assets/js/core/popper.min.js"></script>
+<script src="assets/js/core/bootstrap.min.js"></script>
+<script src="assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
 <!--  Google Maps Plugin    -->
 <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
 <!-- Chart JS -->
-<script src="../assets/js/plugins/chartjs.min.js"></script>
+<script src="assets/js/plugins/chartjs.min.js"></script>
 <!--  Notifications Plugin    -->
-<script src="../assets/js/plugins/bootstrap-notify.js"></script>
+<script src="assets/js/plugins/bootstrap-notify.js"></script>
 <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
-<script src="../assets/js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
+<script src="assets/js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
 <!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
-<script src="../assets/demo/demo.js"></script>
+<script src="assets/demo/demo.js"></script>
 <script>
+    
      
-     function validateForm() {
+    function validateForm() {
     var nom = document.forms["myForm"]["Nom"].value;
     var adresse = document.forms["myForm"]["Adresse"].value;
     var ville = document.forms["myForm"]["Ville"].value;
@@ -393,18 +401,31 @@ if (
     var pays = document.forms["myForm"]["Pays"].value;
     var tel = document.forms["myForm"]["Tel"].value;
     var email = document.forms["myForm"]["Email"].value;
-
-    // Vérification du nom (doit commencer par une majuscule)
-    if (!/^[A-Z]/.test(nom)) {
-        alert("Le nom doit commencer par une majuscule.");
-        return false;
-    }
-
-    // Vérification que tous les champs sont remplis
+  
     if (nom === "" || adresse === "" || ville === "" || codePostal === "" || pays === "" || tel === "" || email === "") {
         alert("Tous les champs doivent être remplis.");
         return false;
     }
+    // Vérification du nom (doit commencer par une majuscule)
+    if (!/^[A-Z][a-zA-Z\s]*$/.test(nom)) {
+        alert("Le nom doit contenir uniquement des caractères et commencer par une majuscule.");
+        return false;
+    }
+
+    // Vérification de l'adresse (doit commencer par une majuscule)
+    if (!/^[A-Z][a-zA-Z\s]*$/.test(adresse)) {
+        alert("L'adresse doit contenir uniquement des caractères et commencer par une majuscule.");
+        return false;
+    }
+
+    // Vérification que le pays commence par une majuscule
+    if (!/^[A-Z]/.test(pays)) {
+        alert("Le pays doit commencer par une majuscule.");
+        return false;
+    }
+
+    // Vérification que tous les champs sont remplis
+   
 
     // Vérification de l'adresse e-mail (format valide)
     if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)) {
@@ -419,9 +440,13 @@ if (
     }
 
     // Ajoutez ici d'autres vérifications si nécessaire
-
     return true;
 }
+
+
+
+// Fonction pour afficher les messages d'erreur
+
 
 
 
