@@ -1,35 +1,10 @@
 <?php
  // Inclure le fichier config.php
-include '../controller/EventC.php';
-$c = new EventC();
-$tab = $c->listEvents();
+include '../controller/ReservationC.php';
+$c = new ReservationC();
+$tab = $c->listReservation();
 
 // Vérification si un fichier image a été envoyé
-if(isset($_FILES['image'])){
-    $errors= array();
-    $file_name = $_FILES['image']['name'];
-    $file_size =$_FILES['image']['size'];
-    $file_tmp =$_FILES['image']['tmp_name'];
-    $file_type=$_FILES['image']['type'];
-    $file_ext=strtolower(end(explode('.',$_FILES['image']['name'])));
-    
-    $extensions= array("jpeg","jpg","png");
-    
-    if(in_array($file_ext,$extensions)=== false){
-       $errors[]="Extension not allowed, please choose a JPEG or PNG file.";
-    }
-    
-    if($file_size > 2097152){
-       $errors[]='File size must be excately 2 MB';
-    }
-    
-    if(empty($errors)==true){
-       move_uploaded_file($file_tmp,"../assets/img/".$file_name);
-       echo "Success";
-    }else{
-       print_r($errors);
-    }
- }
 
 ?>
 
@@ -220,13 +195,12 @@ if(isset($_FILES['image'])){
                   <!-- PHP Loop to display data -->
                   <?php foreach ($tab as $event) { ?>
                     <tr>
-                      <td class="text-center"><?= $event['id']; ?></td>
-                      <td><?= $event['Nom']; ?></td>
-                      <td><?= $event['DateE']; ?></td>
-                      <td><?= $event['Lieu']; ?></td>
-                      <td><?= $event['DescriptionE']; ?></td>
-                      <td><?= $event['Prix']; ?></td>
-                      <td><img src=<?php echo ("./images/uploads/".$event['image']); ?> alt="" style="width:50px;height:50px;border:2px solid gray;border-radius:8px;object-fit:cover"></td>
+                      <td class="text-center"><?= $reservation['id']; ?></td>
+                      <td><?= $reservation['Nom']; ?></td>
+                      <td><?= $reservation['DateE']; ?></td>
+                      <td><?= $reservation['Lieu']; ?></td>
+                      <td><?= $reservation['DescriptionE']; ?></td>
+                      <td><?= $reservation['Prix']; ?></td>
 
                       <td>
                 <a href="../view/updateEvent.php?id=<?= $event['id']; ?>">Modifier</a>

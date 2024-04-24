@@ -88,7 +88,7 @@ if (
             <div class="sidebar-wrapper" id="sidebar-wrapper">
                 <ul class="nav">
                     <li>
-                        <a href="../examples/dashboard.php">
+                        <a href="../view/listEvent.php">
                             <i class="now-ui-icons design_app"></i>
                             <p>Dashboard</p>
                         </a>
@@ -186,7 +186,7 @@ if (
                             <h5 class="title">Ajouter un Event</h5>
                         </div>
                         <div class="card-body">
-                            <button type="button" class="btn btn-primary btn-round"><a href="../examples/dashboard.php"
+                            <button type="button" class="btn btn-primary btn-round"><a href="../view/listEvent.php"
                                     style="color: white;">Retour à la liste</a></button>
                             <form action="" method="POST" name="myForm" enctype="multipart/form-data"
                                 onsubmit="return validateForm()">

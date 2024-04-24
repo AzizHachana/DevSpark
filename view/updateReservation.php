@@ -1,58 +1,46 @@
 <?php
-include '../Controller/EventC.php';
+include '../Controller/ReservationC.php';
 
-$eventC = new EventC();
+$ReservationC = new ReservationC();
 $error = "";
 
 if (
     isset($_POST["id"]) &&
-    isset($_POST["Nom"]) &&
-    isset($_POST["DateE"]) &&
-    isset($_POST["Lieu"]) &&
-    isset($_POST["DescriptionE"]) &&
-    isset($_POST["Prix"]) &&
-    isset($_FILES["image"])
+    isset($_POST["date_check_in"]) &&
+    isset($_POST["date_check_out"]) &&
+    isset($_POST["nbr_p"]) &&
+    isset($_POST["status"]) &&
+    isset($_POST["id_e"]) 
 ) {
     if (
         !empty($_POST['id']) &&
-        !empty($_POST['Nom']) &&
-        !empty($_POST["DateE"]) &&
-        !empty($_POST["Lieu"]) &&
-        !empty($_POST["DescriptionE"]) &&
-        !empty($_POST["Prix"])
-    ) {
-        // Vérification si un nouveau fichier est téléchargé
-        if ($_FILES["image"]["size"] != 0) {
-            $original_name = $_FILES["image"]["name"];
-            $imageName = uniqid() . time() . "." . pathinfo($original_name, PATHINFO_EXTENSION);
-            move_uploaded_file($_FILES["image"]["tmp_name"], "./images/uploads/" . $imageName);
-            $image = $imageName;
-        } else {
-            // Si aucune nouvelle image n'est fournie, conserver l'image existante
-            $currentEvent = $eventC->getEventById($_POST['id']); // Supposons que cette fonction récupère les données de l'hôtel par son ID
-            $image = $currentEvent['image'];
-        }
+        !empty($_POST['date_check_in']) &&
+        !empty($_POST["date_check_out"]) &&
+        !empty($_POST["nbr_p"]) &&
+        !empty($_POST["status"]) &&
+        !empty($_POST["id_e"]) 
+    ) 
 
         // Créer une instance de la classe Hotel avec les données fournies
-        $event = new Event(
+        $Reservation = new Reservation(
             $_POST['id'],
-            $_POST['Nom'],
-            $_POST['DateE'],
-            $_POST['Lieu'],
-            $_POST['DescriptionE'],
-            $_POST['Prix'],
-            $image
+            $_POST['date_check_in'],
+            $_POST['date_check_out'],
+            $_POST['nbr_p'],
+            $_POST['status'],
+            $_POST['id_e'],
+            
         );
 
         // Mettre à jour l'hôtel
         $id = $_POST["id"];
-        $nom = $_POST["Nom"];
-        $dateE = $_POST["DateE"];
-        $lieu = $_POST["Lieu"];
-        $descriptionE = $_POST["DescriptionE"];
-        $prix = $_POST["Prix"];
+        $date_check_in = $_POST["date_check_in"];
+        $date_check_out = $_POST["date_check_out"];
+        $nbr_p = $_POST["nbr_p"];
+        $status = $_POST["status"];
+        $id_e = $_POST["id_e"];
 
-        if ($eventC->updateEvent($id, $nom, $dateE, $lieu,$descriptionE, $prix,$image)) {
+        if ($eventC->updateReservation($id, $date_check_in, $date_check_out, $nbr_p,$status, $id_e)) {
             // Rediriger vers une page de succès ou effectuer une autre action en cas de succès de la mise à jour
             header('Location:../examples/dashboard.php');
             exit;

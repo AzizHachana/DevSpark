@@ -234,7 +234,7 @@ if(isset($_FILES['image'])){
             <div class="row">
     <?php foreach ($tab as $event): ?>
         <div class="col-md-4 ftco-animate">
-            <div class="project-wrap">
+            <div class="project-wrap"data-id="<?= $event['id']; ?>">
                 <a href="#" class="img" style="background-image: url(<?php echo "./images/uploads/".$event['image']; ?>);"></a>
                 <div class="text p-4">
                     <h3><a href="#"><?= $event['Nom']; ?></a></h3>
@@ -244,9 +244,13 @@ if(isset($_FILES['image'])){
                     <ul>
                         
                         <li><span class="flaticon-tour">Pays</span><?= $event['Lieu']; ?></li>
+                        <button type="button" class="form-control btn btn-primary"><a id="reservationLink" href="../view/addreservation.php?id=<?= $event['id']; ?>&Nom=<?= $event['Nom']; ?>&Prix=<?= $event['Prix']; ?>"
+                                        style="color: white;">Réserver</a></button>
                     </ul>
                 </div>
+                
             </div>
+            
         </div>
     <?php endforeach; ?>
 </div>
@@ -346,6 +350,19 @@ if(isset($_FILES['image'])){
   <!-- loader -->
   <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var reservationLink = document.getElementById('reservationLink');
+        var eventID;
+
+        document.querySelectorAll('.btn.btn-primary').forEach(function(btn) {
+            btn.addEventListener('click', function(event) {
+                eventID = event.target.closest('.project-wrap').dataset.id;
+                reservationLink.href = `../view/addreservation.php?id=${eventID}`;
+            });
+        });
+    });
+</script>
 
   <script src="js/jquery.min.js"></script>
   <script src="js/jquery-migrate-3.0.1.min.js"></script>

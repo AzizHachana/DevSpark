@@ -1,5 +1,4 @@
 <?php
-include '../config.php'; // Inclure le fichier config.php
 include '../Model/Event.php'; // Inclure le fichier Hotel.php
 
 class EventC
