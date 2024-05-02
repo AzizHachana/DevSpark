@@ -19,6 +19,7 @@ class Reservation
         $Enfants,
         $Chambres,
         $hotel_id,
+        $user_id,
       
     )
     {
@@ -29,6 +30,7 @@ class Reservation
         $this->Enfants= $Enfants;
         $this->Chambres = $Chambres ;
         $this->hotel_id = $hotel_id;
+        $this->user_id = $user_id;
         
     }
     public function getId()
@@ -113,6 +115,16 @@ class Reservation
     public function setHotelId($hotel_id)
     {
         $this->hotel_id = $hotel_id;
+        return $this;
+    }
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId($user_id)
+    {
+        $this->user_id = $user_id;
         return $this;
     }
 }

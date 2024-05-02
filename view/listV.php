@@ -12,13 +12,15 @@ if ($hotels) {
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+
 <head>
 <title>Explorez nos Hébergements</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    
 
     <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="css/animate.css">
@@ -118,6 +120,9 @@ if ($hotels) {
 
         .hotel-info-item {
             margin-bottom: 5px;
+     
+            text-align: left;
+            
         }
 
         .hotel-info-label {
@@ -126,7 +131,8 @@ if ($hotels) {
 
         .hotel-name {
             color: #000000;
-            font-weight: bold; /* Couleur bleue pour le nom de l'hôtel */
+            font-weight: bold;
+           
         }
 
         .availability-button {
@@ -134,16 +140,15 @@ if ($hotels) {
             color: #fff;
             border: none;
             border-radius: 5px;
-            padding: 8px 16px;
+            padding: -0.2px 10px;
             text-transform: uppercase;
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
-        .availability-button:hover {
-            background-color: #ff6b6b; /* Changement de couleur au survol */
-        }
+    
+        
     </style>
 </head>
 <body>
@@ -164,7 +169,7 @@ if ($hotels) {
 	        <ul class="navbar-nav ml-auto">
 	          <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
 	          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-	          <li class="nav-item"><a href="destination.html" class="nav-link">Destination</a></li>
+	          <li class="nav-item"><a href="destination.html" class="nav-link">Hebergement</a></li>
 	          <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
 	          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
 	          <li class="nav-item cta"><a href="#" class="nav-link">Book Now</a></li>
@@ -184,12 +189,16 @@ if ($hotels) {
             <?php foreach ($hotels as $hotel): ?>
                 <div class="hotel-card">
                     <div class="hotel-image-section">
-                        <img class="hotel-image" src="./images/uploads/<?= $hotel['image']; ?>" alt="">
+                        <img class="hotel-image" src="./images/uploads/<?=$hotel['image']; ?>" alt="">
+                        <!--<span class="like-button">
+                            <i class="fas fa-heart" aria-hidden="true"></i>
+                         <span class="like-count">/ $hotel['likes'];?></span>
+                        </span>-->
                     </div>
                     <div class="hotel-info">
                         <div class="hotel-info-item">
                             <span class="hotel-info-label"></span>
-                            <span class="hotel-name"><?= $hotel['Nom']; ?></span>
+                            <span class="hotel-name" ><?= $hotel['Nom']; ?></span>
                         </div>
                         <div class="hotel-info-item">
                             <span class="hotel-info-label">Adresse:</span>
@@ -201,11 +210,10 @@ if ($hotels) {
                             <span class="hotel-info-label">Téléphone:</span>
                             <span class="hotel-info-value"><?= $hotel['Tel']; ?></span>
                         </div>
-                        <div class="hotel-info-item">
-                            <span class="hotel-info-label">Email:</span>
-                            <span class="hotel-info-value"><?= $hotel['Email']; ?></span>
-                        </div>
-                        <a href="addreservation.php?hotel_id=<?= $hotel['id']; ?>" class="availability-button">Vérifier la disponibilité</a>
+                       
+                            <a href="addreservation.php?hotel_id=<?= $hotel['id']; ?>" class="availability-button">Check Availability</a>
+                             <a  href="Send_mail.php" class="availability-button">Send Mail</a>
+                        
 
                     </div>
                 </div>
@@ -213,6 +221,25 @@ if ($hotels) {
         </div>
     </div>
     </div>
+    <script>
+       $(document).ready(function() {
+    $('.like-button').on('click', function() {
+        var hotelId = $(this).closest('.hotel-card').data('hotel-id');
+        var likeCount = parseInt($(this).find('.like-count').text());
+        likeCount++;
+
+        // Send an AJAX request to update the like count in your database
+        $.ajax({
+            type: 'POST',
+            url: 'update_like_count.php',
+            data: { hotel_id: hotelId, likes: likeCount },
+            success: function(data) {
+                $(this).find('.like-count').text(likeCount);
+            }
+        });
+    });
+});
+    </script>
 </body>
 </html>
 

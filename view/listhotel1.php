@@ -14,15 +14,7 @@ $hotelC = new HotelC();
 $hotels= $hotelC->listHotels();
 //$professeurs = $professeurC->listProfesseur();
 
-$reservationC = new ReservationC();
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['hotel']) && isset($_POST['search'])) {
-    $id = $_POST['hotel'];
-    $list = $reservationC->affichereservation($id);
-    
-    }
-}
-$hoteles = $reservationC->afficherhotel();
+
 //$reservations = $reservationC->listreservations();
 if ($hotels) {
 ?>
@@ -201,7 +193,7 @@ if ($hotels) {
                 <thead>
                   <tr>
                     <h5 class="card-category">Hotels List</h5>
-                    <th class="text-center">ID</th>
+                     <th class="text-center">ID</th>
                        
                         <th>Nom</th>
                         <th>Adresse</th>
@@ -253,33 +245,6 @@ if ($hotels) {
     </div>
 </div>
 
-<h1>Recherche des reservations par hotel</h1>
-<form action="" method="POST">
-<label for="hotel"> Sélectionnez un hotel : </label>
-<select name = "hotel" id="hotel"> 
-<?php
-                foreach ($hoteles as $hotel) {
-                    ?>
-                    <option value="<?php echo $hotel['id']?>"><?php echo $hotel['Nom']?></option>
-                <?php
-                }
-                ?>
-</select>
-<input type="submit" value="Rechercher" name="search">
-</form>
-<?php if (isset($list)) { ?>
-<br>
-<h2>Reservation correspondants au hotel sélectionné : </h2>
-<ul>
-
-<?php foreach ($list as $reservation) 
-{ ?>
-<li> <?= $reservation['DDP'] ?> - <?= $reservation['DDA'] ?> </li>
-<?php 
-} ?>
-</ul>
-<?php 
-} ?>
 
 
  <script>

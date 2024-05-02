@@ -22,11 +22,11 @@ if (
         !empty($_POST["Chambres"])&&
         !empty($_POST["hotel_id"])
        
-
+  
     ) 
     {
         // Vérification si l'hôtel existe
-                       
+                $userId = 7; 
                 $reservation = new Reservation(
                     null, // Leave null so that the ID is auto-incremented
                     $_POST['DDP'],
@@ -34,13 +34,13 @@ if (
                     $_POST['Adultes'],
                     $_POST['Enfants'],
                     $_POST['Chambres'],
-                    $_POST['hotel_id'],// Assign the hotel ID to the reservation
+                    $_POST['hotel_id'],
+                    $userId,// Assign the hotel ID to the reservation
                 );
             // Add the reservation
                     $reservationC->ajouterreservation($reservation);
-            } else {
-                echo "err";
-                   }
+            } 
+            header('Location:afficher_reservation.php');
    }
 
 
@@ -90,9 +90,11 @@ if (isset($_GET['hotel_id']))
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">        
 
     <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="css/animate.css">
@@ -136,6 +138,68 @@ if (isset($_GET['hotel_id']))
 	    </div>
 	  </nav>
     <style>
+         .title-container {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.8); /* Fond de la boîte de titre */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre douce */
+            height:75px;
+        }
+        .custom-beach {
+            margin: 0;
+            padding: 0;
+            background-color:  #4FA8FF;
+           /* Couleur bleu ciel */
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+            width:125px
+        }
+        .custom-beach .umbrella {
+            font-size: 18px; /* Taille de l'icône de parasol */
+            margin-right: 5px;
+            color: #FFD700;
+        }
+        .custom-beach .text {
+            font-size: 14px; /* Taille du texte "Plage privée" */
+            font-weight: bold;
+            color: #FFFFFF; /* Couleur blanche pour le texte */
+        }
+       
+    
+       #map {
+    position: relative;
+    width: 360px; /* taille initiale de la carte */
+    height: 200px; /* taille initiale de la carte */
+    right: 20px; 
+    top: 80px;
+}
+
+#big-map {
+    display: none; /* carte de grande taille cachée par défaut */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40%; /* Largeur de la carte de grande taille */
+    height: 40%; /* Hauteur de la carte de grande taille */
+    z-index: 1000; /* Assure que la carte est affichée au-dessus des autres éléments */
+}
+        #open-button {
+            position: absolute;
+            top: 680px;
+            right: 320px;
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            z-index: 1000;
+        }
         body, html {
     margin: 0;
     padding: 0;
@@ -153,31 +217,33 @@ if (isset($_GET['hotel_id']))
 }
        .container1 {
     max-width: 1200px;
+    height:100;
     margin: 100px auto;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0); /* Fond transparent */
-   
     border: 0px solid #ccc;
-   
     text-align: center;
     position: relative;
 }
 .container3 {
-    max-width: 350px;
-    height: 500px;
+    max-width: 360px;
+    height: 420px;
     margin: 10px auto;
     padding: 20px;
     background-color:#FEBA33; /* Fond transparent */
-   
+    
     border: 0px solid #ccc;
    
     box-shadow: 0 1px 20px rgba(0, 0, 0, 0.2);
     text-align: center;
     position: relative;
     margin-right: 20px;
+    bottom: 165px;
+   
 }
 .container0 {
     max-width: 1200px;
+    height:150;
     margin: 20px auto;
     padding: 20px;
     background-color:  #f2f2f2;
@@ -186,7 +252,9 @@ if (isset($_GET['hotel_id']))
     box-shadow: 0 1px 20px rgba(0, 0, 0, 0.2);
     overflow: hidden; /* Pour contenir les éléments floats enfants */
 }
-
+.containerd {
+    bottom:100px;
+}
 .container img {
     float: left; /* Faire flotter l'image à gauche */
     margin-right: 20px; /* Marge à droite pour séparer l'image du formulaire */
@@ -220,32 +288,46 @@ if (isset($_GET['hotel_id']))
 
 
 
-
-
     </style>
 </head>
 <body>
+<div id="big-map"></div>
+
+
+    <button id="open-button" onclick="showBigMap()">Voir sur la carte</button>
+    
+      
 <div class="background">
         <img src="bg_2.jpg" alt="Background Image" class="background-image">
     </div>
 
        <!-- END nav -->
       <div class="overlay"></div>
-        <div class="container1">
+        <div class="container1" >
+        
             <div class="hotel-info">
-            <div class="container0">
+            <div class="container0" style="height: 950px;">
+            <div class="custom-beach">
+        <span class="umbrella">☂️</span>
+        <span class="text">Plage privée</span>
+    </div>
             <h2 style="text-align: left;"><strong><?= $hotel_info['Nom']; ?></strong></h2>
 
-            <p style="text-align: left; color: black;">
-    <i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i> <!-- Icône d'adresse -->
-    <strong><?= $hotel_info['Adresse']; ?></strong>
+            <p style="text-align: left;color: black;">
+    <i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>
+    <strong><?= $hotel_info['Adresse']; ?></strong>,<?= $hotel_info['Code_postal']; ?>
+    <?= $hotel_info['Ville']; ?>, <?= $hotel_info['Pays']; ?></span>
+    - <a href="javascript:showBigMap()"  style="color: navy;"><strong>Trés bon emplacement - voir sur la carte</a>
 </p>
-                
-<img src="./images/uploads/<?= $hotel_info['image']; ?>" alt="" class="hotel-image">
+<img src="./images/uploads/<?= $hotel_info['image']; ?>" alt="" class="hotel-image">*
+
+
+
 
     <div class="container3">
-
-        <h2 ><strong>Passer une réservation</h2>
+    <div class="title-container">
+        <h4 ><strong>Passer une réservation</h4>
+    </div>
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         
         
@@ -276,24 +358,33 @@ if (isset($_GET['hotel_id']))
             <button onclick="increaseValue('rooms')">+</button>
         </div>
     </div>
+    
+              
 </div>
 
           <input type="submit" value="Réserver">
+          <div id="map"></div>
 
-        </form>
+    
+    
+
+        </form> 
                </div>
-                    <p><?= $hotel_info['Ville']; ?>, <?= $hotel_info['Pays']; ?></p>
-                    <p>Téléphone: <?= $hotel_info['Tel']; ?></p>
-                    <p>Email: <?= $hotel_info['Email']; ?></p>
-                    <p>id: <?= $hotel_info['id']; ?></p>
+               <div>
+                    <<p  style="text-align: left;"></p>
+                    <p  style="text-align: left;"></p>
+                    <p style="text-align: left;color: black;"><?= $hotel_info['Description']; ?>
+                    </div>
+                    </div>
                 </div>
                 
                 <div class="">
                     <div class="">
                         <for="hotel_id" style="display: none;">ID</label>
                             <input type="" name="hotel_id" class="" value="<?= isset($hotel_info['id']) ? $hotel_info['id'] : '' ?>">
-                            
-                        </div>
+                           
+                    </div>
+                        
                </div>
                
               
@@ -307,6 +398,92 @@ if (isset($_GET['hotel_id']))
         </div>
       </div>
     </div>
+    
+    
+    <script>
+        var map = L.map('map').setView([36.417991244632184, 10.657854141815537], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // Ajouter la fonction de recherche
+        L.Control.geocoder().addTo(map);
+
+        // Liste des emplacements avec leurs coordonnées géographiques
+        var locations = [
+            { name: 'Location 3', coordinates: [36.920418600953155, 10.294004607895895]},
+            { name: 'Location 4', coordinates: [36.4066820811439, 10.648944014801348]},
+            { name: 'Location 5', coordinates: [36.420148778616735, 10.666770211285563]},
+            { name: 'Location 6', coordinates: [36.42663289952416, 10.677397821021687]},
+            { name: 'Location 7', coordinates: [36.41626420128574, 10.661314871551633]},
+            { name: 'Location 8', coordinates: [36.41956973849154, 10.666316475041786]},
+            { name: 'Location 8', coordinates: [36.44233934876374, 10.730926840282505]},
+            { name: 'Location 8', coordinates: [36.42371582283454, 10.671823348586972]},
+            { name: 'Location 8', coordinates: [36.427674443513425, 10.683206455127879]}
+        ];
+
+
+        // Ajouter chaque emplacement à la carte avec un marqueur personnalisé
+        locations.forEach(function(location) {
+            L.marker(location.coordinates, {
+                icon: L.icon({
+                    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34]
+                })
+            }).addTo(map).bindPopup(location.name);
+        });
+
+        function showBigMap() {
+            var containerSize = document.querySelector('.container1').getBoundingClientRect();
+            var containerWidth = containerSize.width;
+            var containerHeight = containerSize.height;
+
+        // Réglez la taille de la carte agrandie pour correspondre à celle de container1
+        document.getElementById('big-map').style.width = containerWidth *(0.8) + 'px';
+        document.getElementById('big-map').style.height = containerHeight *(0.62) + 'px';
+        document.getElementById('big-map').style.width = containerWidth * 2 + 'px';
+        
+        document.getElementById('big-map').style.width = '1200px';
+       
+           document.getElementById('open-button').style.display = 'none';
+            document.getElementById('map').style.display = 'none'; // cacher la carte de petite taille
+            document.getElementById('big-map').style.display = 'block'; // afficher la carte de grande taille
+            var bigMap = L.map('big-map').setView([36.417991244632184, 10.657854141815537], 13); // créer une nouvelle carte de grande taille
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(bigMap);
+
+            // Ajouter la fonction de recherche à la carte de grande taille
+            L.Control.geocoder().addTo(bigMap);
+
+            // Ajouter chaque emplacement à la carte de grande taille avec un marqueur personnalisé
+            locations.forEach(function(location) {
+                L.marker(location.coordinates, {
+                    icon: L.icon({
+                        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34]
+                    })
+                }).addTo(bigMap).bindPopup(location.name);
+            });
+
+            // Ajouter l'événement pour revenir à la taille initiale de la carte en appuyant sur la touche "Échap"
+            document.addEventListener('keyup', function(event) {
+                if (event.key === 'Escape') {
+                    document.getElementById('map').style.display = 'block'; // afficher la carte de petite taille
+                    document.getElementById('big-map').style.display = 'none'; // cacher la carte de grande taille
+                    bigMap.remove();
+                    document.getElementById('open-button').style.display = 'block';
+                    
+                     // supprimer la carte de grande taille
+                }
+            });
+        }
+    </script>
     <script>
        function toggleForm() {
     var formContainer = document.getElementById('form-container');

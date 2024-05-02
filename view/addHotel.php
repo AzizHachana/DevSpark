@@ -12,7 +12,8 @@ if (
     isset($_POST["Pays"]) &&
     isset($_POST["Tel"]) &&
     isset($_POST["Email"]) &&
-    isset($_FILES["image"])
+    isset($_FILES["image"])&&
+    isset($_POST["Description"])
     //isset($_FILES["etoile"])
 ) 
 {
@@ -24,7 +25,8 @@ if (
         !empty($_POST["Pays"]) &&
         !empty($_POST["Tel"]) &&
         !empty($_POST["Email"]) &&
-        $_FILES["image"]["size"] != 0   
+        $_FILES["image"]["size"] != 0 &&
+        !empty($_POST["Description"])   
        // $_FILES["etoile"]["size"] != 0
     ) {
         // Renommer l'image avant de l'enregistrer dans la base de données
@@ -46,6 +48,7 @@ if (
             $_POST['Tel'],
             $_POST['Email'],
             $imageName,
+            $_POST['Description'],
             //$etoileName,
 
             
@@ -241,7 +244,8 @@ if (
                                     <div class="col-md-4 px-1">
                                         <div class="form-group">
                                             <label>Nom</label>
-                                            <input type="text" name="Nom" class="form-control" placeholder="Nom" >
+                                            <input type="text" name="Nom" class="form-control" id="nomInput" placeholder="Nom" oninput="ajouterEtoiles()">
+                                            <div id="etoiles"></div>
                                           
                                         </div>
                                     </div>
@@ -252,6 +256,14 @@ if (
                                                 placeholder="Adresse">
                                         </div>
                                     </div>
+                                    <div class="col-md-4 pl-1">
+                                        <div class="form-group">
+                                            <label>Description</label>
+                                            <input type="text" name="Description" class="form-control"
+                                                placeholder="Description">
+                                        </div>
+                                    </div>
+                                    
                                    
                                     
                                 </div>
@@ -371,6 +383,13 @@ if (
         color: #ffffff !important;
         /* Couleur du texte */
     }
+    .form-group {
+            margin-bottom: 20px;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+        }
     
     
 </style>
@@ -407,10 +426,12 @@ if (
         return false;
     }
     // Vérification du nom (doit commencer par une majuscule)
-    if (!/^[A-Z][a-zA-Z\s]*$/.test(nom)) {
-        alert("Le nom doit contenir uniquement des caractères et commencer par une majuscule.");
-        return false;
-    }
+    const starSymbol = '★';
+if (!/^[A-Z][a-zA-Z\s*]*$/.test(nom) || !/.*[★].*/.test(nom)) {
+    alert("Le nom doit contenir uniquement des caractères, des étoiles (★) et commencer par une majuscule.");
+    return false;
+}
+}
 
     // Vérification de l'adresse (doit commencer par une majuscule)
     if (!/^[A-Z][a-zA-Z\s]*$/.test(adresse)) {
@@ -467,6 +488,20 @@ if (
         }
         reader.readAsDataURL(event.target.files[0]);
     }*/
+</script>
+<script>
+function ajouterEtoiles() {
+    var nom = document.getElementById("nomInput").value;
+    var nombreEtoiles = parseInt(document.getElementById("nomInput").getAttribute("data-etoiles"));
+    var etoiles = "";
+    for (var i = 0; i < nombreEtoiles; i++) {
+        etoiles += "★";
+    }
+    document.getElementById("etoiles").textContent = etoiles;
+    
+}
+// Appel initial pour afficher les étoiles par défaut
+ajouterEtoiles();
 </script>
 </body>
 

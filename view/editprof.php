@@ -13,7 +13,8 @@ if (
     isset($_POST["Pays"]) &&
     isset($_POST["Tel"]) &&
     isset($_POST["Email"]) &&
-    isset($_FILES["image"])
+    isset($_FILES["image"])&&
+    isset($_POST["Description"])
 ) {
     if (
         !empty($_POST['id']) &&
@@ -23,7 +24,8 @@ if (
         !empty($_POST["Code_postal"]) &&
         !empty($_POST["Pays"]) &&
         !empty($_POST["Tel"]) &&
-        !empty($_POST["Email"])      
+        !empty($_POST["Email"])&&
+        !empty($_POST["Description"])      
     ) {
         // Vérification si un nouveau fichier est téléchargé
         if ($_FILES["image"]["size"] != 0) {
@@ -48,6 +50,7 @@ if (
             $_POST['Tel'],
             $_POST['Email'],
             $image,
+            $_POST['Description'],
         );
 
         // Mettre à jour l'hôtel
@@ -59,8 +62,9 @@ if (
         $pays = $_POST["Pays"];
         $tel = $_POST["Tel"];
         $email = $_POST["Email"];
+        $description = $_POST["Description"];
 
-        if ($hotelC->updateHotel($id, $nom, $adresse, $ville, $code_postal, $pays, $tel, $email, $image)) {
+        if ($hotelC->updateHotel($id, $nom, $adresse, $ville, $code_postal, $pays, $tel, $email, $image , $description)) {
             // Rediriger vers une page de succès ou effectuer une autre action en cas de succès de la mise à jour
             header('Location:listhotel1.php');
             exit;
@@ -283,8 +287,17 @@ if (isset($_GET['id'])) {
                                                 <label>Adresse</label>
                                                 <input type="text" name="Adresse" class="form-control"
                                                     value="<?php echo $hotel['Adresse']; ?>" placeholder="Adresse">
-                                            </div>
                                         </div>
+                                        <div class="col-md-4 pl-1">
+                                        <div class="form-group">
+                                            <label>Description</label>
+                                            <input type="text" name="Description" class="form-control" 
+                                            value="<?php echo $hotel['Description']; ?>" placeholder="Description">
+                                       
+                                    
+                                    </div>
+                                    </div>
+                                </div>
                                         
                                     </div>
                                     <div class="row">
@@ -372,6 +385,7 @@ if (isset($_GET['id'])) {
     var pays = document.forms["myForm"]["Pays"].value;
     var tel = document.forms["myForm"]["Tel"].value;
     var email = document.forms["myForm"]["Email"].value;
+    var description = document.forms["myForm"]["Description"].value;
 
     // Vérification du nom (doit commencer par une majuscule)
     if (!/^[A-Z]/.test(nom)) {
@@ -388,7 +402,7 @@ if (!/^[A-Z]/.test(pays)) {
     }
 
     // Vérification que tous les champs sont remplis
-    if (nom === "" || adresse === "" || ville === "" || codePostal === "" || pays === "" || tel === "" || email === "") {
+    if (nom === "" || adresse === "" || ville === "" || codePostal === "" || pays === "" || tel === "" || email === "" || description === "") {
         alert("Tous les champs doivent être remplis.");
         return false;
     }
@@ -423,5 +437,6 @@ if (!/^[A-Z]/.test(pays)) {
     }
     
 </script>
+
 </body>
 </html>

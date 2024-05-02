@@ -33,7 +33,7 @@ class HotelC
 
     public function ajouterHotel($hotel)
     {
-        $sql = "INSERT INTO hotel VALUES (NULL, :Nom, :Adresse, :Ville, :Code_postal, :Pays, :Tel, :Email, :image )";
+        $sql = "INSERT INTO hotel VALUES (NULL, :Nom, :Adresse, :Ville, :Code_postal, :Pays, :Tel, :Email, :image, :Description )";
         $db = Config::getConnexion();
         try {
             $query = $db->prepare($sql);
@@ -46,7 +46,7 @@ class HotelC
                 'Tel' => $hotel->getTelephone(), // Utilisation de la méthode getTelephone() pour récupérer le numéro de téléphone
                 'Email' => $hotel->getEmail(),
                 'image' => $hotel->getImage(),
-                //'Description'=>$hotel->getDescription()
+                'Description'=>$hotel->getDescription(),
                 //'image' => $hotel->getetoile()
             ]);
             echo "Hotel ajouté avec succès.";
@@ -57,27 +57,38 @@ class HotelC
     
     
 
-   public function updatehotel($id, $nom, $adresse, $ville, $code_postal,$pays,$tel,$email,$image)
-{
-    $sql = "UPDATE hotel SET Nom=:nom, Adresse=:adresse, Ville=:ville, Code_postal=:code_postal , Pays=:pays ,Tel=:tel,Email=:email, image=:image WHERE id=:id";
-    $db = config::getConnexion();
-    try {
-        $query = $db->prepare($sql);
-        $query->bindParam(':id', $id);
-        $query->bindParam(':nom', $nom);
-        $query->bindParam(':adresse', $adresse);
-        $query->bindParam(':ville', $ville);
-        $query->bindParam(':code_postal', $code_postal);
-        $query->bindParam(':pays', $pays);
-        $query->bindParam(':tel', $tel);
-        $query->bindParam(':email', $email);
-        $query->bindParam(':image', $image);
-        $query->execute();
-        echo $query->rowCount() . " records updated successfully";
-    } catch (Exception $e) {
-        die('Error: ' . $e->getMessage());
+    public function updatehotel($id, $nom, $adresse, $ville, $code_postal, $pays, $tel, $email, $image, $description)
+    {
+        $db = config::getConnexion();
+        try {
+            // Define your SQL query
+            $sql = "UPDATE hotel SET nom = :nom, adresse = :adresse, ville = :ville, code_postal = :code_postal, pays = :pays, tel = :tel, email = :email, image = :image, description = :description WHERE id = :id";
+            
+            // Prepare the SQL query
+            $query = $db->prepare($sql);
+            
+            // Bind parameters
+            $query->bindParam(':id', $id);
+            $query->bindParam(':nom', $nom);
+            $query->bindParam(':adresse', $adresse);
+            $query->bindParam(':ville', $ville);
+            $query->bindParam(':code_postal', $code_postal);
+            $query->bindParam(':pays', $pays);
+            $query->bindParam(':tel', $tel);
+            $query->bindParam(':email', $email);
+            $query->bindParam(':image', $image);
+            $query->bindParam(':description', $description);
+            
+            // Execute the query
+            $query->execute();
+            
+            echo $query->rowCount() . " records updated successfully";
+        } catch (Exception $e) {
+            die('Error: ' . $e->getMessage());
+        }
     }
-}
+    
+    
 public function getHotelById($id)
     {
         $sql = "SELECT * FROM hotel WHERE id = :id";
@@ -109,10 +120,30 @@ public function chercherHotels($query) {
     $hotels = $stmt->fetchAll();
     return $hotels;
 }
+public function showMap() {
+    $mapModel = new MapModel();
+    $locationData = $mapModel->getLocationData();
+    require_once 'view/map_view.php';
+}
+}
+class Map {
+    private $db;
 
+    public function __construct() {
+        $this->db = new Database;
+    }
 
+    public function getMapMarkers() {
+        $this->db->query('SELECT * FROM maps');
+        $results = $this->db->resultSet();
+        return $results;
+    }
 
-
-
+    public function getMarkerByLocation($location) {
+        $this->db->query('SELECT * FROM maps WHERE location = :location');
+        $this->db->bind(':location', $location);
+        $results = $this->db->single();
+        return $results;
+    }
 }
 ?>
