@@ -1,9 +1,9 @@
 <?php
- // Inclure le fichier config.php
+include_once '../config.php';
+
 include 'C:/xampp/htdocs/eventC/controller/EventC.php';
 $c = new EventC();
 $tab = $c->listEvents();
-
 // Vérification si un fichier image a été envoyé
 if(isset($_FILES['image'])){
     $errors= array();
@@ -30,7 +30,31 @@ if(isset($_FILES['image'])){
        print_r($errors);
     }
  }
-?>
+ 
+ if (isset($_POST['Nom'], $_POST['Prix'])) {
+  $nom = $_POST['Nom'];
+  $prix = $_POST['Prix'];
+  $filteredTab = $c->searchEvents($nom, $prix);
+  // Utiliser $filteredTab pour afficher les événements filtrés
+
+  // Si des événements correspondants sont trouvés, mettez à jour $tab pour ne contenir que les événements filtrés
+  if (!empty($filteredTab)) {
+      $tab = $filteredTab;
+  }
+}
+$eventsPerPage = 6; // Nombre d'événements par page
+$totalEvents = count($tab); // Nombre total d'événements
+$totalPages = ceil($totalEvents / $eventsPerPage); // Nombre total de pages
+$page = isset($_GET['page']) ? $_GET['page'] : 1; // Page actuelle, par défaut la première page
+
+$start = ($page - 1) * $eventsPerPage;
+$end=$start+$eventsPerPage; // Index de début pour extraire les événements de la page actuelle
+$tab = array_slice($tab, $start, $eventsPerPage); // Extraire les événements de la page actuelle
+
+
+ ?>
+ 
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -58,6 +82,13 @@ if(isset($_FILES['image'])){
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/icomoon.css">
     <link rel="stylesheet" href="css/style.css">
+    <title>Event Map</title>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
   </head>
   <body>
 	  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
@@ -146,80 +177,38 @@ if(isset($_FILES['image'])){
     	</div>
     </section>
 
-    <section class="ftco-section ftco-no-pb ftco-no-pt">
-    	<div class="container">
-	    	<div class="row">
-					<div class="col-md-12 mb-5">
-						<div class="search-wrap-1 search-wrap-notop ftco-animate p-4">
-							<form action="#" class="search-property-1">
-		        		<div class="row">
-		        			<div class="col-lg align-items-end">
-		        				<div class="form-group">
-		        					<label for="#">Destination</label>
-		          				<div class="form-field">
-		          					<div class="icon"><span class="ion-ios-search"></span></div>
-				                <input type="text" class="form-control" placeholder="Search place">
-				              </div>
-			              </div>
-		        			</div>
-		        			<div class="col-lg align-items-end">
-		        				<div class="form-group">
-		        					<label for="#">Check-in date</label>
-		        					<div class="form-field">
-		          					<div class="icon"><span class="ion-ios-calendar"></span></div>
-				                <input type="text" class="form-control checkin_date" placeholder="Check In Date">
-				              </div>
-			              </div>
-		        			</div>
-		        			<div class="col-lg align-items-end">
-		        				<div class="form-group">
-		        					<label for="#">Check-out date</label>
-		        					<div class="form-field">
-		          					<div class="icon"><span class="ion-ios-calendar"></span></div>
-				                <input type="text" class="form-control checkout_date" placeholder="Check Out Date">
-				              </div>
-			              </div>
-		        			</div>
-		        			<div class="col-lg align-items-end">
-		        				<div class="form-group">
-		        					<label for="#">Price Limit</label>
-		        					<div class="form-field">
-		          					<div class="select-wrap">
-		                      <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-		                      <select name="" id="" class="form-control">
-		                        <option value="">$5,000</option>
-		                        <option value="">$10,000</option>
-		                        <option value="">$50,000</option>
-		                        <option value="">$100,000</option>
-		                        <option value="">$200,000</option>
-		                        <option value="">$300,000</option>
-		                        <option value="">$400,000</option>
-		                        <option value="">$500,000</option>
-		                        <option value="">$600,000</option>
-		                        <option value="">$700,000</option>
-		                        <option value="">$800,000</option>
-		                        <option value="">$900,000</option>
-		                        <option value="">$1,000,000</option>
-		                        <option value="">$2,000,000</option>
-		                      </select>
-		                    </div>
-				              </div>
-			              </div>
-		        			</div>
-		        			<div class="col-lg align-self-end">
-		        				<div class="form-group">
-		        					<div class="form-field">
-				                <input type="submit" value="Search" class="form-control btn btn-primary">
-				              </div>
-			              </div>
-		        			</div>
-		        		</div>
-		        	</form>
-		        </div>
-					</div>
-	    	</div>
-	    </div>
-    </section>
+    <div class="search-wrap-1 search-wrap-notop ftco-animate p-4">
+    <form action="" method="post" class="search-property-1">
+        <div class="row">
+            <div class="col-lg align-items-end">
+                <div class="form-group">
+                    <label for="Nom">Tour Name</label>
+                    <div class="form-field">
+                        <div class="icon"><span class="ion-ios-search"></span></div>
+                        <input type="text" name="Nom" class="form-control" placeholder="Search place">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg align-items-end">
+                <div class="form-group">
+                    <label for="Prix">Price Limit</label>
+                    <div class="form-field">
+                        <div class="icon"><span class="ion-ios-search"></span></div>
+                        <input type="number" name="Prix" class="form-control" placeholder="Enter price limit">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg align-self-end">
+                <div class="form-group">
+                    <div class="form-field">
+                        <input type="submit" value="Search" class="form-control btn btn-primary">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 
    
     <section class="ftco-section ftco-no-pt">
@@ -241,11 +230,25 @@ if(isset($_FILES['image'])){
                     <span class="price"><?= $event['Prix']; ?>$</span>
                     <span class="date"><?= $event['DateE']; ?></span>
                     <p class="location"><span class="ion-ios-map"></span> <?= $event['DescriptionE']; ?></p>
+                    <!-- Affichage du rating -->
+<div class="rating">
+    <?php for ($i = 1; $i <= 5; $i++): ?>
+        <?php if ($i <= $event['rating']): ?>
+            <span class="fa fa-star checked"></span>
+        <?php else: ?>
+            <span class="fa fa-star"></span>
+        <?php endif; ?>
+    <?php endfor; ?>
+</div>
+
                     <ul>
                         
                         <li><span class="flaticon-tour">Pays</span><?= $event['Lieu']; ?></li>
-                        <button type="button" class="form-control btn btn-primary"><a id="reservationLink" href="../view/addreservation.php?id=<?= $event['id']; ?>&Nom=<?= $event['Nom']; ?>&Prix=<?= $event['Prix']; ?>"
+
+                        <button type="button" class="form-control btn btn-primary"><a href="../view/addreservation.php?id=<?= $event['id']; ?>&Nom=<?= $event['Nom']; ?>&Prix=<?= $event['Prix']; ?>&image=<?= $event['image']; ?>"
                                         style="color: white;">Réserver</a></button>
+
+
                     </ul>
                 </div>
                 
@@ -254,32 +257,34 @@ if(isset($_FILES['image'])){
         </div>
     <?php endforeach; ?>
 </div>
+<div id="map"></div>
 
 
 
 </div>
-
+</section>
 
            
         	
-
-        <div class="row mt-5">
-          <div class="col text-center">
-            <div class="block-27">
-              <ul>
-                <li><a href="#">&lt;</a></li>
-                <li class="active"><span>1</span></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">&gt;</a></li>
-              </ul>
-            </div>
-          </div>
+<!-- Pagination -->
+<div class="row mt-5">
+    <div class="col text-center">
+        <div class="block-27">
+            <ul>
+                <?php if ($page > 1): ?>
+                    <li><a href="eventFront.php?page=<?php echo $page - 1; ?>">&lt;</a></li>
+                <?php endif; ?>
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <li <?php if($i == $page) echo 'class="active"'; ?>>
+                    <a href="eventFront.php?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+                <?php endfor; ?>
+                <?php if ($page < $totalPages): ?>
+                    <li><a href="eventFront.php?page=<?php echo $page + 1; ?>">&gt;</a></li>
+                <?php endif; ?>
+            </ul>
         </div>
-    	</div>
-    </section>
+    </div>
+</div>
     <?php  ?>
     <footer class="ftco-footer bg-bottom" style="background-image: url(images/footer-bg.jpg);">
       <div class="container">
@@ -363,7 +368,34 @@ if(isset($_FILES['image'])){
         });
     });
 </script>
+<script>
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 51.5074, lng: -0.1278}, // London, UK (default center)
+                zoom: 10
+            });
 
+            // Add markers for each event
+            var events = <?php echo json_encode($events); ?>; // Assuming $events is an array of event objects
+            events.forEach(function(event) {
+                var marker = new google.maps.Marker({
+                    position: {lat: parseFloat(event['latitude']), lng: parseFloat(event['longitude'])},
+                    map: map,
+                    title: event['Nom'] // Event name
+                });
+
+                // Add info window for each marker
+                var infoWindow = new google.maps.InfoWindow({
+                    content: '<h3>' + event['Nom'] + '</h3><p>' + event['DescriptionE'] + '</p>'
+                });
+                marker.addListener('click', function() {
+                    infoWindow.open(map, marker);
+                });
+            });
+        }
+    </script>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=callback=initMap" async defer></script>
   <script src="js/jquery.min.js"></script>
   <script src="js/jquery-migrate-3.0.1.min.js"></script>
   <script src="js/popper.min.js"></script>

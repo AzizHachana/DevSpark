@@ -1,8 +1,12 @@
 <?php
  // Inclure le fichier config.php
+ include '../config.php';
 include '../controller/ReservationC.php';
-$c = new ReservationC();
-$tab = $c->listReservation();
+include '../controller/EventC.php';
+include '../view/stats.php';
+$ReservaC = new ReservationC();
+$Reserva = $ReservaC->listReservation();
+$EventC = new EventC();
 
 // Vérification si un fichier image a été envoyé
 
@@ -138,86 +142,111 @@ $tab = $c->listReservation();
       <div class="content">
         <div class="row">
           <div class="col-md-12">
-            <div class="card">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <h5 class="card-category">Events List</h5>
-                    <th class="text-center">ID</th>
-                    <th>Nom</th>
-                    <th>Date</th>
-                    <th>Lieu</th>
-                    <th>Description</th>
-                    <th>Prix</th>
-                    <th>Image</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- PHP Loop to display data -->
-                  <?php foreach ($tab as $event) { ?>
-                    <tr>
-                      <td class="text-center"><?= $event['id']; ?></td>
-                      <td><?= $event['Nom']; ?></td>
-                      <td><?= $event['DateE']; ?></td>
-                      <td><?= $event['Lieu']; ?></td>
-                      <td><?= $event['DescriptionE']; ?></td>
-                      <td><?= $event['Prix']; ?></td>
-                      <td><img src=<?php echo ("./images/uploads/".$event['image']); ?> alt="" style="width:50px;height:50px;border:2px solid gray;border-radius:8px;object-fit:cover"></td>
+            <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="">
+                                        <th>ID Reservation</th>
+                                        <th>Nom Event</th>
+                                        <th>Date check in</th>
+                                        <th>Date check out</th>
+                                        <th>Nombres personnes</th>
+                                        <th>Status</th>
+                    
+                                    </thead>
 
-                      <td>
-                <a href="../view/updateEvent.php?id=<?= $event['id']; ?>">Modifier</a>
-                <a href="../view/deleteEvent.php?id=<?= $event['id']; ?>">Supprimer</a>
-            </td>
-                        <!-- Suppression du bouton plus -->
-                      </td>
-                    </tr>
-                  <?php } ?>
-               
-                  <!-- End of PHP Loop -->
-                </tbody>
-              </table>
-            </div>
-            <div class="card">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <h5 class="card-category">Reservation List</h5>
-                    <th class="text-center">ID</th>
-                    <th>Date check in</th>
-                    <th>Date check out</th>
-                    <th>Status</th>
-                    <th>Nombre Persone</th>
-                    <th>Prix</th>
-                    <th>Image</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- PHP Loop to display data -->
-                  <?php foreach ($tab as $event) { ?>
-                    <tr>
-                      <td class="text-center"><?= $reservation['id']; ?></td>
-                      <td><?= $reservation['Nom']; ?></td>
-                      <td><?= $reservation['DateE']; ?></td>
-                      <td><?= $reservation['Lieu']; ?></td>
-                      <td><?= $reservation['DescriptionE']; ?></td>
-                      <td><?= $reservation['Prix']; ?></td>
+                                    <tbody>
+                                        <?php
+                                        $ReservC = new ReservationC ();
+                                        $Reserv = $ReservC->listReservation();
+                                        foreach ($Reserv as $reserv) {
+                                          echo "<td>" . $reserv['id_r'] . "</td>";
+                                            $Event = $EventC->getEventById($reserv['id_e']);
+                                            echo "<td>" . $Event['Nom'] . "</td>";
+                                            echo "<td>" . $reserv['date_check_in'] . "</td>";
+                                            echo "<td>" . $reserv['date_check_out'] . "</td>";
+                                            echo "<td>" . $reserv['nbr_p'] . "</td>";
+                                            echo "<td>" . $reserv['status'] . "</td>";
+                                     ?>
+                                            <td align="center">
+                                                <a href="../view/updateReservation.php?id_r=<?= $reserv['id_r']; ?>">
+                                                    <img src="../assets/img/editer.png" alt="Update" class="btn-icon" width="50" height="50">
+                                                </a>
+                                                <a href="../view/deleteReservation.php?id_r=<?= $reserv['id_r']; ?>">
+                                                    <img src="../assets/img/delete.png" alt="Delete" class="btn-icon" width="55" height="55">
+                                                </a>
+                                            </td>
 
-                      <td>
-                <a href="../view/updateEvent.php?id=<?= $event['id']; ?>">Modifier</a>
-                <a href="../view/deleteEvent.php?id=<?= $event['id']; ?>">Supprimer</a>
-            </td>
-                        <!-- Suppression du bouton plus -->
-                      </td>
-                    </tr>
-                  <?php } ?>
-               
-                  <!-- End of PHP Loop -->
-                </tbody>
-              </table>
-            </div>
+                                        <?php
+                                            echo "</tr>";
+                                        }
+                                        ?>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                   </div>
           </div>
         </div>
       </div>
+      <!-- Ajout de la section pour afficher le graphique des statistiques -->
+<div class="card card-plain">
+    <div class="d-flex justify-content-between align-items-center pr-4 pl-4">
+        <div class="card-header">
+            <h4 class="card-title">Statistiques des Réservations par Événement</h4>
+            <p class="category">Pourcentage de réservations par événement</p>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="chart-container">
+            <canvas id="reservationChart"></canvas>
+        </div>
+        <script>
+            const reservationCtx = document.getElementById('reservationChart');
+
+            new Chart(reservationCtx, {
+                type: 'bar',
+                data: {
+                    labels: <?php echo json_encode($PaysNames) ?>,
+                    datasets: [{
+                        label: 'Pourcentage de réservations',
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        data: <?php echo json_encode($percentagesReservations) ?>,
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: 'black',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14 // Augmentez la taille de la police
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'black',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14 // Augmentez la taille de la police
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+</div>
+
+                        </div>
+                    </div>
       <footer class="footer">
         <div class=" container-fluid ">
           <nav>

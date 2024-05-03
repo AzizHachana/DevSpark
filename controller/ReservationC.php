@@ -1,13 +1,14 @@
 <?php
-include '../config.php'; // Inclure le fichier config.php
-include '../Model/Reservation.php'; // Inclure le fichier Hotel.php
+include '../model/Reservation.php'; // Inclure le fichier Hotel.php
+include_once '../config.php'; // Inclure le fichier config.php
+
 
 class ReservationC
 {
     public function listReservation()
     {
         $sql = "SELECT * FROM reservation";
-        $db = Config::getConnexion();
+        $db = config::getConnexion();
         try {
             $stmt = $db->query($sql);
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -17,12 +18,12 @@ class ReservationC
         }
     }
 
-    public function deleteReservation($id)
+    public function deleteReservation($id_r)
     {
         $sql = "DELETE FROM reservation WHERE id_r = :id_r";
         $db = Config::getConnexion();
         $req = $db->prepare($sql);
-        $req->bindValue(':id_r', $id);
+        $req->bindValue(':id_r', $id_r);
 
         try {
             $req->execute();
@@ -31,10 +32,10 @@ class ReservationC
         }
     }
 
-    public function ajouterReservation($event)
+    public function ajouterReservation($Reservation)
     {
         $sql = "INSERT INTO reservation VALUES (NULL, :date_check_in, :date_check_out, :nbr_p, :status, :id_e)";
-        $db = Config::getConnexion();
+        $db = config::getConnexion();
         try {
             $query = $db->prepare($sql);
             $query->execute([
@@ -42,16 +43,18 @@ class ReservationC
                 'date_check_out' => $Reservation->getDate_out(),
                 'nbr_p' => $Reservation->getnbr(),
                 'status' => $Reservation->getstatus(),
-                'id_e' => $Reservation->getId_e(),
+                'id_e' => $Reservation->getId_e()
             ]);
             echo "Hotel ajouté avec succès.";
         } catch (Exception $e) {
             echo 'Error: ' . $e->getMessage();
         }
     }
-    public function updateEvent($id_r,$date_check_in,$date_check_out,$nbr_p,$status,$id_e)
+
+
+    public function updateReservation($id_r,$date_check_in,$date_check_out,$nbr_p,$status,$id_e)
     {
-        $sql = "UPDATE events SET date_check_in=:date_check_in, date_check_out=:date_check_out, nbr_p=:nbr_p, status=:status, id_e=:id_e WHERE id_r=:id_r";
+        $sql = "UPDATE reservation SET date_check_in=:date_check_in, date_check_out=:date_check_out, nbr_p=:nbr_p, status=:status, id_e=:id_e WHERE id_r=:id_r";
         $db = config::getConnexion();
         try {
             $query = $db->prepare($sql);
@@ -67,7 +70,16 @@ class ReservationC
             die('Error: ' . $e->getMessage());
         }
     }
-    public function getReservationById($id)
+    public function getReservationById($id_r)
+    {
+        $sql = "SELECT * FROM reservation WHERE id_r = :id_r";
+        $db = config::getConnexion();
+        $query = $db->prepare($sql);
+        $query->bindParam(':id_r', $id_r);
+        $query->execute();
+        return $query->fetch(PDO::FETCH_ASSOC);
+    }
+    public function getReservation($id_r)
     {
         $sql = "SELECT * FROM reservation WHERE id_r = :id_r";
         $db = config::getConnexion();
@@ -82,7 +94,7 @@ class ReservationC
         $sql = "SELECT * FROM reservation WHERE id_e = :id_e";
         $db = config::getConnexion();
         $query = $db->prepare($sql);
-        $query->bindParam(":id_e", $id_pays, PDO::PARAM_INT);
+        $query->bindParam(":id_e", $id_e, PDO::PARAM_INT);
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC); // Retourne un tableau de commentaires
     }

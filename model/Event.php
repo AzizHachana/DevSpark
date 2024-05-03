@@ -9,6 +9,8 @@ class Event
     private ?string $description = null;
     private ?string $prix = null;
     private ?string $image = null;
+    private ?int $rating = null;
+
 
     public function __construct(
         $id,
@@ -17,7 +19,8 @@ class Event
         $lieu,
         $description,
         $prix,
-        $image
+        $image,
+        $rating=null
     ) {
         $this->id = $id;
         $this->nom = $nom;
@@ -26,6 +29,8 @@ class Event
         $this->description = $description;
         $this->prix = $prix;
         $this->image = $image;
+        $this->rating = $rating;
+
     }
 
     // Getters and setters
@@ -102,6 +107,37 @@ class Event
     public function setImage($image)
     {
         $this->image = $image;
+        return $this;
+    }
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude($latitude)
+    {
+        $this->latitude = $latitude;
+        return $this;
+    }
+
+    public function getLongitude()
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+        return $this;
+    }
+    public function getrating()
+    {
+        return $this->rating;
+    }
+
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
         return $this;
     }
     

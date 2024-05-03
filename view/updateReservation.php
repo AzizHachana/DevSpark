@@ -5,7 +5,7 @@ $ReservationC = new ReservationC();
 $error = "";
 
 if (
-    isset($_POST["id"]) &&
+    isset($_POST["id_r"]) &&
     isset($_POST["date_check_in"]) &&
     isset($_POST["date_check_out"]) &&
     isset($_POST["nbr_p"]) &&
@@ -13,17 +13,18 @@ if (
     isset($_POST["id_e"]) 
 ) {
     if (
-        !empty($_POST['id']) &&
+        !empty($_POST['id_r']) &&
         !empty($_POST['date_check_in']) &&
         !empty($_POST["date_check_out"]) &&
         !empty($_POST["nbr_p"]) &&
         !empty($_POST["status"]) &&
         !empty($_POST["id_e"]) 
     ) 
+    {
 
         // Créer une instance de la classe Hotel avec les données fournies
         $Reservation = new Reservation(
-            $_POST['id'],
+            $_POST['id_r'],
             $_POST['date_check_in'],
             $_POST['date_check_out'],
             $_POST['nbr_p'],
@@ -33,16 +34,16 @@ if (
         );
 
         // Mettre à jour l'hôtel
-        $id = $_POST["id"];
+        $id_r = $_POST["id_r"];
         $date_check_in = $_POST["date_check_in"];
         $date_check_out = $_POST["date_check_out"];
         $nbr_p = $_POST["nbr_p"];
         $status = $_POST["status"];
         $id_e = $_POST["id_e"];
 
-        if ($eventC->updateReservation($id, $date_check_in, $date_check_out, $nbr_p,$status, $id_e)) {
+        if ($ReservationC->updateReservation($id_r,$date_check_in,$date_check_out,$nbr_p,$status,$id_e)) {
             // Rediriger vers une page de succès ou effectuer une autre action en cas de succès de la mise à jour
-            header('Location:../examples/dashboard.php');
+            header('Location:../examples/listReservation.php');
             exit;
         } else {
             $error = "Échec de la mise à jour de l'hôtel.";
@@ -53,11 +54,11 @@ if (
     header('Location:../examples/dashboard.php');
 }
 
-
 // Récupérer les informations de l'hôtel à mettre à jour
-if (isset($_GET['id'])) {
-    $event = $eventC->getEvent($_GET['id']);
-    if (!$event) {
+// Récupérer les informations de la réservation à mettre à jour
+if (isset($_GET['id_r'])) {
+    $Reservation = $ReservationC->getReservation($_GET['id_r']);
+    if (!$Reservation) {
         echo "Event non trouvé.";
         exit;
     }
@@ -67,7 +68,9 @@ if (isset($_GET['id'])) {
 }
 
 
+
 ?>
+
 
 <!-- update.php -->
 
@@ -211,7 +214,7 @@ if (isset($_GET['id'])) {
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="title">Update Event</h5>
+                            <h5 class="title">Update Reservation</h5>
                             </div>
                             <div class="card-body">
                                 <!-- Form for updating hotel -->
@@ -219,67 +222,53 @@ if (isset($_GET['id'])) {
                                         style="color: white;">Back to list</a></button>
                                 <form action="" method="POST" name="myForm" enctype="multipart/form-data"
                                     onsubmit="return validateForm()">
-                                    <input type="hidden" name="id" value="<?php echo $event['id']; ?>">
+                                    <input type="hidden" name="id" value="<?php echo $Reservation['id_r']; ?>">
                                     <div class="row">
                                         <div class="col-md-4 px-1">
                                             <div class="form-group">
-                                                <label>Nom</label>
-                                                <input type="text" name="Nom" class="form-control"
-                                                    value="<?php echo $event['Nom']; ?>" placeholder="Nom">
+                                                <label>date check in</label>
+                                                <input type="date" name="date_check_in" class="form-control"
+                                                    value="<?php echo $Reservation['date_check_in']; ?>" placeholder="date_check_in">
                                             </div>
                                         </div>
                                         <div class="col-md-4 pl-1">
                                             <div class="form-group">
-                                                <label>Adresse</label>
-                                                <input type="date" name="DateE" class="form-control"
-                                                    value="<?php echo $event['DateE']; ?>" placeholder="DateE">
+                                                <label>date_check_out</label>
+                                                <input type="date" name="date_check_out" class="form-control"
+                                                    value="<?php echo $Reservation['date_check_out']; ?>" placeholder="date_check_out">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                     <div class="col-md-4 px-1">
                                         <div class="form-group">
-                                            <label>Ville</label>
-                                            <input type="text" name="Lieu" class="form-control" placeholder="Lieu"
-                                            value="<?php echo $event['Lieu']; ?>" placeholder="Lieu">
+                                            <label>nbr_p</label>
+                                            <input type="text" name="nbr_p" class="form-control" placeholder="nbr_p"
+                                            value="<?php echo $Reservation['nbr_p']; ?>" placeholder="nbr_p">
                                         </div>
                                     </div>
                                     <div class="col-md-4 pl-1">
                                         <div class="form-group">
-                                            <label>Code Postal</label>
-                                            <input type="text" name="DescriptionE" class="form-control"
-                                            value="<?php echo $event['DescriptionE']; ?>" placeholder="DescriptionE">
+                                            <label>Costatus</label>
+                                            <input type="text" name="status" class="form-control"
+                                            value="<?php echo $Reservation['status']; ?>" placeholder="status">
                                         </div>
                                     </div>
                                     <div class="col-md-4 pl-1">
                                         <div class="form-group">
-                                            <label>Pays</label>
-                                            <input type="text" name="Prix" class="form-control" 
-                                            value="<?php echo $event['Prix']; ?>" placeholder="Prix">
+                                            <label>id_e</label>
+                                            <input type="text" name="id_e" class="form-control" 
+                                            value="<?php echo $Reservation['id_e']; ?>" placeholder="id_e">
                                         </div>
                                     </div>
                                 </div>
 
                                     <!-- Add other fields similarly -->
                                     <!--<div class="row">-->
-                                        <div class="col-md-4 pl-1">
-                                            <div class="form-group">
-                                                <label>Image</label>
-                                                <input type="file" name="image" class="form-control"
-                                                    onchange="previewImage(event)">
-                                                <input type="hidden" name="image_old"
-                                                    value="<?php echo $event['image']; ?>">
-                                                <div class="img-container"
-                                                    style="margin-top: 10px; text-align: center;">
-                                                    <img id="preview"
-                                                        src="./images/uploads/<?php echo $event['image']; ?>"
-                                                        alt="Hotel Image"
-                                                        style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
-                                                </div>
-                                            </div>
+                                      
+                                    
                                          
-                                        </div>
-                                    </div>
+                                    
                                     <button type="submit" class="btn btn-primary btn-round">Save</button>
                                 </form>
                             </div>

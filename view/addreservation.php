@@ -1,5 +1,10 @@
 <?php
-include '../controller/ReservationC.php'; // Inclure le fichier contenant la classe HotelC
+include '../config.php';
+include '../controller/ReservationC.php';
+include '../controller/EventC.php';
+
+
+ // Inclure le fichier contenant la classe HotelC
 $ReservationC = new ReservationC(); // Créer une instance de HotelC
 
 $error = "";
@@ -9,7 +14,8 @@ if (
     isset($_POST["date_check_out"]) &&
     isset($_POST["nbr_p"]) &&
     isset($_POST["status"]) &&
-    isset($_POST["id_e"]) ) 
+    isset($_POST["id_e"]) 
+) {
     if (
         !empty($_POST['date_check_in']) &&
         !empty($_POST["date_check_out"]) &&
@@ -17,56 +23,32 @@ if (
         !empty($_POST["status"]) &&
         !empty($_POST["id_e"]) 
     ) {
-      
+       
+        // Créer une instance de la classe Hotel avec les données fournies
         $Reservation = new Reservation(
             null, // Laissez null pour que l'ID soit auto-incrémenté
             $_POST['date_check_in'],
             $_POST['date_check_out'],
             $_POST['nbr_p'],
             $_POST['status'],
-            $_POST['id_e'],
-            
+            $_POST['id_e']
         );
 
         // Ajouter l'hotel
         $ReservationC->ajouterReservation($Reservation);
 
         // Rediriger vers une page de succès ou effectuer une autre action en cas d'ajout réussi
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            header("");
-            exit;
-           }
-           
-           if (isset($_GET['id_e'])) 
-           {
-            $id_e = $_GET['id_e'];
-            $pdo = new PDO(
-            'mysql:host=localhost; dbname=atelierphp',
-            'root',
-            '',
-            [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-            ]
-            );
-            $query = "SELECT * FROM events WHERE id = ?";
-            $statement = $pdo->prepared($query);
-            $statement->execute([$id_e]);
-            $event_info = $statement->fetch(PDO::FETCH_ASSOC);
-           
-            if (!$event_info) {
-            header("Location: erreur.php");
-            exit;
-            }
-           } else {
-            header("Location: listEvent.php");
-            exit;
-           }
-           $eventId = isset($_GET['id']) ? $_GET['id'] : '';
-$eventName = isset($_GET['Nom']) ? urldecode($_GET['Nom']) : '';
-$eventPrice = isset($_GET['Prix']) ? $_GET['Prix'] : '';
-        }
+        header('Location: ../view/eventFront.php');
+        exit;
+    } else {
+        $error = "Tous les champs doivent être remplis";
+    }
+    $id_event = $_GET['id'];
+    $eventName = isset($_GET['Nom']) ? urldecode($_GET['Nom']) : '';
+    $eventPrice = isset($_GET['Prix']) ? $_GET['Prix'] : '';
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -75,7 +57,8 @@ $eventPrice = isset($_GET['Prix']) ? $_GET['Prix'] : '';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <!-- Metas, links, and stylesheets -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
 
     <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="css/animate.css">
@@ -99,7 +82,7 @@ $eventPrice = isset($_GET['Prix']) ? $_GET['Prix'] : '';
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-        <div class="container">
+    <div class="container">
             <a class="navbar-brand" href="index.html">Vacation<span>AdventureAwaits</span></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
@@ -120,7 +103,7 @@ $eventPrice = isset($_GET['Prix']) ? $_GET['Prix'] : '';
     <!-- END nav -->
 
     <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
-        <div class="overlay"></div>
+    <div class="overlay"></div>
         <div class="container">
             <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
                 <div class="col-md-9 ftco-animate pb-5 text-center">
@@ -132,44 +115,54 @@ $eventPrice = isset($_GET['Prix']) ? $_GET['Prix'] : '';
     </section>
 
     <section class="ftco-section bg-light">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-7">
-                    <h2 class="heading-section">Make a Reservation</h2>
+    <div class="container">
+        <div class="row justify-content-center">
+        <div class="col-md-6">
+                <h2 class="heading-section">Make a Reservation</h2>
                 
-                    <form action="" method="post">
+                <form action="" method="post">
                     <div class="form-group">
-</div>
-<div class="form-group">
-    <label for="event_name">Event Name:</label>
-    <input type="text" id="event_name" name="event_name" class="form-control"  value="<?= $_GET['name'] ?? ''; ?>" readonly>
-</div>
-<div class="form-group">
-    <label for="event_price">Event Price:</label>
-    <input type="text" id="event_price" name="event_price" class="form-control"value="<?= $_GET['price'] ?? ''; ?>" readonly>
-</div>
-                        <div class="form-group">
-                            <label for="date_check_in">Check-in Date:</label>
-                            <input type="date" id="date_check_in" name="date_check_in" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="date_check_out">Check-out Date:</label>
-                            <input type="date" id="date_check_out" name="date_check_out" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="nombre_personnes">Number of People:</label>
-                            <input type="number" id="nombre_personnes" name="nombre_personnes" class="form-control" required>
-                        </div>
+                        <label for="date_check_in">Check-in Date:</label>
+                        <input type="date" id="date_check_in" name="date_check_in" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date_check_out">Check-out Date:</label>
+                        <input type="date" id="date_check_out" name="date_check_out" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nbr_p">Number of People:</label>
+                        <input type="text" id="nbr_p" name="nbr_p" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status:</label>
+                        <input type="text" id="status" name="status" class="form-control" required>
+                    </div>
+                    <input type="hidden" name="id_e" value="<?= htmlspecialchars($_GET['id']) ?? ''; ?>">
+
                         
-                        <input type="submit" value="Submit Reservation" class="btn btn-primary">
-                    </form>
-                </div>
+                    <input type="submit" value="Submit Reservation" class="btn btn-primary">
+                </form>
             </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <img class="card-img-top img-fluid img-thumbnail" src="<?php echo "./images/uploads/".$_GET['image']; ?>" alt="Event Image">
+                    <div class="card-body">
+                        <h5 class="card-title"><?php echo $_GET['Nom'] ?? ''; ?></h5>
+                        <p class="card-text"><strong>Event Price:</strong> <?php echo $_GET['Prix'] ?? ''; ?></p>
+                    </div>
+                </div>
+</div>
+
+</div>
+
         </div>
-    </section>
+        </div>
+    </div>
+</section>
+
 
     <footer class="ftco-footer bg-bottom" style="background-image: url(images/footer-bg.jpg);">
-        <div class="container">
+    <div class="container">
             <div class="row mb-5">
                 <div class="col-md">
                     <div class="ftco-footer-widget mb-4">
@@ -234,7 +227,6 @@ $eventPrice = isset($_GET['Prix']) ? $_GET['Prix'] : '';
         </div>
     </footer>
 
-    <!-- loader -->
     <div id="ftco-loader" class="show fullscreen">
         <svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg>
     </div>
@@ -255,6 +247,8 @@ $eventPrice = isset($_GET['Prix']) ? $_GET['Prix'] : '';
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
     <script src="js/google-map.js"></script>
     <script src="js/main.js"></script>
-
 </body>
+
 </html>
+
+

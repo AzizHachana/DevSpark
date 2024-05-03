@@ -1,4 +1,5 @@
 <?php
+include '../config.php';
 include '../controller/EventC.php'; // Inclure le fichier contenant la classe HotelC
 $eventC = new EventC(); // Créer une instance de HotelC
 

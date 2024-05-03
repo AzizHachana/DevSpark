@@ -1,5 +1,5 @@
 <?php
- // Inclure le fichier config.php
+include '../config.php';
 include '../controller/EventC.php';
 $c = new EventC();
 $tab = $c->listEvents();
@@ -202,46 +202,7 @@ if(isset($_FILES['image'])){
                 </tbody>
               </table>
             </div>
-            <div class="card">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <h5 class="card-category">Reservation List</h5>
-                    <th class="text-center">ID</th>
-                    <th>Date check in</th>
-                    <th>Date check out</th>
-                    <th>Status</th>
-                    <th>Nombre Persone</th>
-                    <th>Prix</th>
-                    <th>Image</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- PHP Loop to display data -->
-                  <?php foreach ($tab as $event) { ?>
-                    <tr>
-                      <td class="text-center"><?= $event['id']; ?></td>
-                      <td><?= $event['Nom']; ?></td>
-                      <td><?= $event['DateE']; ?></td>
-                      <td><?= $event['Lieu']; ?></td>
-                      <td><?= $event['DescriptionE']; ?></td>
-                      <td><?= $event['Prix']; ?></td>
-                      <td><img src=<?php echo ("./images/uploads/".$event['image']); ?> alt="" style="width:50px;height:50px;border:2px solid gray;border-radius:8px;object-fit:cover"></td>
-
-                      <td>
-                <a href="../view/updateEvent.php?id=<?= $event['id']; ?>">Modifier</a>
-                <a href="../view/deleteEvent.php?id=<?= $event['id']; ?>">Supprimer</a>
-            </td>
-                        <!-- Suppression du bouton plus -->
-                      </td>
-                    </tr>
-                  <?php } ?>
-               
-                  <!-- End of PHP Loop -->
-                </tbody>
-              </table>
             </div>
-          </div>
         </div>
       </div>
       <footer class="footer">
@@ -297,16 +258,4 @@ if(isset($_FILES['image'])){
   <!-- Notifications Plugin -->
   <script src="../assets/js/plugins/bootstrap-notify.js"></script>
   <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
-  <!-- Now Ui
-  <!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
-  <script src="../assets/demo/demo.js"></script>
-  <script>
-    $(document).ready(function () {
-      // JavaScript method's body can be found in assets/js/demos.js
-      demo.initDashboardPageCharts();
-    });
-  </script>
-</body>
-
-</html>
+  <script src="../

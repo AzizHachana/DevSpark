@@ -1,8 +1,13 @@
 <?php
  // Inclure le fichier config.php
 include '../controller/EventC.php';
+include '../controller/ReservationC.php';
+
 $c = new EventC();
 $tab = $c->listEvents();
+$ReservaC = new ReservationC();
+$Reserva = $ReservaC->listReservation();
+
 
 // Vérification si un fichier image a été envoyé
 if(isset($_FILES['image'])){
@@ -197,10 +202,50 @@ if(isset($_FILES['image'])){
                       </td>
                     </tr>
                   <?php } ?>
-               
-                  <!-- End of PHP Loop -->
+                  
                 </tbody>
               </table>
+               <!-- Second table for reservations -->
+               <div class="table-responsive">
+                <table class="table">
+                  <thead class="">
+                    <th>ID Reservation</th>
+                    <th>Nom Event</th>
+                    <th>Date check in</th>
+                    <th>Date check out</th>
+                    <th>Nombres personnes</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </thead>
+                  <tbody>
+                    <!-- PHP Loop to display reservation data -->
+                    <?php
+                    $ReservC = new ReservationC();
+                    $Reserv = $ReservC->listReservation();
+                    foreach ($Reserv as $reserv) {
+                      echo "<tr>";
+                      echo "<td>" . $reserv['id_r'] . "</td>";
+                      $event = $c->getEventById($reserv['id_e']);
+                      echo "<td>" . $event['Nom'] . "</td>";
+                      echo "<td>" . $reserv['date_check_in'] . "</td>";
+                      echo "<td>" . $reserv['date_check_out'] . "</td>";
+                      echo "<td>" . $reserv['nbr_p'] . "</td>";
+                      echo "<td>" . $reserv['status'] . "</td>";
+                      echo "<td align='center'>
+                              <a href='../view/updateReservation.php?id_r=" . $reserv['id_r'] . "'>
+                                <img src='../assets/img/editer.png' alt='Update' class='btn-icon' width='50' height='50'>
+                              </a>
+                              <a href='../view/deleteReservation.php?id_r=" . $reserv['id_r'] . "'>
+                                <img src='../assets/img/delete.png' alt='Delete' class='btn-icon' width='55' height='55'>
+                              </a>
+                            </td>";
+                      echo "</tr>";
+                    }
+                    ?>
+                    <!-- End of PHP Loop -->
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
