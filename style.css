@@ -84,3 +84,74 @@ input[name="name"] {
     padding: 5px 10px;
     cursor: pointer;
 }
+
+.box {
+    display: flex;
+  }
+  
+  #checkbox {
+    width: 65px;
+    height: 65px;
+    cursor: pointer;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    background: white;
+    position: relative;
+  }
+  #checkbox:hover {
+    background: rgba(255, 255, 255, .7);
+  }
+  #checkbox::before {
+    content: '\f1e0';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'font awesome 5 free';
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: rgb(41, 41, 41);
+    transition: all 1.5s;
+  }
+  #checkbox:checked::before {
+    content: '\f00d';
+  }
+  #checkbox:checked ~ .menu {
+    width: 264px; /* 4 * 65 + 4 * 1 pour la bordure */
+  }
+
+  .menu {
+    width: 0;
+     display: flex;
+    overflow: hidden;
+    transition: all .5s;
+  }
+  .menu .menuItems {
+    width: 65px;
+    height: 65px;
+    background: white;
+    border-left: 1px solid rgb(165, 165, 165);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .menu .menuItems:hover {
+    background: rgba(255, 255, 255, .7);
+  }
+  .menu .menuItems i {
+    font-size: 1.8rem;
+  }
+  .fa-whatsapp {
+    color: #25d366;
+  }
+  .fa-instagram {
+    color: #c32aa3;
+  }
+  .fa-facebook {
+    color: #273c75;
+  }
+  .fa-twitter {
+    color: #1da1f2;
+  }

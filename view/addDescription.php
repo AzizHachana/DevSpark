@@ -24,13 +24,13 @@ if (
         !empty($_POST["Activites"])
     ) {
         function isValidText($text)
-        {
-            return preg_match('/^[a-zA-Z\s]+$/', $text);
-        }
+{
+    return preg_match('/^[^\d]*$/', $text);
+}
 
-        if (!isValidText($_POST["Capitale"]) || !isValidText($_POST["Climat"]) || !isValidText($_POST["Langue"]) || !isValidText($_POST["Monnaie"]) || !isValidText($_POST["Attractions_touristiques"]) || !isValidText($_POST["Activites"])) {
-            $error = "Les champs ne doivent contenir que des lettres et des espaces.";
-        } else {
+if (!isValidText($_POST["Capitale"]) || !isValidText($_POST["Climat"]) || !isValidText($_POST["Langue"]) || !isValidText($_POST["Monnaie"]) || !isValidText($_POST["Attractions_touristiques"]) || !isValidText($_POST["Activites"])) {
+    $error = "Les champs ne doivent contenir que des caractères autres que des chiffres.";
+} else {
             $Description = new Description(
                 $_POST['id'],
                 $_POST['Capitale'],
@@ -83,11 +83,9 @@ if (
         <div class="sidebar" data-color="blue">
             <!-- Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow" -->
             <div class="logo">
-                <a href="http://www.creative-tim.com" class="simple-text logo-mini">
-                    LR
-                </a>
+
                 <a href="http://www.creative-tim.com" class="simple-text logo-normal">
-                    Learner
+                Adventure Awaits
                 </a>
             </div>
             <div class="sidebar-wrapper" id="sidebar-wrapper">
@@ -96,42 +94,6 @@ if (
                         <a href="../examples/dashboard.php">
                             <i class="now-ui-icons design_app"></i>
                             <p>Dashboard</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../examples/icons.html">
-                            <i class="now-ui-icons education_atom"></i>
-                            <p>Icons</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../examples/map.html">
-                            <i class="now-ui-icons location_map-big"></i>
-                            <p>Maps</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../examples/notifications.html">
-                            <i class="now-ui-icons ui-1_bell-53"></i>
-                            <p>Notifications</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../examples/user.html">
-                            <i class="now-ui-icons users_single-02"></i>
-                            <p>User Profile</p>
-                        </a>
-                    </li>
-                    <li class>
-                        <a href="../examples/tables.html">
-                            <i class="now-ui-icons design_bullet-list-67"></i>
-                            <p>Description</p>
-                        </a>
-                    </li>
-                    <li class="active-pro">
-                        <a href="../examples/upgrade.html">
-                            <i class="now-ui-icons arrows-1_cloud-download-93"></i>
-                            <p>Upgrade to PRO</p>
                         </a>
                     </li>
                 </ul>
@@ -149,7 +111,7 @@ if (
                                 <span class="navbar-toggler-bar bar3"></span>
                             </button>
                         </div>
-                        <a class="navbar-brand" href="#pablo">Description Des Pays</a>
+                        <a class="navbar-brand" href="#pablo">Description Des Blogs</a>
                     </div>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
                         aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
@@ -217,7 +179,7 @@ if (
                     <div class="col-md-8">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="title">Ajouter une description</h5>
+                                <h5 class="title">Ajouter une description d'un Blog</h5>
                             </div>
                             <?php if (!empty($error)) : ?>
                             <div class="alert alert-danger">

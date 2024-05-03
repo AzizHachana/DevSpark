@@ -2,9 +2,51 @@
 include '../config.php';
 include '../controller/PaysC.php';
 include '../controller/DescriptionC.php';
+session_start();
 $PaysC = new PaysC();
-$Pays = $PaysC->listPays();
 
+$Continent = isset($_GET['Continent']) ? $_GET['Continent'] : '';
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+
+if (!empty($search)) {
+    // Si le champ de recherche n'est pas vide, recherchez à la fois par nom et par langue
+    $Pays = $PaysC->searchPays($search); // Recherche par nom
+    // Si la recherche par nom ne donne aucun résultat, recherche par langue
+    if (empty($Pays)) {
+        $Pays = $PaysC->searchPaysByLang($search);
+    }
+} elseif (!empty($Continent)) {
+    // Si aucun champ de recherche n'est rempli mais le continent est sélectionné, filtrez par continent
+    $Pays = $PaysC->searchPaysByContinent($Continent);
+} else {
+    // Si aucun critère de recherche n'est spécifié, affichez tous les pays
+    $Pays = $PaysC->listPays();
+}
+function compareByName($a, $b) {
+    // Convertir les noms en majuscules pour un tri insensible à la casse
+    $nameA = strtoupper($a['NomP']);
+    $nameB = strtoupper($b['NomP']);
+
+    // Comparer les noms
+    return strcmp($nameA, $nameB);
+}
+
+// Tri du tableau $Pays par ordre alphabétique
+usort($Pays, 'compareByName');
+
+$totalPays = count($Pays);
+$perPage = 6;
+$totalPages = ceil($totalPays / $perPage);
+
+// Détermination de la page actuelle
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+// Calcul des indices de début et de fin pour les pays à afficher
+$start = ($page - 1) * $perPage;
+$end = $start + $perPage;
+
+// Extraction des pays à afficher pour la page actuelle
+$displayPays = array_slice($Pays, $start, $perPage);
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +78,80 @@ $Pays = $PaysC->listPays();
     <link rel="stylesheet" href="../assets/css/flaticon.css">
     <link rel="stylesheet" href="../assets/css/icomoon.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        .box {
+    display: flex;
+  }
+  
+  #checkbox {
+    width: 65px;
+    height: 65px;
+    cursor: pointer;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    background: white;
+    position: relative;
+  }
+  #checkbox:hover {
+    background: rgba(255, 255, 255, .7);
+  }
+  #checkbox::before {
+    content: '\f1e0';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'font awesome 5 free';
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: rgb(41, 41, 41);
+    transition: all 1.5s;
+  }
+  #checkbox:checked::before {
+    content: '\f00d';
+  }
+  #checkbox:checked ~ .menu {
+    width: 264px; /* 4 * 65 + 4 * 1 pour la bordure */
+  }
+
+  .menu {
+    width: 0;
+     display: flex;
+    overflow: hidden;
+    transition: all .5s;
+  }
+  .menu .menuItems {
+    width: 65px;
+    height: 65px;
+    background: white;
+    border-left: 1px solid rgb(165, 165, 165);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .menu .menuItems:hover {
+    background: rgba(255, 255, 255, .7);
+  }
+  .menu .menuItems i {
+    font-size: 1.8rem;
+  }
+  .fa-whatsapp {
+    color: #25d366;
+  }
+  .fa-instagram {
+    color: #c32aa3;
+  }
+  .fa-facebook {
+    color: #273c75;
+  }
+  .fa-twitter {
+    color: #1da1f2;
+  }
+
+    </style>
 </head>
 
 <body>
@@ -78,27 +194,35 @@ $Pays = $PaysC->listPays();
 
     <section class="ftco-section">
         <div class="container">
-            <div class="row d-flex mb-4">
-                <div class="col-md-12">
-                    <form method="GET" action="Blog.php" class="form-inline">
-                        <div class="form-group mr-4">
-                            <input type="text" name="search" class="form-control" placeholder="Rechercher par nom...">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Rechercher</button>
-                    </form>
-                </div>
+        <div class="row d-flex mb-4">
+    <div class="col-md-12">
+        <form method="GET" action="Blog.php" class="form-inline justify-content-between">
+            <div class="form-group mr-2">
+                <input type="text" name="search" class="form-control" placeholder="Rechercher ...">
+                <button type="submit" class="btn btn-primary ml-2">Rechercher</button>
             </div>
 
+            <div class="form-group mx-2">
+                <select name="Continent" class="form-control mr-2" id="Continent">
+                    <option value="">Tous Les Continents</option>
+                    <option value="Asie">Asie</option>
+                    <option value="Afrique">Afrique</option>
+                    <option value="Europe">Europe</option>
+                    <option value="Amérique">Amérique</option>
+                    <option value="Océanie">Océanie</option>
+                    <option value="Antarctique">Antarctique</option>
+                </select>
+                <button type="submit" class="btn btn-primary" id="filterBtn">Filtrer</button>
+            </div>
+           
+        </form>
+    </div>
+</div>
+
+
             <div class="row d-flex">
-                <?php
-                if (isset($_GET['search']) && !empty($_GET['search'])) {
-                    $search = $_GET['search'];
-                    $Pays = $PaysC->searchPays($search);
-                } else {
-                    $Pays = $PaysC->listPays();
-                }
-                ?>
-                <?php foreach ($Pays as $country) : ?>
+
+                <?php foreach ($displayPays as $country) : ?>
                 <div class="col-lg-4 d-flex ftco-animate">
                     <div class="blog-entry justify-content-end">
                         <a href="blog-single.php?id=<?php echo $country['id'] ?>" class="block-20"
@@ -111,13 +235,14 @@ $Pays = $PaysC->listPays();
                             <?php $DescriptionC = new DescriptionC();
                                 $country_desc = $DescriptionC->getDescriptById($country['id']) ?>
                             <div class="d-flex justify-content-between">
-                                <p><strong style="color: #f9ab30;">Capitale : </strong>
-                                    <?php echo $country_desc['Capitale']; ?>
+                                <p><strong style="color: #f9ab30;">Continent : </strong>
+                                    <?php echo $country['Continent']; ?>
                                 </p>
                                 <p><strong style="color: #f9ab30;">Langue : </strong>
                                     <?php echo $country_desc['Langue']; ?>
                                 </p>
                             </div>
+
                             <div class="d-flex justify-content-between mt-3">
                                 <!-- Bouton Like -->
                                 <button class="btn btn-success like-btn" data-id="<?php echo $country['id']; ?>">
@@ -131,6 +256,7 @@ $Pays = $PaysC->listPays();
                                 </button>
                                 <span class="dislike-count"><?php echo $country['dislikes']; ?></span>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -140,59 +266,75 @@ $Pays = $PaysC->listPays();
             <script src="../assets/js/jquery-migrate-3.0.1.min.js"></script>
             <script>
             $(document).ready(function() {
-                $('.like-btn').click(function() {
-                    var id = $(this).data('id');
-                    $.ajax({
-                        url: '../view/ajax_like.php',
-                        method: 'POST',
-                        data: {
-                            id: id
-                        },
-                        success: function(response) {
-                            $('.like-count').each(function() {
-                                if ($(this).prev('.like-btn').data('id') == id) {
-                                    $(this).text(response);
-                                }
-                            });
+    $('.like-btn').click(function() {
+        var id = $(this).data('id');
+        $.ajax({
+            url: '../view/ajax_like.php',
+            method: 'POST',
+            data: {id: id},
+            success: function(response) {
+                if (response === "You have already liked this country.") {
+                    alert(response); // Affichage du message si l'utilisateur a déjà aimé
+                } else {
+                    $('.like-count').each(function() {
+                        if ($(this).prev('.like-btn').data('id') == id) {
+                            $(this).text(response);
                         }
                     });
-                });
+                }
+            }
+        });
+    });
 
-                $('.dislike-btn').click(function() {
-                    var id = $(this).data('id');
-                    $.ajax({
-                        url: '../view/ajax_dislike.php',
-                        method: 'POST',
-                        data: {
-                            id: id
-                        },
-                        success: function(response) {
-                            $('.dislike-count').each(function() {
-                                if ($(this).prev('.dislike-btn').data('id') == id) {
-                                    $(this).text(response);
-                                }
-                            });
+    $('.dislike-btn').click(function() {
+        var id = $(this).data('id');
+        $.ajax({
+            url: '../view/ajax_dislike.php',
+            method: 'POST',
+            data: {id: id},
+            success: function(response) {
+                if (response === "You have already disliked this country.") {
+                    alert(response); // Affichage du message si l'utilisateur a déjà disliké
+                } else {
+                    $('.dislike-count').each(function() {
+                        if ($(this).prev('.dislike-btn').data('id') == id) {
+                            $(this).text(response);
                         }
                     });
-                });
-            });
+                }
+            }
+        });
+    });
+});
             </script>
-            <div class="row mt-5">
+           <div class="row mt-5">
+    <div class="col text-center">
+        <div class="block-27">
+            <ul>
+                <?php if ($page > 1) : ?>
+                    <!-- Lien vers la page précédente -->
+                    <li><a href="Blog.php?page=<?php echo $page - 1; ?>">&lt;</a></li>
+                <?php endif; ?>
+                
+                <!-- Affichage des numéros de page -->
+                <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+                    <li <?php if ($i == $page) echo 'class="active"'; ?>>
+                        <a href="Blog.php?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                    </li>
+                <?php endfor; ?>
 
-                <div class="col text-center">
-                    <div class="block-27">
-                        <ul>
-                            <li><a href="#">&lt;</a></li>
-                            <li class="active"><span>1</span></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li><a href="#">&gt;</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+                <?php if ($page < $totalPages) : ?>
+                    <!-- Lien vers la page suivante -->
+                    <li><a href="Blog.php?page=<?php echo $page + 1; ?>">&gt;</a></li>
+                <?php endif; ?>
+            </ul>
+        </div>
+        
+
+    </div>
+    
+</div>
+
         </div>
 
 
@@ -200,7 +342,7 @@ $Pays = $PaysC->listPays();
 
     </section>
 
-
+    
     <footer class="ftco-footer bg-bottom" style="background-image: url(../assets/img/footer-bg.jpg);">
         <div class="container">
             <div class="row mb-5">
@@ -209,11 +351,32 @@ $Pays = $PaysC->listPays();
                         <h2 class="ftco-heading-2">Vacation</h2>
                         <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
                             there live the blind texts.</p>
-                        <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
-                            <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-                            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-                            <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
-                        </ul>
+                            <div class="box">
+  <input type="checkbox"id="checkbox" />
+  <div class="menu">
+    <a href="https://api.whatsapp.com/send?phone=29992140" target="_blank">
+      <div class="menuItems">
+        <i class="fab fa-whatsapp"></i>
+      </div>
+    </a>
+    <a href="https://www.instagram.com/share/url=http://localhost/oumey/view/Blog.php?page=1#" target="_blank">
+      <div class="menuItems">
+        <i class="fab fa-instagram"></i>
+      </div>
+    </a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https://kids.nationalgeographic.com/geography/countries/article/egypt" target="_blank">
+      <div class="menuItems" >
+        <i class="fab fa-facebook"></i>
+      </div>
+    </a>
+    <a href="https://twitter.com/intent/tweet?url=http://localhost/oumey/view/Blog.php?page=1#" target="_blank">
+      <div class="menuItems">
+        <i class="fab fa-twitter"></i>
+      </div>
+    </a>
+  </div>
+</div>
+
                     </div>
                 </div>
                 <div class="col-md">
@@ -272,7 +435,9 @@ $Pays = $PaysC->listPays();
                 </div>
             </div>
         </div>
+        
     </footer>
+
 
     <script src="../assets/js/jquery.min.js"></script>
     <script src="../assets/js/jquery-migrate-3.0.1.min.js"></script>

@@ -7,14 +7,15 @@ $error = "";
 
 if (
     isset($_POST["NomP"]) &&
-    isset($_FILES["image"])
+    isset($_FILES["image"])&&
+    isset($_POST["Continent"]) 
 ) {
     if (
-        !empty($_POST['NomP']) &&
+        !empty($_POST['NomP']) && !empty($_POST["Continent"]) &&
         $_FILES["image"]["size"] != 0
     ) {
         // Vérification du nom du pays
-        if (preg_match('/^[a-zA-Z\s]+$/', $_POST['NomP'])) {
+        if (preg_match('/^[a-zA-Z\s]+$/', $_POST['NomP']) && preg_match('/^[a-zA-Z\s]+$/', $_POST['Continent'])) {
             // Renommer l'image avant de l'enregistrer dans la base de données
             $original_name = $_FILES["image"]["name"];
             $imageName = uniqid() . time() . "." . pathinfo($original_name, PATHINFO_EXTENSION);
@@ -24,7 +25,10 @@ if (
             $Pays = new Pays(
                 null, // Laissez null pour que l'ID soit auto-incrémenté
                 $_POST['NomP'],
-                $imageName // Utilisez le nom de l'image nouvellement téléchargée
+                $imageName, // Utilisez le nom de l'image nouvellement téléchargée
+                0, // valeur par défaut pour likes
+                0, // valeur par défaut pour dislikes
+                $_POST['Continent']
             );
 
             // Ajouter le pays
@@ -69,11 +73,8 @@ if (
         <div class="sidebar" data-color="blue">
             <!-- Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow" -->
             <div class="logo">
-                <a href="http://www.creative-tim.com" class="simple-text logo-mini">
-                    LR
-                </a>
                 <a href="http://www.creative-tim.com" class="simple-text logo-normal">
-                    Learner
+                    Adventure Awaits
                 </a>
             </div>
             <div class="sidebar-wrapper" id="sidebar-wrapper">
@@ -84,42 +85,7 @@ if (
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="./icons.html">
-                            <i class="now-ui-icons education_atom"></i>
-                            <p>Icons</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./map.html">
-                            <i class="now-ui-icons location_map-big"></i>
-                            <p>Maps</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./notifications.html">
-                            <i class="now-ui-icons ui-1_bell-53"></i>
-                            <p>Notifications</p>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="./user.html">
-                            <i class="now-ui-icons users_single-02"></i>
-                            <p> User Profile</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./tables.html">
-                            <i class="now-ui-icons design_bullet-list-67"></i>
-                            <p>Table List</p>
-                        </a>
-                    </li>
-                    <li class="active-pro">
-                        <a href="./upgrade.html">
-                            <i class="now-ui-icons arrows-1_cloud-download-93"></i>
-                            <p>Upgrade to PRO</p>
-                        </a>
-                    </li>
+                    
                 </ul>
             </div>
         </div>
@@ -135,7 +101,7 @@ if (
                                 <span class="navbar-toggler-bar bar3"></span>
                             </button>
                         </div>
-                        <a class="navbar-brand" href="#pablo">Les Pays</a>
+                        <a class="navbar-brand" href="#pablo">Les Blogs</a>
                     </div>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -207,7 +173,7 @@ if (
                                         <?php echo $error; ?>
                                     </div>
                                 <?php endif; ?>
-                                <h5 class="title">Ajouter un Pays</h5>
+                                <h5 class="title">Ajouter un Blog</h5>
                             </div>
                             <div class="card-body">
                                 <button type="button" class="btn btn-primary btn-round"><a href="../examples/dashboard.php" style="color: white;">Retour à la
@@ -228,6 +194,12 @@ if (
                                                 <div class="img-container" style="margin-top: 10px; text-align: center;">
                                                     <img id="preview" src="../assets/img/default_profile.jpg" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 px-1">
+                                            <div class="form-group">
+                                                <label>Continent</label>
+                                                <input type="text" name="Continent" class="form-control" placeholder="Continent">
                                             </div>
                                         </div>
                                     </div>
@@ -304,7 +276,8 @@ if (
         function validateForm() {
             var NomP = document.forms["myForm"]["NomP"].value;
             var image = document.forms["myForm"]["image"].value;
-            if (NomP == "" || image == "") {
+            var Continent = document.forms["myForm"]["Continent"].value;
+            if (NomP == "" || image == "" || Continent == "" ) {
                 alert("Tous les champs doivent être remplis");
                 return false;
             }

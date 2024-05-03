@@ -49,12 +49,10 @@ $totalPays = count($Pays);
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>Dashboard </title>
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no"
-        name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" name="viewport" />
     <!-- Fonts and icons -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
-        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
     <!-- cdn for awesome fonts icons -->
     <script src="https://kit.fontawesome.com/20ee220576.js" crossorigin="anonymous"></script>
@@ -69,7 +67,9 @@ $totalPays = count($Pays);
     <link href="../assets/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="../assets/demo/demo.css" rel="stylesheet" />
-
+    <script src="../view/pdf.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="html2pdf.bundle.min.js"></script>
 </head>
 
 <body class="">
@@ -77,12 +77,10 @@ $totalPays = count($Pays);
         <div class="sidebar" data-color="blue">
             <!-- Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow" -->
             <div class="logo">
-                <a href="http://www.learnes.com" class="simple-text logo-mini">
-                    LR
-                </a>
                 <a href="http://www.learnes.com" class="simple-text logo-normal">
-                    Learner
+                    Adventure Awaits
                 </a>
+
             </div>
 
             <div class="sidebar-wrapper" id="sidebar-wrapper">
@@ -91,48 +89,6 @@ $totalPays = count($Pays);
                         <a href="./dashboard.php">
                             <i class="now-ui-icons design_app"></i>
                             <p>Dashboard</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./icons.html">
-                            <i class="now-ui-icons education_atom"></i>
-                            <p>Icons</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./map.html">
-                            <i class="now-ui-icons location_map-big"></i>
-                            <p>Maps</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./notifications.html">
-                            <i class="now-ui-icons ui-1_bell-53"></i>
-                            <p>Notifications</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./user.html">
-                            <i class="now-ui-icons users_single-02"></i>
-                            <p>User Profile</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./tables.html">
-                            <i class="now-ui-icons design_bullet-list-67"></i>
-                            <p>Table List</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./typography.html">
-                            <i class="now-ui-icons text_caps-small"></i>
-                            <p>Typography</p>
-                        </a>
-                    </li>
-                    <li class="active-pro">
-                        <a href="./upgrade.html">
-                            <i class="now-ui-icons arrows-1_cloud-download-93"></i>
-                            <p>Upgrade to PRO</p>
                         </a>
                     </li>
                 </ul>
@@ -156,44 +112,106 @@ $totalPays = count($Pays);
                             <a class="navbar-brand" href="#pablo">Dashboard</a>
                         </div>
                         <div>
-                            <a class="custom-link" href="http://localhost/oumey/view/index.php">To The Front Office</a>
+                            <a class="custom-link" href="../view/index.php">To The Front Office</a>
                         </div>
-                        <style>
-                        /* Style du lien */
-                        a.custom-link {
-                            color: black;
-                            /* Couleur du texte */
-                            text-decoration: none;
-                            /* Supprimer le soulignement par défaut */
-                            font-weight: bold;
-                            /* Gras */
-                            padding: 10px 20px;
-                            /* Ajouter de l'espace autour du texte */
-                            border: 2px solid black;
-                            /* Bordure noire */
-                            border-radius: 10px;
-                            /* Bordure arrondie */
-                            background-color: pink;
-                            /* Fond rose */
-                            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-                            /* Ombre */
-                            transition: all 0.3s ease;
-                            /* Transition fluide pour l'effet hover */
-                        }
+                        <div>
+                            <button class="custom-link" id="download">Export PDF</button>
+                        </div>
 
-                        /* Style du lien lorsqu'il est survolé */
-                        a.custom-link:hover {
-                            background-color: black;
-                            /* Changement de couleur de fond au survol */
-                            color: pink;
-                            /* Changement de couleur de texte au survol */
-                            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7);
-                            /* Ombre plus prononcée au survol */
-                        }
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+                        <style>
+                            /* Style du lien */
+                            a.custom-link {
+                                color: black;
+                                /* Couleur du texte */
+                                text-decoration: none;
+                                /* Supprimer le soulignement par défaut */
+                                font-weight: bold;
+                                /* Gras */
+                                padding: 10px 20px;
+                                /* Ajouter de l'espace autour du texte */
+                                border: 2px solid black;
+                                /* Bordure noire */
+                                border-radius: 10px;
+                                /* Bordure arrondie */
+                                background-color: pink;
+                                /* Fond rose */
+                                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+                                /* Ombre */
+                                transition: all 0.3s ease;
+                                /* Transition fluide pour l'effet hover */
+                            }
+
+                            /* Style du lien lorsqu'il est survolé */
+                            a.custom-link:hover {
+                                background-color: black;
+                                /* Changement de couleur de fond au survol */
+                                color: pink;
+                                /* Changement de couleur de texte au survol */
+                                box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7);
+                                /* Ombre plus prononcée au survol */
+                            }
+
+                            button.custom-link {
+                                color: white;
+                                /* Couleur du texte */
+                                text-decoration: none;
+                                /* Supprimer le soulignement par défaut */
+                                font-weight: bold;
+                                /* Gras */
+                                padding: 10px 20px;
+                                /* Ajouter de l'espace autour du texte */
+                                border: 2px solid black;
+                                /* Bordure noire */
+                                border-radius: 10px;
+                                /* Bordure arrondie */
+                                background-color: pink;
+                                /* Fond rose */
+                                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+                                /* Ombre */
+                                transition: all 0.3s ease;
+                                /* Transition fluide pour l'effet hover */
+                            }
+
+                            /* Style du lien lorsqu'il est survolé */
+                            button.custom-link:hover {
+                                background-color: black;
+                                /* Changement de couleur de fond au survol */
+                                color: pink;
+                                /* Changement de couleur de texte au survol */
+                                box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7);
+                                /* Ombre plus prononcée au survol */
+                            }
+
+                            /* Style du champ de recherche */
+                            .input-group {
+                                margin-bottom: 0;
+                            }
+
+                            /* Style du bouton de recherche */
+                            .btn-primary {
+                                margin-left: 10px;
+                            }
+
+                            /* Style du champ de recherche avec une largeur réduite */
+                            .search-input {
+                                width: 450px;
+                                /* Ajustez la largeur selon vos besoins */
+                            }
+
+                            .card.card-plain:nth-child(2) {
+                                margin-bottom: 10px;
+                                /* Réduit la marge inférieure de la deuxième carte */
+                            }
+
+                            .card.card-plain:nth-child(3) {
+                                margin-top: 10px;
+                                /* Réduit la marge supérieure de la troisième carte */
+                            }
                         </style>
 
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
-                            aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-bar navbar-kebab"></span>
                             <span class="navbar-toggler-bar navbar-kebab"></span>
                             <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -218,15 +236,13 @@ $totalPays = count($Pays);
                                             </a>
                                         </li>
                                         <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="now-ui-icons location_world"></i>
                                                 <p>
                                                     <span class="d-lg-none d-md-block">Some Actions</span>
                                                 </p>
                                             </a>
-                                            <div class="dropdown-menu dropdown-menu-right"
-                                                aria-labelledby="navbarDropdownMenuLink">
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                                 <a class="dropdown-item" href="#">Action</a>
                                                 <a class="dropdown-item" href="#">Another action</a>
                                                 <a class="dropdown-item" href="#">Something else here</a>
@@ -249,21 +265,28 @@ $totalPays = count($Pays);
 
 
             </div>
-
+            <div id="backOfficeData">
             <div class="container">
                 <div class="col-md-12">
-                    <div class="card card-plain">
-                        <div class="d-flex justify-content-between align-items-center pr-4 pl-4">
+                    <div class="card card-plain" id="invoice">
+                        <div class="d-flex justify-content-between align-items-center pr-4 pl-4 mb-4">
                             <div class="card-header">
-                                <h4 class="card-title"> Liste des Pays</h4>
+
+                                <h4 class="card-title"> Liste des Blogs</h4>
                                 <p class="category"> Here is a subtitle for this table</p>
+                            </div>
+                            <div class="input-group search-input">
+                                <input type="text" class="form-control" id="searchInputBlogs" placeholder="Rechercher...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" onclick="searchTableBlogs(event)">Rechercher</button>
+                                </div>
                             </div>
                             <a href="../view/addPays.php" class="addButton"><i class="fa-solid fa-plus"></i></a>
                         </div>
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table" id="tableBlogs">
                                     <thead class="">
                                         <th>
                                             ID
@@ -274,13 +297,14 @@ $totalPays = count($Pays);
                                         <th>
                                             Nom
                                         </th>
+                                        <th>
+                                            Continent
+                                        </th>
                                         <th>Likes</th>
                                         <th>Dislikes</th>
+
                                         <th>
-                                            Modifier
-                                        </th>
-                                        <th>
-                                            Supprimer
+                                            Actions
                                         </th>
                                     </thead>
                                     <tbody>
@@ -291,22 +315,17 @@ $totalPays = count($Pays);
                                             echo "<td>" . $pays['id'] . "</td>";
                                             echo "<td> <img src=../assets/img/uploads/" . $pays['image'] . " width='100px' height='100px'/></td>";
                                             echo "<td>" . $pays['NomP'] . "</td>";
+                                            echo "<td>" . $pays['Continent'] . "</td>";
                                             echo "<td>" . $pays['likes'] . "</td>";  // Affichage des likes
-                                            echo "<td>" . $pays['dislikes'] . "</td>"; ?>
-                                        <td align="center">
-                                            <a href="../view/editPays.php?id=<?php echo $pays['id']; ?>">
-                                                <img src="../assets/img/editer.png" alt="Update" class="btn-icon"
-                                                    width="50" height="50">
-                                            </a>
-                                        </td>
-
-
-                                        <td>
-                                            <a href="../view/deletePays.php?id=<?php echo $pays['id']; ?>">
-                                                <img src="../assets/img/delete.png" alt="Delete" class="btn-icon"
-                                                    width="55" height="55">
-                                            </a>
-                                        </td>
+                                            echo "<td>" . $pays['dislikes'] . "</td>" ?>
+                                            <td align="center">
+                                                <a href="../view/editPays.php?id=<?php echo $pays['id']; ?>">
+                                                    <img src="../assets/img/editer.png" alt="Update" class="btn-icon" width="50" height="50">
+                                                </a>
+                                                <a href="../view/deletePays.php?id=<?php echo $pays['id']; ?>">
+                                                    <img src="../assets/img/delete.png" alt="Delete" class="btn-icon" width="55" height="55">
+                                                </a>
+                                            </td>
 
 
                                         <?php
@@ -319,6 +338,30 @@ $totalPays = count($Pays);
 
                                     </tbody>
                                 </table>
+                                <script>
+                                    function searchTableBlogs(event) {
+                                        event
+                                            .preventDefault(); // Empêcher le comportement par défaut du bouton de recherche
+                                        var input, filter, table, tr, td, i, txtValue;
+                                        input = document.getElementById("searchInputBlogs");
+                                        filter = input.value.toUpperCase();
+                                        table = document.getElementById(
+                                            "tableBlogs"); // Assurez-vous que l'ID de votre table est correct
+                                        tr = table.getElementsByTagName("tr");
+                                        for (i = 0; i < tr.length; i++) {
+                                            td = tr[i].getElementsByTagName("td")[
+                                                2]; // Assurez-vous que l'index de la colonne est correct
+                                            if (td) {
+                                                txtValue = td.textContent || td.innerText;
+                                                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                                    tr[i].style.display = "";
+                                                } else {
+                                                    tr[i].style.display = "none";
+                                                }
+                                            }
+                                        }
+                                    }
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -336,70 +379,73 @@ $totalPays = count($Pays);
                             </div>
 
                             <script>
-                            const ctx = document.getElementById('myChart');
+                                const ctx = document.getElementById('myChart');
 
-                            new Chart(ctx, {
-                                type: 'bar',
-                                data: {
-                                    labels: <?php echo json_encode($PaysNames) ?>,
-                                    datasets: [{
-                                        label: 'Pourcentage de satisfaction (likes)',
-                                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                                        borderColor: 'rgba(75, 192, 192, 1)',
-                                        borderWidth: 1,
-                                        data: <?php echo json_encode($percentagesLikes) ?>,
-                                    }, {
-                                        label: 'Pourcentage d\'insatisfaction (dislikes)',
-                                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
-                                        borderColor: 'rgba(255, 99, 132, 1)',
-                                        borderWidth: 1,
-                                        data: <?php echo json_encode($percentagesDislikes) ?>,
-                                    }]
-                                },
-                                options: {
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true,
-                                            max: 100,
-                                            ticks: {
-                                                color: 'black',
-                                                font: {
-                                                    weight: 'bold',
-                                                    size: 14 // Increase the font size
+                                new Chart(ctx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: <?php echo json_encode($PaysNames) ?>,
+                                        datasets: [{
+                                            label: 'Pourcentage de satisfaction (likes)',
+                                            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                                            borderColor: 'rgba(75, 192, 192, 1)',
+                                            borderWidth: 8,
+                                            data: <?php echo json_encode($percentagesLikes) ?>,
+                                        }, {
+                                            label: 'Pourcentage d\'insatisfaction (dislikes)',
+                                            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                                            borderColor: 'rgba(255, 99, 132, 1)',
+                                            borderWidth: 8,
+                                            data: <?php echo json_encode($percentagesDislikes) ?>,
+                                        }]
+                                    },
+                                    options: {
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                max: 100,
+                                                ticks: {
+                                                    color: 'black',
+                                                    font: {
+                                                        weight: 'bold',
+                                                        size: 14 // Augmentez la taille de la police
+                                                    }
                                                 }
-                                            }
-                                        },
-                                        x: {
-                                            ticks: {
-                                                color: 'black',
-                                                font: {
-                                                    weight: 'bold',
-                                                    size: 14 // Increase the font size
+                                            },
+                                            x: {
+                                                ticks: {
+                                                    color: 'black',
+                                                    font: {
+                                                        weight: 'bold',
+                                                        size: 14 // Augmentez la taille de la police
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                            });
+                                });
                             </script>
-
                         </div>
                     </div>
-
-
                     <div class="card card-plain">
-
                         <div class="d-flex justify-content-between align-items-center pr-4 pl-4">
                             <div class="card-header">
-                                <h4 class="card-title"> Liste des Descriptions des pays</h4>
+                                <h4 class="card-title"> Liste des Descriptions des Blogs</h4>
                                 <p class="category"> Here is a subtitle for this table</p>
                             </div>
+                            <div class="input-group search-input">
+                                <input type="text" class="form-control" id="searchInputDescriptions" placeholder="Rechercher...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" onclick="searchTableDescriptions(event)">Rechercher</button>
+                                </div>
+                            </div>
+
                             <a href="../view/addDescription.php" class="addButton"><i class="fa-solid fa-plus"></i></a>
                         </div>
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table" id="tableDescriptions">
                                     <thead class="">
                                         <th>Nom Pays</th>
                                         <th>Capitale</th>
@@ -408,8 +454,7 @@ $totalPays = count($Pays);
                                         <th>Monnaie</th>
                                         <th>Attractions_touristiques</th>
                                         <th>Activites</th>
-                                        <th>Modifier</th>
-                                        <th>Supprimer</th>
+                                        <th>Actions</th>
                                     </thead>
 
                                     <tbody>
@@ -426,19 +471,14 @@ $totalPays = count($Pays);
                                             echo "<td>" . $desc['Monnaie'] . "</td>";
                                             echo "<td>" . $desc['Attractions_touristiques'] . "</td>";
                                             echo "<td>" . $desc['Activites'] . "</td>"; ?>
-                                        <td align="center">
-                                            <a href="../view/editDescription.php?id=<?php echo $desc['id']; ?>">
-                                                <img src="../assets/img/editer.png" alt="Update" class="btn-icon"
-                                                    width="50" height="50">
-                                            </a>
-                                        </td>
-
-                                        <td>
-                                            <a href="../view/deleteDescription.php?id=<?php echo $desc['id']; ?>">
-                                                <img src="../assets/img/delete.png" alt="Delete" class="btn-icon"
-                                                    width="55" height="55">
-                                            </a>
-                                        </td>
+                                            <td align="center">
+                                                <a href="../view/editDescription.php?id=<?php echo $desc['id']; ?>">
+                                                    <img src="../assets/img/editer.png" alt="Update" class="btn-icon" width="50" height="50">
+                                                </a>
+                                                <a href="../view/deleteDescription.php?id=<?php echo $desc['id']; ?>">
+                                                    <img src="../assets/img/delete.png" alt="Delete" class="btn-icon" width="55" height="55">
+                                                </a>
+                                            </td>
 
                                         <?php
                                             echo "</tr>";
@@ -447,6 +487,31 @@ $totalPays = count($Pays);
 
                                     </tbody>
                                 </table>
+                                <script>
+                                    function searchTableDescriptions(event) {
+                                        event
+                                            .preventDefault(); // Empêcher le comportement par défaut du bouton de recherche
+                                        var input, filter, table, tr, td, i, txtValue;
+                                        input = document.getElementById("searchInputDescriptions");
+                                        filter = input.value.toUpperCase();
+                                        table = document.getElementById(
+                                            "tableDescriptions"); // Assurez-vous que l'ID de votre table est correct
+                                        tr = table.getElementsByTagName("tr");
+                                        for (i = 0; i < tr.length; i++) {
+                                            td = tr[i].getElementsByTagName("td")[
+                                                0]; // Utiliser l'index 0 pour la première colonne
+                                            if (td) {
+                                                txtValue = td.textContent || td.innerText;
+                                                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                                    tr[i].style.display = "";
+                                                } else {
+                                                    tr[i].style.display = "none";
+                                                }
+                                            }
+                                        }
+                                    }
+                                </script>
+
                             </div>
                         </div>
                     </div>
@@ -454,53 +519,89 @@ $totalPays = count($Pays);
                 <div class="card card-plain">
                     <div class="d-flex justify-content-between align-items-center pr-4 pl-4">
                         <div class="card-header">
-                            <h4 class="card-title"> Liste des Commentaires</h4>
+                            <h4 class="card-title"> Liste des Commentaires des Clients</h4>
                             <p class="category"> Here is a subtitle for this table</p>
                         </div>
-                        <a href="../view/addCommentaire.php" class="addButton"><i class="fa-solid fa-plus"></i></a>
+                        <div class="input-group search-input">
+                            <input type="text" class="form-control" id="searchInputComments" placeholder="Rechercher...">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" onclick="searchTableComments(event)">Rechercher</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table">
-                                <thead class="">
-                                    <th>Nom Pays</th>
-                                    <th>Commentaires</th>
-                                    <th>Date_commentaire</th>
-                                    <th>Modifier</th>
-                                    <th>Supprimer</th>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $CommentC = new CommentaireC();
-                                    $PaysC = new PaysC();
-                                    $Comment = $CommentC->listCommentaire();
-                                    foreach ($Comment as $comm) {
-                                        $Pays = $PaysC->getPaysById($comm['id_pays']);
-                                        echo "<tr>";
-                                        echo "<td>" . $Pays['NomP'] . "</td>";
-                                        echo "<td>" . $comm['Commentaire'] . "</td>";
-                                        echo "<td>" . $comm['Date_commentaire'] . "</td>"; ?>
-                                    <td align="center">
-                                        <a href="../view/editCommentaire.php?id_com=<?php echo $comm['id_com']; ?>">
-                                            <img src="../assets/img/editer.png" alt="Update" class="btn-icon" width="50"
-                                                height="50">
-                                        </a>
-                                    </td>
+                            <?php
+                            $CommentC = new CommentaireC();
+                            $PaysC = new PaysC();
+                            $Comment = $CommentC->listCommentaire();
 
-                                    <td>
-                                        <a href="../view/deleteCommentaire.php?id_com=<?php echo $comm['id_com']; ?>">
-                                            <img src="../assets/img/delete.png" alt="Delete" class="btn-icon" width="55"
-                                                height="55">
-                                        </a>
-                                    </td>
+                            // Vérifier si le tableau des commentaires est vide
+                            if (empty($Comment)) {
+                                echo '<p style="text-align:center; font-weight:bolder;">Pas de Commentaires</p>';
+                            } else {
+                            ?>
+                                <table class="table" id="tableComments">
+                                    <thead class="">
+                                        <th>Nom Pays</th>
+                                        <th>Nom Et Prénom</th>
+                                        <th>Commentaires</th>
+                                        <th>Date et Heure</th>
+                                        <th>Actions</th>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $CommentC = new CommentaireC();
+                                        $PaysC = new PaysC();
+                                        $Comment = $CommentC->listCommentaire();
+                                        foreach ($Comment as $comm) {
+                                            $Pays = $PaysC->getPaysById($comm['id_pays']);
+                                            $User = $CommentC->getUserById($comm['id_user']);
 
-                                    <?php
-                                        echo "</tr>";
+                                            echo "<tr>";
+                                            echo "<td>" . $Pays['NomP'] . "</td>";
+                                            echo "<td>" . $User['nom'] . " " . $User['prenom'] . "</td>";
+                                            echo "<td>" . $comm['Commentaire'] . "</td>";
+                                            echo "<td>" . $comm['Date_commentaire'] . "</td>"; ?>
+                                            <td align="center">
+                                                <a href="../view/deleteCommentaire.php?id_com=<?php echo $comm['id_com']; ?>">
+                                                    <img src="../assets/img/delete.png" alt="Delete" class="btn-icon" width="55" height="55">
+                                                </a>
+                                            </td>
+                                        <?php
+                                            echo "</tr>";
+                                        }
+                                        ?>
+                                    </tbody>
+
+                                </table>
+                                <script>
+                                    function searchTableComments(event) {
+                                        event.preventDefault(); // Empêcher le comportement par défaut du bouton de recherche
+                                        var input, filter, table, tr, td, i, txtValue;
+                                        input = document.getElementById("searchInputComments");
+                                        filter = input.value.toUpperCase();
+                                        table = document.getElementById(
+                                            "tableComments"); // Assurez-vous que l'ID de votre table est correct
+                                        tr = table.getElementsByTagName("tr");
+                                        for (i = 0; i < tr.length; i++) {
+                                            td = tr[i].getElementsByTagName("td")[
+                                                0]; // Utiliser l'index 0 pour la première colonne
+                                            if (td) {
+                                                txtValue = td.textContent || td.innerText;
+                                                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                                    tr[i].style.display = "";
+                                                } else {
+                                                    tr[i].style.display = "none";
+                                                }
+                                            }
+                                        }
                                     }
-                                    ?>
-                                </tbody>
+                                </script>
 
-                            </table>
+                            <?php
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -508,19 +609,21 @@ $totalPays = count($Pays);
 
                 <!-- Ajout du script jQuery pour la prévisualisation de l'image -->
                 <script>
-                $(document).ready(function() {
-                    // function to display image before upload
-                    $("input.image").change(function() {
-                        var file = this.files[0];
-                        var url = URL.createObjectURL(file);
-                        $(this).closest("tr").find(".preview_img").attr("src", url);
+                    $(document).ready(function() {
+                        // function to display image before upload
+                        $("input.image").change(function() {
+                            var file = this.files[0];
+                            var url = URL.createObjectURL(file);
+                            $(this).closest("tr").find(".preview_img").attr("src", url);
+                        });
                     });
-                });
                 </script>
             </div>
         </div>
     </div>
+    </div>
     <!-- Core JS Files -->
+
     <script src="../assets/js/core/jquery.min.js"></script>
     <script src="../assets/js/core/popper.min.js"></script>
     <script src="../assets/js/core/bootstrap.min.js"></script>

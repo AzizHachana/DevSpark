@@ -9,4 +9,4 @@ if (isset($_GET["id_com"])) {
 }
 
 
-header('Location:../examples/dashboard.php');
+header("Location: " . $_SERVER['HTTP_REFERER']);

@@ -33,14 +33,14 @@ class CommentaireC
 
     public function ajouterCommentaire($Commentaire)
     {
-        $sql = "INSERT INTO comment VALUES (DEFAULT, :id_pays , :Commentaire, :Date_commentaire)";
+        $sql = "INSERT INTO comment (id_pays, Commentaire, id_user) VALUES (:id_pays, :Commentaire, :id_user)";
         $db = config::getConnexion();
         try {
             $query = $db->prepare($sql);
             $query->execute([
                 'id_pays' => $Commentaire->getIdPays(),
                 'Commentaire' => $Commentaire->getCommentaire(),
-                'Date_commentaire' => $Commentaire->getDate(),
+                'id_user' => $Commentaire->getIdUser(),
             ]);
             echo "Commentaire ajouté avec succès.";
         } catch (Exception $e) {
@@ -48,22 +48,21 @@ class CommentaireC
         }
     }
 
-    public function updateCommentaire($id_com, $id_pays, $Commentaire, $Date_commentaire)
-    {
-        $sql = "UPDATE comment SET Commentaire=:Commentaire, Date_commentaire=:Date_commentaire WHERE id_com=:id_com";
-        $db = config::getConnexion();
-        try {
-            $query = $db->prepare($sql);
-            $query->bindParam(':id_com', $id_com);
-            $query->bindParam(':Commentaire', $Commentaire);
-            $query->bindParam(':Date_commentaire', $Date_commentaire);
 
+    public function updateCommentaire($id_com, $Commentaire)
+{
+    $sql = "UPDATE comment SET Commentaire=:Commentaire WHERE id_com=:id_com";
+    $db = config::getConnexion();
+    try {
+        $query = $db->prepare($sql);
+        $query->bindParam(':id_com', $id_com);
+        $query->bindParam(':Commentaire', $Commentaire);
 
-            $query->execute();
-        } catch (Exception $e) {
-            die('Error: ' . $e->getMessage());
-        }
+        $query->execute();
+    } catch (Exception $e) {
+        die('Error: ' . $e->getMessage());
     }
+}
 
 
 
@@ -88,7 +87,8 @@ class CommentaireC
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getCommentByPaysId($id_pays) {
+    public function getCommentByPaysId($id_pays)
+    {
         $sql = "SELECT * FROM comment WHERE id_pays = :id_pays";
         $db = config::getConnexion();
         $query = $db->prepare($sql);
@@ -96,6 +96,18 @@ class CommentaireC
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC); // Retourne un tableau de commentaires
     }
-    
-    
+
+    public function getUserById($id_user)
+    {
+        $sql = "SELECT * FROM unityuser WHERE id = :id";
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->bindParam(":id", $id_user);
+            $query->execute();
+            return $query->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+    }
 }

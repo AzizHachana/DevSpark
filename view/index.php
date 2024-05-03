@@ -1,3 +1,12 @@
+<?php
+include '../config.php';
+include '../controller/PaysC.php';
+
+$PaysC = new PaysC();
+$Top4Pays = $PaysC->getTop4PaysByLikes();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,49 +42,63 @@
             <a class="navbar-brand" href="../index.html">Adventure Awaits<span>Travel Agency</span></a>
 
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
-                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
             </button>
 
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
-                <div>
-          <a class="custom-link" href ="http://localhost/oumey/examples/dashboard.php">To The Back Office</a>
-        </div>
-        <style>
-        /* Style du lien */
-        a.custom-link {
-            color: black; /* Couleur du texte */
-            text-decoration: none; /* Supprimer le soulignement par défaut */
-            font-weight: bold; /* Gras */
-            padding: 10px 20px; /* Ajouter de l'espace autour du texte */
-            border: 2px solid black; /* Bordure noire */
-            border-radius: 10px; /* Bordure arrondie */
-            background-color: pink; /* Fond rose */
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Ombre */
-            transition: all 0.3s ease; /* Transition fluide pour l'effet hover */
-        }
+                    <div>
+                        <a class="custom-link" href="../examples/dashboard.php">To The Back
+                            Office</a>
+                    </div>
+                    <style>
+                        /* Style du lien */
+                        a.custom-link {
+                            color: black;
+                            /* Couleur du texte */
+                            text-decoration: none;
+                            /* Supprimer le soulignement par défaut */
+                            font-weight: bold;
+                            /* Gras */
+                            padding: 10px 20px;
+                            /* Ajouter de l'espace autour du texte */
+                            border: 2px solid black;
+                            /* Bordure noire */
+                            border-radius: 10px;
+                            /* Bordure arrondie */
+                            background-color: pink;
+                            /* Fond rose */
+                            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+                            /* Ombre */
+                            transition: all 0.3s ease;
+                            /* Transition fluide pour l'effet hover */
+                        }
 
-        /* Style du lien lorsqu'il est survolé */
-        a.custom-link:hover {
-            background-color: black; /* Changement de couleur de fond au survol */
-            color: pink; /* Changement de couleur de texte au survol */
-            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7); /* Ombre plus prononcée au survol */
-        }
+                        /* Style du lien lorsqu'il est survolé */
+                        a.custom-link:hover {
+                            background-color: black;
+                            /* Changement de couleur de fond au survol */
+                            color: pink;
+                            /* Changement de couleur de texte au survol */
+                            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7);
+                            /* Ombre plus prononcée au survol */
+                        }
 
-        .custom-link {
-    display: block;          /* Affiche le lien comme un élément de bloc */
-    margin-top: 10px;        /* Ajoute un espace en haut */
-    margin-left: 15px;       /* Décale le lien vers la gauche */
-}
-
-    </style>
-                    <li class="nav-item active"><a href="../index.php" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="../about.php" class="nav-link">About</a></li>
-                    <li class="nav-item"><a href="../destination.php" class="nav-link">Destination</a></li>
-                    <li class="nav-item"><a href="../view/Blog.php" class="nav-link">Blog</a></li>
-                    <li class="nav-item"><a href="../contact.php" class="nav-link">Contact</a></li>
+                        .custom-link {
+                            display: block;
+                            /* Affiche le lien comme un élément de bloc */
+                            margin-top: 10px;
+                            /* Ajoute un espace en haut */
+                            margin-left: 15px;
+                            /* Décale le lien vers la gauche */
+                        }
+                    </style>
+                    <li class="nav-item active"><a href="./index.php" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="./about.php" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="./destination.php" class="nav-link">Destination</a></li>
+                    <li class="nav-item"><a href="./Blog.php" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="./contact.php" class="nav-link">Contact</a></li>
                     <li class="nav-item cta"><a href="#" class="nav-link">Book Now</a></li>
 
                 </ul>
@@ -84,15 +107,13 @@
     </nav>
     <!-- END nav -->
 
-    <div class="hero-wrap js-fullheight" style="background-image: url('../assets/img/bg_2.jpg');"
-        data-stellar-background-ratio="0.5">
+    <div class="hero-wrap js-fullheight" style="background-image: url('../assets/img/bg_2.jpg');" data-stellar-background-ratio="0.5">
         <div id="person-1" class="person">
             <img src="../assets/img/slider-man.png" alt="Person">
         </div>
         <div class="overlay"></div>
         <div class="container">
-            <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center"
-                data-scrollax-parent="true">
+            <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center" data-scrollax-parent="true">
                 <div class="col-md-9 text text-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
 
 
@@ -124,8 +145,7 @@
                                         <label for="#">Check-in date</label>
                                         <div class="form-field">
                                             <div class="icon"><span class="ion-ios-calendar"></span></div>
-                                            <input type="text" class="form-control checkin_date"
-                                                placeholder="Check In Date">
+                                            <input type="text" class="form-control checkin_date" placeholder="Check In Date">
                                         </div>
                                     </div>
                                 </div>
@@ -134,8 +154,7 @@
                                         <label for="#">Check-out date</label>
                                         <div class="form-field">
                                             <div class="icon"><span class="ion-ios-calendar"></span></div>
-                                            <input type="text" class="form-control checkout_date"
-                                                placeholder="Check Out Date">
+                                            <input type="text" class="form-control checkout_date" placeholder="Check Out Date">
                                         </div>
                                     </div>
                                 </div>
@@ -246,7 +265,8 @@
         <div class="container">
             <div class="row d-flex">
                 <div class="col-md-6 d-flex">
-                    <div class="img d-flex align-self-stretch" style="background-image:url(../assets/img/about.jpg);"></div>
+                    <div class="img d-flex align-self-stretch" style="background-image:url(../assets/img/about.jpg);">
+                    </div>
                 </div>
                 <div class="col-md-6 pl-md-5 py-5">
                     <div class="row justify-content-start pb-3">
@@ -293,55 +313,31 @@
         <div class="container">
             <div class="row justify-content-center pb-4">
                 <div class="col-md-12 heading-section text-center ftco-animate">
-                    <h2 class="mb-4">Best Place Destination</h2>
+                    <h2 class="mb-4">Les Meilleures Destinations</h2>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3 ftco-animate">
-                    <div class="project-destination">
-                        <a href="#" class="img" style="background-image: url(../assets/img/place-1.jpg);">
-                            <div class="text">
-                                <h3>Singapore</h3>
-                                <span>8 Tours</span>
-                            </div>
-                        </a>
+                <?php
+                foreach ($Top4Pays as $pays) {
+                ?>
+                    <div class="col-md-3 ftco-animate">
+                        <div class="project-destination">
+                            <a href="./blog-single.php?id=<?php echo $pays['id'] ?>" class="img" style="background-image: url(../assets/img/uploads/<?php echo $pays['image']; ?>);">
+                                <div class="text">
+                                    <h3><?php echo $pays['NomP']; ?></h3>
+                                    <span><i class="icon-thumbs-o-up mr-2"></i><?php echo $pays['likes']; ?> Likes</span>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3 ftco-animate">
-                    <div class="project-destination">
-                        <a href="#" class="img" style="background-image: url(../assets/img/place-2.jpg);">
-                            <div class="text">
-                                <h3>Canada</h3>
-                                <span>2 Tours</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-3 ftco-animate">
-                    <div class="project-destination">
-                        <a href="#" class="img" style="background-image: url(../assets/img/place-3.jpg);">
-                            <div class="text">
-                                <h3>Thailand</h3>
-                                <span>5 Tours</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-3 ftco-animate">
-                    <div class="project-destination">
-                        <a href="#" class="img" style="background-image: url(../assets/img/place-4.jpg);">
-                            <div class="text">
-                                <h3>Autralia</h3>
-                                <span>5 Tours</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                <?php
+                }
+                ?>
             </div>
         </div>
     </section>
 
-    <section class="ftco-section ftco-no-pt">
+    <section class=" ftco-section ftco-no-pt">
         <div class="container">
             <div class="row justify-content-center pb-4">
                 <div class="col-md-12 heading-section text-center ftco-animate">
@@ -356,7 +352,8 @@
                             <span class="price">$300/person</span>
                             <span class="days">8 Days Tour</span>
                             <h3><a href="#">Bali, Indonesia</a></h3>
-                            <p class="location"><span class="ion-ios-map"></span> Bali, Indonesia</p>
+                            <p class="location"><span class="ion-ios-map"></span> Bali, Indonesia
+                            </p>
                             <ul>
                                 <li><span class="flaticon-shower"></span>2</li>
                                 <li><span class="flaticon-king-size"></span>3</li>
@@ -372,7 +369,8 @@
                             <span class="price">$300/person</span>
                             <span class="days">10 Days Tour</span>
                             <h3><a href="#">Bali, Indonesia</a></h3>
-                            <p class="location"><span class="ion-ios-map"></span> Bali, Indonesia</p>
+                            <p class="location"><span class="ion-ios-map"></span> Bali, Indonesia
+                            </p>
                             <ul>
                                 <li><span class="flaticon-shower"></span>2</li>
                                 <li><span class="flaticon-king-size"></span>3</li>
@@ -388,7 +386,8 @@
                             <span class="price">$300/person</span>
                             <span class="days">7 Days Tour</span>
                             <h3><a href="#">Bali, Indonesia</a></h3>
-                            <p class="location"><span class="ion-ios-map"></span> Bali, Indonesia</p>
+                            <p class="location"><span class="ion-ios-map"></span> Bali, Indonesia
+                            </p>
                             <ul>
                                 <li><span class="flaticon-shower"></span>2</li>
                                 <li><span class="flaticon-king-size"></span>3</li>
@@ -397,144 +396,148 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <div class="col-md-4 ftco-animate">
-    <div class="project-wrap">
-        <a href="#" class="img" style="background-image: url(../assets/img/destination-4.jpg);"></a>
-        <div class="text p-4">
-            <span class="price">$300/person</span>
-            <span class="days">8 Days Tour</span>
-            <h3><a href="#">Bali, Indonesia</a></h3>
-            <p class="location"><span class="ion-ios-map"></span> Bali, Indonesia</p>
-            <ul>
-                <li><span class="flaticon-shower"></span>2</li>
-                <li><span class="flaticon-king-size"></span>3</li>
-                <li><span class="flaticon-sun-umbrella"></span>Near Beach</li>
-            </ul>
+                    <div class="project-wrap">
+                        <a href="#" class="img" style="background-image: url(../assets/img/destination-4.jpg);"></a>
+                        <div class="text p-4">
+                            <span class="price">$300/person</span>
+                            <span class="days">8 Days Tour</span>
+                            <h3><a href="#">Bali, Indonesia</a></h3>
+                            <p class="location"><span class="ion-ios-map"></span> Bali, Indonesia
+                            </p>
+                            <ul>
+                                <li><span class="flaticon-shower"></span>2</li>
+                                <li><span class="flaticon-king-size"></span>3</li>
+                                <li><span class="flaticon-sun-umbrella"></span>Near Beach</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 ftco-animate">
+                    <div class="project-wrap">
+                        <a href="#" class="img" style="background-image: url(../assets/img/destination-5.jpg);"></a>
+                        <div class="text p-4">
+                            <span class="price">$300/person</span>
+                            <span class="days">10 Days Tour</span>
+                            <h3><a href="#">Bali, Indonesia</a></h3>
+                            <p class="location"><span class="ion-ios-map"></span> Bali, Indonesia
+                            </p>
+                            <ul>
+                                <li><span class="flaticon-shower"></span>2</li>
+                                <li><span class="flaticon-king-size"></span>3</li>
+                                <li><span class="flaticon-sun-umbrella"></span>Near Beach</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 ftco-animate">
+                    <div class="project-wrap">
+                        <a href="#" class="img" style="background-image: url(../assets/img/destination-6.jpg);"></a>
+                        <div class="text p-4">
+                            <span class="price">$300/person</span>
+                            <span class="days">7 Days Tour</span>
+                            <h3><a href="#">Bali, Indonesia</a></h3>
+                            <p class="location"><span class="ion-ios-map"></span> Bali, Indonesia
+                            </p>
+                            <ul>
+                                <li><span class="flaticon-shower"></span>2</li>
+                                <li><span class="flaticon-king-size"></span>3</li>
+                                <li><span class="flaticon-sun-umbrella"></span>Near Beach</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-<div class="col-md-4 ftco-animate">
-    <div class="project-wrap">
-        <a href="#" class="img" style="background-image: url(../assets/img/destination-5.jpg);"></a>
-        <div class="text p-4">
-            <span class="price">$300/person</span>
-            <span class="days">10 Days Tour</span>
-            <h3><a href="#">Bali, Indonesia</a></h3>
-            <p class="location"><span class="ion-ios-map"></span> Bali, Indonesia</p>
-            <ul>
-                <li><span class="flaticon-shower"></span>2</li>
-                <li><span class="flaticon-king-size"></span>3</li>
-                <li><span class="flaticon-sun-umbrella"></span>Near Beach</li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div class="col-md-4 ftco-animate">
-    <div class="project-wrap">
-        <a href="#" class="img" style="background-image: url(../assets/img/destination-6.jpg);"></a>
-        <div class="text p-4">
-            <span class="price">$300/person</span>
-            <span class="days">7 Days Tour</span>
-            <h3><a href="#">Bali, Indonesia</a></h3>
-            <p class="location"><span class="ion-ios-map"></span> Bali, Indonesia</p>
-            <ul>
-                <li><span class="flaticon-shower"></span>2</li>
-                <li><span class="flaticon-king-size"></span>3</li>
-                <li><span class="flaticon-sun-umbrella"></span>Near Beach</li>
-            </ul>
-        </div>
-    </div>
-</div>
-</div>
-</div>
-</section>
+    </section>
 
-<section class="ftco-section testimony-section bg-bottom" style="background-image: url(../assets/img/bg_3.jpg);">
-    <div class="container">
-        <div class="row justify-content-center pb-4">
-            <div class="col-md-7 text-center heading-section ftco-animate">
-                <h2 class="mb-4">Tourist Feedback</h2>
+    <section class="ftco-section testimony-section bg-bottom" style="background-image: url(../assets/img/bg_3.jpg);">
+        <div class="container">
+            <div class="row justify-content-center pb-4">
+                <div class="col-md-7 text-center heading-section ftco-animate">
+                    <h2 class="mb-4">Tourist Feedback</h2>
+                </div>
             </div>
-        </div>
-        <div class="row ftco-animate">
-            <div class="col-md-12">
-                <div class="carousel-testimony owl-carousel ftco-owl">
-                    <div class="item">
-                        <div class="testimony-wrap py-4">
-                            <div class="text">
-                                <p class="mb-4">Far far away, behind the word mountains, far from the countries
-                                    Vokalia and Consonantia, there live the blind texts.</p>
-                                <div class="d-flex align-items-center">
-                                    <div class="user-img" style="background-image: url(../assets/img/person_1.jpg)">
-                                    </div>
-                                    <div class="pl-3">
-                                        <p class="name">Roger Scott</p>
-                                        <span class="position">Marketing Manager</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="testimony-wrap py-4">
-                            <div class="text">
-                                <p class="mb-4">Far far away, behind the word mountains, far from the countries
-                                    Vokalia and Consonantia, there live the blind texts.</p>
-                                <div class="d-flex align-items-center">
-                                    <div class="user-img" style="background-image: url(../assets/img/person_2.jpg)">
-                                    </div>
-                                    <div class="pl-3">
-                                        <p class="name">Roger Scott</p>
-                                        <span class="position">Marketing Manager</span>
+            <div class="row ftco-animate">
+                <div class="col-md-12">
+                    <div class="carousel-testimony owl-carousel ftco-owl">
+                        <div class="item">
+                            <div class="testimony-wrap py-4">
+                                <div class="text">
+                                    <p class="mb-4">Far far away, behind the word mountains, far from the countries
+                                        Vokalia and Consonantia, there live the blind texts.</p>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-img" style="background-image: url(../assets/img/person_1.jpg)">
+                                        </div>
+                                        <div class="pl-3">
+                                            <p class="name">Roger Scott</p>
+                                            <span class="position">Marketing Manager</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="item">
-                        <div class="testimony-wrap py-4">
-                            <div class="text">
-                                <p class="mb-4">Far far away, behind the word mountains, far from the countries
-                                    Vokalia and Consonantia, there live the blind texts.</p>
-                                <div class="d-flex align-items-center">
-                                    <div class="user-img" style="background-image: url(../assets/img/person_3.jpg)">
-                                    </div>
-                                    <div class="pl-3">
-                                        <p class="name">Roger Scott</p>
-                                        <span class="position">Marketing Manager</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="testimony-wrap py-4">
-                            <div class="text">
-                                <p class="mb-4">Far far away, behind the word mountains, far from the countries
-                                    Vokalia and Consonantia, there live the blind texts.</p>
-                                <div class="d-flex align-items-center">
-                                    <div class="user-img" style="background-image: url(../assets/img/person_1.jpg)">
-                                    </div>
-                                    <div class="pl-3">
-                                        <p class="name">Roger Scott</p>
-                                        <span class="position">Marketing Manager</span>
+                        <div class="item">
+                            <div class="testimony-wrap py-4">
+                                <div class="text">
+                                    <p class="mb-4">Far far away, behind the word mountains, far from the countries
+                                        Vokalia and Consonantia, there live the blind texts.</p>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-img" style="background-image: url(../assets/img/person_2.jpg)">
+                                        </div>
+                                        <div class="pl-3">
+                                            <p class="name">Roger Scott</p>
+                                            <span class="position">Marketing Manager</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="item">
-                        <div class="testimony-wrap py-4">
-                            <div class="text">
-                                <p class="mb-4">Far far away, behind the word mountains, far from the countries
-                                    Vokalia and Consonantia, there live the blind texts.</p>
-                                <div class="d-flex align-items-center">
-                                    <div class="user-img" style="background-image: url(../assets/img/person_2.jpg)">
+                        <div class="item">
+                            <div class="testimony-wrap py-4">
+                                <div class="text">
+                                    <p class="mb-4">Far far away, behind the word mountains, far from the countries
+                                        Vokalia and Consonantia, there live the blind texts.</p>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-img" style="background-image: url(../assets/img/person_3.jpg)">
+                                        </div>
+                                        <div class="pl-3">
+                                            <p class="name">Roger Scott</p>
+                                            <span class="position">Marketing Manager</span>
+                                        </div>
                                     </div>
-                                    <div class="pl-3">
-                                        <p class="name">Roger Scott</p>
-                                        <span class="position">Marketing Manager</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="testimony-wrap py-4">
+                                <div class="text">
+                                    <p class="mb-4">Far far away, behind the word mountains, far from the countries
+                                        Vokalia and Consonantia, there live the blind texts.</p>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-img" style="background-image: url(../assets/img/person_1.jpg)">
+                                        </div>
+                                        <div class="pl-3">
+                                            <p class="name">Roger Scott</p>
+                                            <span class="position">Marketing Manager</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="testimony-wrap py-4">
+                                <div class="text">
+                                    <p class="mb-4">Far far away, behind the word mountains, far from the countries
+                                        Vokalia and Consonantia, there live the blind texts.</p>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-img" style="background-image: url(../assets/img/person_2.jpg)">
+                                        </div>
+                                        <div class="pl-3">
+                                            <p class="name">Roger Scott</p>
+                                            <span class="position">Marketing Manager</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -543,178 +546,174 @@
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="ftco-section">
-    <div class="container">
-        <div class="row justify-content-center pb-4">
-            <div class="col-md-12 heading-section text-center ftco-animate">
-                <h2 class="mb-4">Recent Post</h2>
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center pb-4">
+                <div class="col-md-12 heading-section text-center ftco-animate">
+                    <h2 class="mb-4">Recent Post</h2>
+                </div>
+            </div>
+            <div class="row d-flex">
+                <div class="col-md-4 d-flex ftco-animate">
+                    <div class="blog-entry justify-content-end">
+                        <a href="blog-single.html" class="block-20" style="background-image: url('../assets/img/image_1.jpg');">
+                        </a>
+                        <div class="text mt-3 float-right d-block">
+                            <div class="d-flex align-items-center mb-4 topp">
+                                <div class="one">
+                                    <span class="day">21</span>
+                                </div>
+                                <div class="two">
+                                    <span class="yr">2019</span>
+                                    <span class="mos">August</span>
+                                </div>
+                            </div>
+                            <h3 class="heading"><a href="#">Why Lead Generation is Key for Business Growth</a></h3>
+                            <p>A small river named Duden flows by their place and supplies it with the necessary
+                                regelialia.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex ftco-animate">
+                    <div class="blog-entry justify-content-end">
+                        <a href="blog-single.html" class="block-20" style="background-image: url('../assets/img/image_2.jpg');">
+                        </a>
+                        <div class="text mt-3 float-right d-block">
+                            <div class="d-flex align-items-center mb-4 topp">
+                                <div class="one">
+                                    <span class="day">21</span>
+                                </div>
+                                <div class="two">
+                                    <span class="yr">2019</span>
+                                    <span class="mos">August</span>
+                                </div>
+                            </div>
+                            <h3 class="heading"><a href="#">Why Lead Generation is Key for Business Growth</a></h3>
+                            <p>A small river named Duden flows by their place and supplies it with the necessary
+                                regelialia.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex ftco-animate">
+                    <div class="blog-entry">
+                        <a href="blog-single.html" class="block-20" style="background-image: url('../assets/img/image_3.jpg');">
+                        </a>
+                        <div class="text mt-3 float-right d-block">
+                            <div class="d-flex align-items-center mb-4 topp">
+                                <div class="one">
+                                    <span class="day">21</span>
+                                </div>
+                                <div class="two">
+                                    <span class="yr">2019</span>
+                                    <span class="mos">August</span>
+                                </div>
+                            </div>
+                            <h3 class="heading"><a href="#">Why Lead Generation is Key for Business Growth</a></h3>
+                            <p>A small river named Duden flows by their place and supplies it with the necessary
+                                regelialia.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row d-flex">
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry justify-content-end">
-                    <a href="blog-single.html" class="block-20" style="background-image: url('../assets/img/image_1.jpg');">
-                    </a>
-                    <div class="text mt-3 float-right d-block">
-                        <div class="d-flex align-items-center mb-4 topp">
-                            <div class="one">
-                                <span class="day">21</span>
-                            </div>
-                            <div class="two">
-                                <span class="yr">2019</span>
-                                <span class="mos">August</span>
-                            </div>
-                        </div>
-                        <h3 class="heading"><a href="#">Why Lead Generation is Key for Business Growth</a></h3>
-                        <p>A small river named Duden flows by their place and supplies it with the necessary
-                            regelialia.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry justify-content-end">
-                    <a href="blog-single.html" class="block-20" style="background-image: url('../assets/img/image_2.jpg');">
-                    </a>
-                    <div class="text mt-3 float-right d-block">
-                        <div class="d-flex align-items-center mb-4 topp">
-                            <div class="one">
-                                <span class="day">21</span>
-                            </div>
-                            <div class="two">
-                                <span class="yr">2019</span>
-                                <span class="mos">August</span>
-                            </div>
-                        </div>
-                        <h3 class="heading"><a href="#">Why Lead Generation is Key for Business Growth</a></h3>
-                        <p>A small river named Duden flows by their place and supplies it with the necessary
-                            regelialia.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry">
-                    <a href="blog-single.html" class="block-20" style="background-image: url('../assets/img/image_3.jpg');">
-                    </a>
-                    <div class="text mt-3 float-right d-block">
-                        <div class="d-flex align-items-center mb-4 topp">
-                            <div class="one">
-                                <span class="day">21</span>
-                            </div>
-                            <div class="two">
-                                <span class="yr">2019</span>
-                                <span class="mos">August</span>
-                            </div>
-                        </div>
-                        <h3 class="heading"><a href="#">Why Lead Generation is Key for Business Growth</a></h3>
-                        <p>A small river named Duden flows by their place and supplies it with the necessary
-                            regelialia.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
 
-<footer class="ftco-footer bg-bottom" style="background-image: url(../assets/img/footer-bg.jpg);">
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-md">
-                <div class="ftco-footer-widget mb-4">
-                    <h2 class="ftco-heading-2">Vacation</h2>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
-                        there live the blind texts.</p>
-                    <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
-                        <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-                        <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-                        <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="ftco-footer-widget mb-4 ml-md-5">
-                    <h2 class="ftco-heading-2">Infromation</h2>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="py-2 d-block">Online Enquiry</a></li>
-                        <li><a href="#" class="py-2 d-block">General Enquiries</a></li>
-                        <li><a href="#" class="py-2 d-block">Booking Conditions</a></li>
-                        <li><a href="#" class="py-2 d-block">Privacy and Policy</a></li>
-                        <li><a href="#" class="py-2 d-block">Refund Policy</a></li>
-                        <li><a href="#" class="py-2 d-block">Call Us</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="ftco-footer-widget mb-4">
-                    <h2 class="ftco-heading-2">Experience</h2>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="py-2 d-block">Adventure</a></li>
-                        <li><a href="#" class="py-2 d-block">Hotel and Restaurant</a></li>
-                        <li><a href="#" class="py-2 d-block">Beach</a></li>
-                        <li><a href="#" class="py-2 d-block">Nature</a></li>
-                        <li><a href="#" class="py-2 d-block">Camping</a></li>
-                        <li><a href="#" class="py-2 d-block">Party</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="ftco-footer-widget mb-4">
-                    <h2 class="ftco-heading-2">Have a Questions?</h2>
-                    <div class="block-23 mb-3">
-                        <ul>
-                            <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain
-                                    View, San Francisco, California, USA</span></li>
-                            <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929
-                                        210</span></a></li>
-                            <li><a href="#"><span class="icon icon-envelope"></span><span
-                                        class="text">info@yourdomain.com</span></a></li>
+    <footer class="ftco-footer bg-bottom" style="background-image: url(../assets/img/footer-bg.jpg);">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Vacation</h2>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
+                            there live the blind texts.</p>
+                        <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                            <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
                         </ul>
                     </div>
                 </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4 ml-md-5">
+                        <h2 class="ftco-heading-2">Infromation</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="py-2 d-block">Online Enquiry</a></li>
+                            <li><a href="#" class="py-2 d-block">General Enquiries</a></li>
+                            <li><a href="#" class="py-2 d-block">Booking Conditions</a></li>
+                            <li><a href="#" class="py-2 d-block">Privacy and Policy</a></li>
+                            <li><a href="#" class="py-2 d-block">Refund Policy</a></li>
+                            <li><a href="#" class="py-2 d-block">Call Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Experience</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="py-2 d-block">Adventure</a></li>
+                            <li><a href="#" class="py-2 d-block">Hotel and Restaurant</a></li>
+                            <li><a href="#" class="py-2 d-block">Beach</a></li>
+                            <li><a href="#" class="py-2 d-block">Nature</a></li>
+                            <li><a href="#" class="py-2 d-block">Camping</a></li>
+                            <li><a href="#" class="py-2 d-block">Party</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Have a Questions?</h2>
+                        <div class="block-23 mb-3">
+                            <ul>
+                                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain
+                                        View, San Francisco, California, USA</span></li>
+                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929
+                                            210</span></a></li>
+                                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+
+                    <p>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;<script>
+                            document.write(new Date().getFullYear());
+                        </script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12 text-center">
+    </footer>
 
-                <p>
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    Copyright &copy;<script>
-                    document.write(new Date().getFullYear());
-                    </script> All rights reserved | This template is made with <i class="icon-heart color-danger"
-                        aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                </p>
-            </div>
-        </div>
-    </div>
-</footer>
+    <!-- loader -->
+    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
+            <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
+            <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" />
+        </svg></div>
 
-<!-- loader -->
-<div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
-        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
-        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
-            stroke="#F96D00" />
-    </svg></div>
-
-<script src="../assets/js/jquery.min.js"></script>
-<script src="../assets/js/jquery-migrate-3.0.1.min.js"></script>
-<script src="../assets/js/popper.min.js"></script>
-<script src="../assets/js/bootstrap.min.js"></script>
-<script src="../assets/js/jquery.easing.1.3.js"></script>
-<script src="../assets/js/jquery.waypoints.min.js"></script>
-<script src="../assets/js/jquery.stellar.min.js"></script>
-<script src="../assets/js/owl.carousel.min.js"></script>
-<script src="../assets/js/jquery.magnific-popup.min.js"></script>
-<script src="../assets/js/aos.js"></script>
-<script src="../assets/js/jquery.animateNumber.min.js"></script>
-<script src="../assets/js/bootstrap-datepicker.js"></script>
-<script src="../assets/js/scrollax.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false">
-</script>
-<script src="../assets/js/google-map.js"></script>
-<script src="../assets/js/main.js"></script>
+    <script src="../assets/js/jquery.min.js"></script>
+    <script src="../assets/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="../assets/js/popper.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+    <script src="../assets/js/jquery.easing.1.3.js"></script>
+    <script src="../assets/js/jquery.waypoints.min.js"></script>
+    <script src="../assets/js/jquery.stellar.min.js"></script>
+    <script src="../assets/js/owl.carousel.min.js"></script>
+    <script src="../assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="../assets/js/aos.js"></script>
+    <script src="../assets/js/jquery.animateNumber.min.js"></script>
+    <script src="../assets/js/bootstrap-datepicker.js"></script>
+    <script src="../assets/js/scrollax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false">
+    </script>
+    <script src="../assets/js/google-map.js"></script>
+    <script src="../assets/js/main.js"></script>
 
 </body>
 

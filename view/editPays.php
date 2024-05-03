@@ -21,19 +21,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $image = $_POST['image_old'];
     }
 
-    if (isset($_POST["NomP"])) {
-
+    if (isset($_POST["NomP"]) && isset($_POST["Continent"])) {
         $id = $_POST['id'];
         $NomP = $_POST['NomP'];
+        $Continent = $_POST['Continent'];
 
-        if (!containsOnlyLettersAndSpaces($NomP)) {
-            $error = "Le nom du pays ne doit contenir que des lettres et des espaces.";
+        if (!containsOnlyLettersAndSpaces($NomP) || !containsOnlyLettersAndSpaces($Continent)) {
+            $error = "Le nom du pays et le continent ne doivent contenir que des lettres et des espaces.";
         } else {
-            $Pays = $PaysC->getPaysById($id);
-            // Mettre à jour le pays
-            $PaysC->updatePays($id, $NomP, $image);
-            header('Location:../examples/dashboard.php');
-            exit;
+            try {
+                // Récupérer les informations du pays à mettre à jour
+                $Pays = $PaysC->getPaysById($id);
+
+                if (!$Pays) {
+                    echo "Pays non trouvé.";
+                    exit;
+                }
+
+                // Mettre à jour le pays
+                $PaysC->updatePays($id, $NomP, $image, $Continent);
+                header('Location:../examples/dashboard.php');
+                exit;
+            } catch (Exception $e) {
+                echo "Erreur lors de la mise à jour du pays : " . $e->getMessage();
+            }
         }
     } else {
         $error = "Tous les champs doivent être remplis";
@@ -81,22 +92,16 @@ if (isset($_GET['id'])) {
         <div class="sidebar" data-color="blue">
             <!-- Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow" -->
             <div class="logo">
-                <a href="http://www.learnes.com" class="simple-text logo-mini">
-                    LR
-                </a>
                 <a href="http://www.learnes.com" class="simple-text logo-normal">
-                    Learner
+                Adventure Awaits
                 </a>
             </div>
 
             <div class="sidebar" data-color="blue">
                 <!-- Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow" -->
                 <div class="logo">
-                    <a href="http://www.learnes.com" class="simple-text logo-mini">
-                        LR
-                    </a>
                     <a href="http://www.learnes.com" class="simple-text logo-normal">
-                        Learner
+                    Adventure Awaits
                     </a>
                 </div>
 
@@ -108,48 +113,8 @@ if (isset($_GET['id'])) {
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        <li>
-                            <a href="../examples/icons.html">
-                                <i class="now-ui-icons education_atom"></i>
-                                <p>Icons</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../examples/map.html">
-                                <i class="now-ui-icons location_map-big"></i>
-                                <p>Maps</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../examples/notifications.html">
-                                <i class="now-ui-icons ui-1_bell-53"></i>
-                                <p>Notifications</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../examples/user.html">
-                                <i class="now-ui-icons users_single-02"></i>
-                                <p>User Profile</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../examples/tables.html">
-                                <i class="now-ui-icons design_bullet-list-67"></i>
-                                <p>Table List</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../examples/typography.html">
-                                <i class="now-ui-icons text_caps-small"></i>
-                                <p>Typography</p>
-                            </a>
-                        </li>
-                        <li class="active-pro">
-                            <a href="./upgrade.html">
-                                <i class="now-ui-icons arrows-1_cloud-download-93"></i>
-                                <p>Upgrade to PRO</p>
-                            </a>
-                        </li>
+                       
+                        
                     </ul>
                     <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
                         <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
@@ -280,6 +245,15 @@ if (isset($_GET['id'])) {
                                             </div>
                                         </div>
 
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 px-1">
+                                        <div class="form-group">
+                                            <label>Continent</label>
+                                            <input type="text" name="Continent" class="form-control"
+                                                value="<?php echo $Pays['Continent']; ?>" placeholder="Continent">
+                                        </div>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-round">Save</button>

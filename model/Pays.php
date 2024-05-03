@@ -1,6 +1,5 @@
 <?php
 
-
 class Pays
 {
     private ?int $id = null;
@@ -8,15 +7,17 @@ class Pays
     private ?string $image = null;
     private ?int $likes = null;
     private ?int $dislikes = null;
+    private ?string $Continent = null;
     
 
-    public function __construct($id, $NomP, $image,$likes = null, $dislikes = null)
+    public function __construct($id, $NomP, $image,$likes = null, $dislikes = null,$Continent)
     {
         $this->id = $id;
         $this->NomP = $NomP;
         $this->image = $image;
         $this->likes = $likes;
         $this->dislikes = $dislikes;
+        $this->Continent = $Continent;
     }
 
     // Méthodes getters et setters pour l'attribut id
@@ -75,6 +76,16 @@ class Pays
         $this->dislikes = $dislikes;
         return $this;
     }
+    public function getContinent()
+    {
+        return $this->Continent;
+    }
+
+    public function setContinent($Continent)
+    {
+        $this->Continent = $Continent;
+        return $this;
+    }
+
 
 }
-?>

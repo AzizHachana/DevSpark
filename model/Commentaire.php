@@ -5,13 +5,14 @@ class Commentaire
     private ?int $id_pays = null;
     private ?string $Commentaire = null;
     private ?string $Date_commentaire = null;
-    
+    private ?int $id_user = null;
 
-    public function __construct($id_pays, $Commentaire, $Date_commentaire)
+
+    public function __construct($idPays, $commentaire, $idUser)
     {
-        $this->id_pays = $id_pays;
-        $this->Commentaire = $Commentaire;
-        $this->Date_commentaire = $Date_commentaire;
+        $this->id_pays = $idPays;
+        $this->Commentaire = $commentaire;
+        $this->id_user = $idUser;
     }
 
     // Méthodes getters et setters pour l'attribut id
@@ -36,8 +37,17 @@ class Commentaire
         $this->id_pays = $id_pays;
         return $this;
     }
+    public function getIdUser()
+    {
+        return $this->id_user;
+    }
 
-    
+    public function setIdUser($id_user)
+    {
+        $this->id_user = $id_user;
+        return $this;
+    }
+
     public function getCommentaire()
     {
         return $this->Commentaire;
@@ -49,7 +59,7 @@ class Commentaire
         return $this;
     }
 
-    
+
     public function getDate()
     {
         return $this->Date_commentaire;
@@ -60,6 +70,4 @@ class Commentaire
         $this->Date_commentaire = $Date_commentaire;
         return $this;
     }
-
 }
-?>

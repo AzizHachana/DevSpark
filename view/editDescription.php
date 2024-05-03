@@ -7,10 +7,7 @@ $DescriptionC = new DescriptionC();
 $error = "";
 
 // Fonction pour vérifier si une chaîne ne contient que des lettres et des espaces
-function containsOnlyLettersAndSpaces($str)
-{
-    return preg_match('/^[a-zA-Z\s]+$/', $str);
-}
+
 
 // Récupérer les informations de la description à mettre à jour
 if (isset($_GET['id'])) {
@@ -48,10 +45,14 @@ if (
         $Attractions_touristiques = $_POST["Attractions_touristiques"];
         $Activites = $_POST["Activites"];
 
-        // Vérifier si les champs contiennent uniquement des lettres et des espaces
-        if (!containsOnlyLettersAndSpaces($Capitale) || !containsOnlyLettersAndSpaces($Climat) || !containsOnlyLettersAndSpaces($Langue) || !containsOnlyLettersAndSpaces($Monnaie) || !containsOnlyLettersAndSpaces($Attractions_touristiques) || !containsOnlyLettersAndSpaces($Activites)) {
-            $error = "Les champs ne doivent contenir que des lettres et des espaces.";
-        } else {
+        function isValidText($text)
+{
+    return preg_match('/^[^\d]*$/', $text);
+}
+
+if (!isValidText($_POST["Capitale"]) || !isValidText($_POST["Climat"]) || !isValidText($_POST["Langue"]) || !isValidText($_POST["Monnaie"]) || !isValidText($_POST["Attractions_touristiques"]) || !isValidText($_POST["Activites"])) {
+    $error = "Les champs ne doivent contenir que des caractères autres que des chiffres.";
+} else {
             $DescriptionC->updateDescription($id, $Capitale, $Climat, $Langue, $Monnaie, $Attractions_touristiques, $Activites);
             header('Location:../examples/dashboard.php');
             exit;
@@ -91,11 +92,8 @@ if (
         <div class="sidebar" data-color="blue">
             <!-- Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow" -->
             <div class="logo">
-                <a href="http://www.learnes.com" class="simple-text logo-mini">
-                    LR
-                </a>
                 <a href="http://www.learnes.com" class="simple-text logo-normal">
-                    Learner
+                Adventure Awaits
                 </a>
             </div>
 
@@ -107,48 +105,7 @@ if (
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="../examples/icons.html">
-                            <i class="now-ui-icons education_atom"></i>
-                            <p>Icons</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../examples/map.html">
-                            <i class="now-ui-icons location_map-big"></i>
-                            <p>Maps</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../examples/notifications.html">
-                            <i class="now-ui-icons ui-1_bell-53"></i>
-                            <p>Notifications</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../examples/user.html">
-                            <i class="now-ui-icons users_single-02"></i>
-                            <p>User Profile</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../examples/tables.html">
-                            <i class="now-ui-icons design_bullet-list-67"></i>
-                            <p>Table List</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../examples/typography.html">
-                            <i class="now-ui-icons text_caps-small"></i>
-                            <p>Typography</p>
-                        </a>
-                    </li>
-                    <li class="active-pro">
-                        <a href="../assets/demo/upgrade.html">
-                            <i class="now-ui-icons arrows-1_cloud-download-93"></i>
-                            <p>Upgrade to PRO</p>
-                        </a>
-                    </li>
+
                 </ul>
                 <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
                     <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>

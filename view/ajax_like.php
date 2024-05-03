@@ -6,8 +6,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
 
     $Pays = new PaysC();
-    $Pays->incrementLikes($id);
 
-    // Renvoyer le nouveau nombre de likes à afficher sur la page
-    echo $Pays->getLikesCount($id);
+    if (!$Pays->hasLiked($id)) { // Vérification côté serveur si l'utilisateur a déjà aimé
+        $Pays->incrementLikes($id);
+        echo $Pays->getLikesCount($id);
+    } else {
+        echo "You have already liked this country."; // Message si l'utilisateur a déjà aimé
+    }
 }
