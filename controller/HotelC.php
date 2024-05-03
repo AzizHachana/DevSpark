@@ -33,7 +33,7 @@ class HotelC
 
     public function ajouterHotel($hotel)
     {
-        $sql = "INSERT INTO hotel VALUES (NULL, :Nom, :Adresse, :Ville, :Code_postal, :Pays, :Tel, :Email, :image, :Description )";
+        $sql = "INSERT INTO hotel VALUES (NULL, :Nom, :Adresse, :Ville, :Code_postal, :Pays, :Tel, :Email, :image, :Description, 0, 0 )";
         $db = Config::getConnexion();
         try {
             $query = $db->prepare($sql);
@@ -125,6 +125,64 @@ public function showMap() {
     $locationData = $mapModel->getLocationData();
     require_once 'view/map_view.php';
 }
+public function incrementLikes($id)
+    {
+        $sql = "UPDATE hotel SET likes = likes + 1 WHERE id = :id";
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->bindParam(':id', $id);
+            $query->execute();
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
+    public function incrementDislikes($id)
+    {
+        $sql = "UPDATE hotel SET dislikes = dislikes + 1 WHERE id = :id";
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->bindParam(':id', $id);
+            $query->execute();
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
+    function getLikesCount($id)
+    {
+        $sql = "SELECT likes FROM hotel WHERE id = :id";
+        $db = config::getConnexion();
+
+        try {
+            $query = $db->prepare($sql);
+            $query->bindParam(':id', $id, PDO::PARAM_INT);
+            $query->execute();
+            $result = $query->fetchColumn();
+            return $result;
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
+    function getDislikesCount($id)
+    {
+        $sql = "SELECT dislikes FROM hotel WHERE id = :id";
+        $db = config::getConnexion();
+
+        try {
+            $query = $db->prepare($sql);
+            $query->bindParam(':id', $id, PDO::PARAM_INT);
+            $query->execute();
+            $result = $query->fetchColumn();
+            return $result;
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
 }
 class Map {
     private $db;

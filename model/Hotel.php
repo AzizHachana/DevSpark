@@ -12,6 +12,9 @@ class Hotel
     private ?string $email = null;
     private ?string $image = null;
     private ?string $description= null;
+    private ?int $likes = null;
+    private ?int $dislikes = null;
+    
     //private ?string $etoile = null;
 
   
@@ -27,6 +30,8 @@ class Hotel
         $email,
         $image,
         $description,
+        $likes = null ,
+        $dislikes = null ,
         //$etoile,
     
     ) {
@@ -162,7 +167,27 @@ class Hotel
         $this->description = $description;
         return $this;
     }
+    public function getLikes()
+    {
+        return $this->likes;
+    }
 
+    public function setLikes($likes)
+    {
+        $this->likes = $likes;
+        return $this;
+    }
+
+    public function getDislikes()
+    {
+        return $this->dislikes;
+    }
+
+    public function setDislikes($dislikes)
+    {
+        $this->dislikes = $dislikes;
+        return $this;
+    }
    
 }
 

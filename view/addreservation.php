@@ -288,6 +288,7 @@ if (isset($_GET['hotel_id']))
 
 
 
+
     </style>
 </head>
 <body>

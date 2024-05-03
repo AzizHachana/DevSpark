@@ -21,23 +21,24 @@ if ($hotels) {
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     
-
-    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
-    <link rel="stylesheet" href="css/animate.css">
     
-    <link rel="stylesheet" href="css/owl.carousel.min.css">
-    <link rel="stylesheet" href="css/owl.theme.default.min.css">
-    <link rel="stylesheet" href="css/magnific-popup.css">
 
-    <link rel="stylesheet" href="css/aos.css">
+    <link rel="stylesheet" href="../css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    
+    <link rel="stylesheet" href="../css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../assets/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="../assets/css/magnific-popup.css">
+
+    <link rel="stylesheet" href="../css/aos.css">
 
     <link rel="stylesheet" href="css/ionicons.min.css">
 
-    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
-    <link rel="stylesheet" href="css/jquery.timepicker.css">
+    <link rel="stylesheet" href="../css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="../css/jquery.timepicker.css">
 
     
-    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="../css/flaticon.css">
     <link rel="stylesheet" href="css/icomoon.css">
     <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
@@ -146,6 +147,9 @@ if ($hotels) {
             cursor: pointer;
             transition: background-color 0.3s;
         }
+        .btn-height {
+    line-height: 1;
+}
 
     
         
@@ -201,18 +205,32 @@ if ($hotels) {
                             <span class="hotel-name" ><?= $hotel['Nom']; ?></span>
                         </div>
                         <div class="hotel-info-item">
-                            <span class="hotel-info-label">Adresse:</span>
-                            <span class="hotel-info-value"><?= $hotel['Adresse']; ?></span>
-                            <span class="hotel-info-value"><?= $hotel['Ville']; ?></span>
-                            <span class="hotel-info-value"><?= $hotel['Pays']; ?></span>
+                            <span class="fas fa-map-marker-alt" >  <?= $hotel['Adresse']; ?></span> ,
+                            <span ><?= $hotel['Ville']; ?></span> ,
+                            <span ><?= $hotel['Pays']; ?></span>
                         </div>
                         <div class="hotel-info-item">
-                            <span class="hotel-info-label">Téléphone:</span>
-                            <span class="hotel-info-value"><?= $hotel['Tel']; ?></span>
+                            
+                            <span class="fas fa-phone" > <?= $hotel['Tel']; ?></span>
                         </div>
+                        <div class="d-flex justify-content-between mt-3">
+                                <!-- Bouton Like -->
+                                <button class="btn btn-outline-success like-btn" data-id="<?php echo $hotel['id']; ?>">
+                                    <i class="icon-thumbs-o-up"></i> Like
+                                </button>
+                                <span class="like-count"><?php echo $hotel['likes']; ?></span>
+
+                                <!-- Bouton Dislike -->
+                                <button class="btn btn-outline-danger dislike-btn" data-id="<?php echo $hotel['id']; ?>">
+                                    <i class="icon-thumbs-o-down"></i> Dislike
+                                </button>
+                                <span class="dislike-count"><?php echo $hotel['dislikes']; ?></span>
+                            </div>
                        
-                            <a href="addreservation.php?hotel_id=<?= $hotel['id']; ?>" class="availability-button">Check Availability</a>
-                             <a  href="Send_mail.php" class="availability-button">Send Mail</a>
+                            <div class="d-flex justify-content-center mt-3">
+                                <a href="addreservation.php?hotel_id=<?= $hotel['id']; ?>" class="btn btn-primary mr-2 btn-height availability-button">Check Availability</a>
+                                <a href="Send_mail.php" class="btn btn-secondary btn-height availability-button">Send Mail</a>
+                            </div>
                         
 
                     </div>
@@ -221,25 +239,64 @@ if ($hotels) {
         </div>
     </div>
     </div>
-    <script>
-       $(document).ready(function() {
-    $('.like-button').on('click', function() {
-        var hotelId = $(this).closest('.hotel-card').data('hotel-id');
-        var likeCount = parseInt($(this).find('.like-count').text());
-        likeCount++;
+    <script src="../js/jquery.min.js"></script>
+     <script src="../js/jquery-migrate-3.0.1.min.js"></script>
+     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.like-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var id = this.getAttribute('data-id'); // Vérifiez si id est correct ici
+                console.log("ID de l'hôtel:", id); // Affichez l'ID de l'hôtel dans la console
+                var countSpan = this.nextElementSibling;
 
-        // Send an AJAX request to update the like count in your database
-        $.ajax({
-            type: 'POST',
-            url: 'update_like_count.php',
-            data: { hotel_id: hotelId, likes: likeCount },
-            success: function(data) {
-                $(this).find('.like-count').text(likeCount);
-            }
+                fetch('../view/ajax_like.php', {
+                    method: 'POST',
+                    body: JSON.stringify({ id: id }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.text())
+                .then(data => {
+                    // Mettre à jour le nombre de likes affiché
+                    countSpan.textContent = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
         });
     });
-});
-    </script>
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.dislike-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var id = this.getAttribute('data-id'); // Vérifiez si id est correct ici
+                console.log("ID de l'hôtel:", id); // Affichez l'ID de l'hôtel dans la console
+                var countSpan = this.nextElementSibling;
+
+                fetch('../view/ajax_dislike.php', {
+                    method: 'POST',
+                    body: JSON.stringify({ id: id }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.text())
+                .then(data => {
+                    // Mettre à jour le nombre de likes affiché
+                    countSpan.textContent = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    });
+</script>
+
+    
 </body>
 </html>
 
