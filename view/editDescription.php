@@ -2,7 +2,7 @@
 include '../config.php';
 include '../controller/PaysC.php';
 include '../controller/DescriptionC.php';
-
+$PaysC = new PaysC();
 $DescriptionC = new DescriptionC();
 $error = "";
 
@@ -196,7 +196,7 @@ if (!isValidText($_POST["Capitale"]) || !isValidText($_POST["Climat"]) || !isVal
                         <?php endif; ?>
 
                         <div class="card-header d-flex justify-content-between align-items-center ">
-                            <?php $PaysC = new PaysC();
+                            <?php 
                             $Pays = $PaysC->getPaysById($Description['id']); ?>
                             <h5 class="title">Modifier la description pour le pays :
                                 <strong><?php echo $Pays['NomP'] ?></strong>

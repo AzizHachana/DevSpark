@@ -40,7 +40,8 @@ if (
         $Commentaire = new Commentaire(
             $_POST['id_pays'],
             $commentaire,
-            $_POST['id_user']
+            $_POST['id_user'],
+            0
         );
 
         $CommentaireC->ajouterCommentaire($Commentaire);

@@ -6,13 +6,15 @@ class Commentaire
     private ?string $Commentaire = null;
     private ?string $Date_commentaire = null;
     private ?int $id_user = null;
+    private ?int $nbre_like = null;
 
 
-    public function __construct($idPays, $commentaire, $idUser)
+    public function __construct($id_pays, $Commentaire, $id_user, $nbre_like)
     {
-        $this->id_pays = $idPays;
-        $this->Commentaire = $commentaire;
-        $this->id_user = $idUser;
+        $this->id_pays = $id_pays;
+        $this->Commentaire = $Commentaire;
+        $this->id_user = $id_user;
+        $this->nbre_like = $nbre_like;
     }
 
     // Méthodes getters et setters pour l'attribut id
@@ -68,6 +70,16 @@ class Commentaire
     public function setDate($Date_commentaire)
     {
         $this->Date_commentaire = $Date_commentaire;
+        return $this;
+    }
+    public function getNbre_Like()
+    {
+        return $this->nbre_like;
+    }
+
+    public function setNbre_Like($nbre_like)
+    {
+        $this->nbre_like = $nbre_like;
         return $this;
     }
 }

@@ -86,6 +86,7 @@ class Pays
         $this->Continent = $Continent;
         return $this;
     }
+    
 
 
 }

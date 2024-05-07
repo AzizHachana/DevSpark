@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistant de voyage</title>
+</head>
+<body>
+    <h1>Assistant de voyage</h1>
+    <p>Poser une question :</p>
+    <input type="text" id="question" name="question" placeholder="Posez votre question ici...">
+    <button onclick="poserQuestion()">Envoyer</button>
+    <p id="reponse"></p>
+
+    <script>
+        function poserQuestion() {
+            var question = document.getElementById("question").value;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("reponse").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "assistant.php?question=" + question, true);
+            xhttp.send();
+        }
+    </script>
+</body>
+</html>

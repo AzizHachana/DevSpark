@@ -150,7 +150,43 @@ $displayPays = array_slice($Pays, $start, $perPage);
   .fa-twitter {
     color: #1da1f2;
   }
+  .remove-from-favorites {
+    color: #red;
+    cursor: pointer;
+}
+.modal-header h5 {
+    text-align: center;
+    margin-bottom: 0;
+    margin-top: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 auto;
+    margin-right: 50px; }
+    
+   
+    /* Style pour chaque élément de la liste */
+    .favorite-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #ccc;
+        padding: 10px 0;
+    }
 
+    
+    
+    /* Style pour le bouton de suppression */
+    .remove-from-favorites {
+        color: #f00;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+    /* Style pour le bouton de suppression au survol */
+    .remove-from-favorites:hover {
+        color: #c00;
+    }
     </style>
 </head>
 
@@ -201,8 +237,12 @@ $displayPays = array_slice($Pays, $start, $perPage);
                 <input type="text" name="search" class="form-control" placeholder="Rechercher ...">
                 <button type="submit" class="btn btn-primary ml-2">Rechercher</button>
             </div>
-
             <div class="form-group mx-2">
+    <button type="button" class="btn btn-outline-primary view-favorites-btn">
+        <i class="fas fa-heart"></i> Voir les favoris
+    </button>
+</div>
+                <div class="form-group mx-2">
                 <select name="Continent" class="form-control mr-2" id="Continent">
                     <option value="">Tous Les Continents</option>
                     <option value="Asie">Asie</option>
@@ -255,16 +295,86 @@ $displayPays = array_slice($Pays, $start, $perPage);
                                     <i class="icon-thumbs-o-down"></i> Dislike
                                 </button>
                                 <span class="dislike-count"><?php echo $country['dislikes']; ?></span>
+                                
                             </div>
+                            <div class="text-center mt-3">
+                                <button class="btn btn-outline-primary add-to-favorites-btn" data-id="<?php echo $country['id']; ?>">
+                                    <i class="fas fa-heart"></i> Ajouter aux favoris
+                                </button>
+                    
+                             </div>
+                             
 
                         </div>
                     </div>
                 </div>
                 <?php endforeach; ?>
             </div>
+            <div class="modal fade" id="favoritesModal" tabindex="-1" role="dialog" aria-labelledby="favoritesModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+ <h5 class="modal-title modal-title-centered" id="favoritesModalLabel">--Ma Liste Des Favoris--</h5>               
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+    <ul id="favorites-list">
+    <div id="favorites-list" class="d-flex flex-column">
+    <?php foreach ($PaysC->getFavorites() as $country) :?>
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="d-flex align-items-center">
+                <img src="../assets/img/uploads/<?php echo $country['image']; ?>" alt="Country Image" style="width: 50px; height: auto;">
+                <a href="blog-single.php?id=<?php echo $country['id'];?>" class="ml-2"><?php echo $country['NomP'];?></a>
+            </div>
+            <span class="remove-from-favorites" data-id="<?php echo $country['id'];?>">×</span>
+        </div>
+    <?php endforeach;?>
+</div>
+
+    </ul>
+</div>
+        </div>
+    </div>
+</div>
             <script src="../assets/js/jquery.min.js"></script>
             <script src="../assets/js/jquery-migrate-3.0.1.min.js"></script>
             <script>
+                $(document).ready(function() {
+        // Gérer la suppression des favoris
+        $('.remove-from-favorites').click(function() {
+            var id = $(this).data('id');
+            $.ajax({
+                url: 'supprimer_des_favoris.php', 
+                method: 'POST',
+                data: { id: id },
+                success: function(response) {
+                    alert(response); 
+                    $(this).parent('li').remove(); // Supprimer la ligne de la liste des favoris
+                }
+            });
+        });
+    });
+                $(document).ready(function() {
+    // Add to favorites button
+    $('.add-to-favorites-btn').click(function() {
+        var countryId = $(this).data('id');
+        $.ajax({
+            url: 'ajouter_aux_favoris.php',
+            method: 'POST',
+            data: { id: countryId },
+            success: function(response) {
+                alert(response);
+            }
+        });
+    });
+
+    // View favorites button
+    $('.view-favorites-btn').click(function() {
+        $('#favoritesModal').modal('show');
+    });
+});
             $(document).ready(function() {
     $('.like-btn').click(function() {
         var id = $(this).data('id');
@@ -302,6 +412,33 @@ $displayPays = array_slice($Pays, $start, $perPage);
                         }
                     });
                 }
+            }
+        });
+    });
+});
+$(document).ready(function() {
+    // Gérer l'ajout aux favoris
+    $('.add-to-favorites-btn').click(function() {
+        var id = $(this).data('id');
+        $.ajax({
+            url: 'ajouter_aux_favoris.php', // Nom du fichier PHP pour gérer l'ajout aux favoris
+            method: 'POST',
+            data: { id: id },
+            success: function(response) {
+                alert(response); // Afficher un message pour confirmer l'ajout aux favoris
+            }
+        });
+    });
+
+    // Gérer la suppression des favoris
+    $('.remove-from-favorites-btn').click(function() {
+        var id = $(this).data('id');
+        $.ajax({
+            url: 'supprimer_des_favoris.php', // Nom du fichier PHP pour gérer la suppression des favoris
+            method: 'POST',
+            data: { id: id },
+            success: function(response) {
+                alert(response); // Afficher un message pour confirmer la suppression des favoris
             }
         });
     });

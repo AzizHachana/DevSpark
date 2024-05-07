@@ -30,6 +30,8 @@ $Comment = $CommentaireC->getCommentByPaysId($id);
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
     <link rel="stylesheet" href="../assets/css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/animate.css">
@@ -243,6 +245,12 @@ $Comment = $CommentaireC->getCommentByPaysId($id);
         overflow: hidden; /* Cache le débordement de l'image */
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre douce */
     }
+
+    .comment-input[readonly] {
+    border: none;
+    background-color: #f8f9fa !important;
+    outline: none; /* Remove outline when input is focused */
+}
     </style>
 
 
@@ -311,7 +319,7 @@ $Comment = $CommentaireC->getCommentByPaysId($id);
                     <div class="col-md-12">
                         <p style="font-size: 25px; margin-bottom: 10px;"><strong>- Activites :</strong> <?php echo $Description['Activites']; ?></p>
                          <!-- Lien pour voir plus d'infos -->
-                         <p><a href="https://kids.nationalgeographic.com/geography/countries/article/<?php echo strtolower($Pays['NomP']); ?>" target="_blank">Voir plus d'infos</a></p>
+                         <p><a href="https://kids.nationalgeographic.com/geography/countries/article/<?php echo strtolower($Pays['NomP']); ?>" target="_blank">Références</a></p>
                     </div>
                 </div>
             </div>
@@ -352,8 +360,8 @@ $Comment = $CommentaireC->getCommentByPaysId($id);
 
             <!-- ... -->
 
-            <!-- Ajoutez ce code pour le formulaire de commentaire -->
-            <div class="container mt-5 comment-container">
+           <!-- Ajoutez ce code pour le formulaire de commentaire -->
+           <div class="container mt-5 comment-container">
                 <h3>Laissez un commentaire</h3>
                 <div class="error-message" id="comment-error"></div>
                 <form id="comment-form" action="../view/addCommentaire.php" method="post">
@@ -375,69 +383,147 @@ $Comment = $CommentaireC->getCommentByPaysId($id);
                 </form>
             </div>
 
+
             <!-- Section des commentaires -->
-            <div class="container mt-5">
-                <h3 style="text-align:center;">Commentaires</h3>
-                <?php
-                $CommentC = new CommentaireC();
-                $PaysC = new PaysC();
-                $Comment = $CommentC->getCommentByPaysId($id); // Remplacez cette ligne par la récupération des commentaires spécifiques à l'article si nécessaire
-                if ($Comment == null) {
-                    echo '<p class="text-center">Aucun commentaire pour le moment</p>';
-                }
-                foreach ($Comment as $comm) {
-                    $Pays = $PaysC->getPaysById($comm['id_pays']);
-                    $User = $CommentC->getUserById($comm['id_user']);
-                ?>
-                    <div class="comment-container d-flex justify-content-between">
-                        <div>
-                            <div class="comment-header">
-                                <?php echo $User['nom'] . " " . $User['prenom']; ?>
+            <!-- Section des commentaires -->
+<div class="container mt-5">
+    <?php
+    $CommentC = new CommentaireC();
+    $PaysC = new PaysC();
+    $Comment = $CommentC->getCommentByPaysId($id); // Remplacez cette ligne par la récupération des commentaires spécifiques à l'article si nécessaire
+    $numberOfComments = count($Comment); // Nombre de commentaires
+    ?>
+    <h3 style="text-align:center;">Commentaires (<?php echo $numberOfComments; ?>)</h3>
+    <?php
+    if ($numberOfComments == 0) {
+        echo '<p class="text-center">Aucun commentaire pour le moment</p>';
+    }
+    foreach ($Comment as $comm) {
+        $Pays = $PaysC->getPaysById($comm['id_pays']);
+        $User = $CommentC->getUserById($comm['id_user']);
+    ?>
+            <form action="../view/editCommentaire.php" method="POST">
+                <div class="comment-container d-flex justify-content-between">
+            <div>
+                <div class="comment-header">
+                    <?php echo $User['nom'] . " " . $User['prenom']; ?>
+                </div>
+                
+                    <div class="comment-body" id="comment-body-<?php echo $comm['id_com']; ?>">
+                        <input type="hidden" name="id_com" value="<?php echo $comm['id_com']; ?>">
+                        <input type="text" class="form-control comment-input" name="comment-body" value="<?php echo $comm['Commentaire']; ?>" readonly>
+                        
+                        <?php if (isset($_SESSION['error_message_edit'])) : ?>
+                            <div class="alert alert-danger" id="comment-error">
+                                <?php echo $_SESSION['error_message_edit']; ?>
                             </div>
-
-                            <div class="comment-body" id="comment-body-<?php echo $comm['id_com']; ?>" contenteditable="false">
-            <?php echo $comm['Commentaire']; ?>
-        </div>
-
-                            <div class="comment-date">
-                                Posté le <?php echo $comm['Date_commentaire']; ?>
-                            </div>
-                        </div>
-                        <?php if ($User['id'] == 7) { ?>
-                            <div>
-                                <a href="./deleteCommentaire.php?id_com=<?php echo $comm['id_com']; ?>">
-                                    <img src="../assets/img/delete.png" alt="Delete" class="btn-icon" width="55" height="55">
-                                </a>
-                                
-                            </div>
-
-                        <?php } ?>
+                            <?php unset($_SESSION['error_message_edit']); ?>
+                            <?php endif; ?>
+                            <!-- Bouton J'aime et nombre de likes -->
                     </div>
-                <?php
-                }
+                        
+                        <button class="btn btn-success comment-like-btn" data-id="<?php echo $comm['id_com']; ?>" style="margin-top: 12px;  margin-bottom: 12px;">
+                        <i class="icon-thumbs-o-up"></i>  J'aime
+                            <span class="comment-like-count"><?php echo $comm['nbre_like']; ?></span>
+                        </button>
 
-                ?>
-
+                        
+                        <div class="comment-date">
+                            Posté le <?php echo $comm['Date_commentaire']; ?>
+                    </div>
+                    
+                    
             </div>
             
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    document.getElementById('comment-form').addEventListener('submit', function(event) {
-                        var commentaire = document.getElementById('Commentaire').value;
-                        var badWords = <?php echo json_encode($badWords); ?>;
+            
+            
+            
+            <?php if ($User['id'] == 7) { ?>
+                <div class="d-flex align-items-center">
+                    <a href="./deleteCommentaire.php?id_com=<?php echo $comm['id_com']; ?>" class="delete-btn">
+                        <img src="../assets/img/delete.png" alt="Delete" class="btn-icon" width="55" height="55">
+                    </a>
+                    
+                    <a class="edit-comment-btn btn" data-id="<?php echo $comm['id_com']; ?>">
+                        <img src="../assets/img/editer.png" alt="Edit" class="btn-icon" width="50" height="50">
+                    </a>
+                    
+                    <button type="submit" class="save-comment-btn btn btn-primary d-none" data-id="<?php echo $comm['id_com']; ?>">Save</button>
+                    
+                </div>
+                
+                <?php } ?>
+                
+            </div>
+            </form>
 
-                        for (var i = 0; i < badWords.length; i++) {
-                            if (commentaire.toLowerCase().indexOf(badWords[i].toLowerCase()) !== -1) {
-                                // Afficher le message d'erreur près du champ de commentaire
-                                document.getElementById('comment-error').innerHTML =
-                                    'Votre commentaire contient des mots interdits. Veuillez modifier votre commentaire.';
-                                document.getElementById('comment-error').style.display = 'block';
-                                event.preventDefault(); // Empêche la soumission du formulaire
-                                return;
-                            }
-                        }
+    <?php
+    }
+
+    ?>
+
+</div>
+<script>
+
+$(document).ready(function() {
+    $('.comment-like-btn').click(function() {
+        var id_com = $(this).data('id');
+        var btn = $(this); // Référence au bouton like pour la désactivation temporaire
+
+        // Désactiver le bouton pendant la requête AJAX pour éviter les clics multiples
+        btn.prop('disabled', true);
+
+        $.ajax({
+            url: '../view/ajax_like_comment.php',
+            method: 'POST',
+            data: {id_com: id_com},
+            success: function(response) {
+                if (response === "You have already liked this comment.") {
+                    alert(response); // Affichage du message si l'utilisateur a déjà aimé
+                } else {
+                    // Mise à jour du nombre de likes
+                    btn.next('.comment-like-count').text(response);
+                }
+            },
+            complete: function() {
+                // Réactiver le bouton après la réponse AJAX
+                btn.prop('disabled', false);
+            }
+        });
+    });
+});
+
+
+
+
+</script>
+
+
+            <script>
+                $(document).ready(function() {
+                    $(".edit-comment-btn").click(function() {
+                        var commentId = $(this).data("id");
+                        $("#comment-body-" + commentId + " input").prop("readonly", false);
+
+                        $(this).addClass("d-none"); // Hide edit button
+                        $(this).siblings(".delete-btn").addClass("d-none"); // Hide delete button
+                        $(this).siblings(".save-comment-btn").removeClass("d-none"); // Show save button
+   
+                    });
+
+                    $(".save-comment-btn").click(function() {
+                        var commentId = $(this).data("id");
+                        $("#comment-body-" + commentId + " input").prop("readonly", true);
+
+                        $(this).addClass("d-none"); // Hide save button
+                        $(this).siblings(".delete-btn").removeClass("d-none"); // Hide delete button
+                        $(this).siblings(".edit-comment-btn").removeClass("d-none"); // Show save button
+   
                     });
                 });
+
+
+       
             </script>
 
 

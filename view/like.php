@@ -12,7 +12,7 @@ if (isset($_POST["likes"]) && isset($_POST["id"])) {
 
 <!-- dislike.php -->
 <?php
-include "../controller/instrumentsC.php";
+include "../controller/PaysC.php";
 
 if (isset($_POST["dislikes"]) && isset($_POST["id"])) {
     $id = $_POST["id"];

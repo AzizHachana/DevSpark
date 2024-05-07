@@ -5,12 +5,27 @@ include '../model/Pays.php';
 
 class PaysC
 {
-    public function __construct()
+    public function getFavorites()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+        if (isset($_SESSION['favorites'])) {
+            $favorites = $_SESSION['favorites'];
+            $countries = array();
+            foreach ($favorites as $countryId) {
+                $country = $this->getPaysById($countryId);
+                $countries[] = $country;
+            }
+            return $countries;
+        } else {
+            return array();
         }
     }
+    public function __construct($condition = false)
+{
+    if ((session_status() === PHP_SESSION_NONE)) {
+        session_start();
+    }
+}
+
 
    
     public function incrementLikes($id)

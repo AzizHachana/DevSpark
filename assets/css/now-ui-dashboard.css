@@ -4354,7 +4354,7 @@ Created using IcoMoon - icomoon.io
 }
 
 .main-panel > .content {
-  padding: 0 30px 30px;
+  padding: 50px 30px;
   min-height: calc(100vh - 123px);
   margin-top: -30px;
 }
