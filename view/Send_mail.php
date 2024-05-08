@@ -1,9 +1,13 @@
 <?php
 
+require_once __DIR__ . '/../vendor/autoload.php';
+//Import PHPMailer classes into the global namespace
+//These must be at the top of your script, not inside a function
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
+//Load Composer's autoloader
 require '../vendor/autoload.php';
 
 $email_client = $_POST["mail"] ?? "";
@@ -27,7 +31,7 @@ try {
 
         // Destinataire
         $mail->setFrom($email_client, 'Mailer'); // Utiliser l'adresse e-mail de l'expéditeur récupérée du formulaire
-        $mail->addAddress('mahmoudlajmi3@gmail.com', 'Joe User'); // Adresse e-mail de destination
+        $mail->addAddress('aziizhachana@gmail.com', 'Joe User'); // Adresse e-mail de destination
 
         // Contenu de l'e-mail
         $mail->isHTML(true); // Format HTML

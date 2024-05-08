@@ -2,6 +2,7 @@
 //include '../config.php';
 include_once __DIR__ . '/../config.php';
 include '../Model/Reservation.php';
+include '../phpqrcode/qrlib.php';
 class ReservationC
 {
     public function ajouterreservation($reservation)
@@ -18,7 +19,8 @@ class ReservationC
                 'Enfants' => $reservation->getEnfants(),
                 'Chambres' => $reservation->getChambres(),
                 'hotel_id' => $reservation->getHotelId(),
-                'user_id' => $reservation->getuserId() // Ajout de l'ID de l'hôtel
+                'user_id' => $reservation->getuserId()
+                //'qr_code_link' => $reservation->getcode_qr() // Ajout de l'ID de l'hôtel
             ]);
             echo "Réservation ajoutée avec succès.";
         } catch (Exception $e) {

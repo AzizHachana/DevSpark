@@ -21,28 +21,46 @@ if (
         !empty($_POST["Enfants"]) &&
         !empty($_POST["Chambres"])&&
         !empty($_POST["hotel_id"])
-       
   
     ) 
     {
         // Vérification si l'hôtel existe
-                $userId = 7; 
-                $reservation = new Reservation(
-                    null, // Leave null so that the ID is auto-incremented
-                    $_POST['DDP'],
-                    $_POST['DDA'],
-                    $_POST['Adultes'],
-                    $_POST['Enfants'],
-                    $_POST['Chambres'],
-                    $_POST['hotel_id'],
-                    $userId,// Assign the hotel ID to the reservation
-                );
-            // Add the reservation
-                    $reservationC->ajouterreservation($reservation);
-            } 
-            header('Location:afficher_reservation.php');
-   }
+        $userId = 7; 
+        //$qr_code_link = 'chemin/vers/qr_code_image.png'; // Chemin de l'image du code QR
+        
+        // Créer une nouvelle instance de Reservation en incluant le chemin de l'image du code QR
+        $reservation = new Reservation(
+            null, // Laisser null pour que l'ID soit auto-incrémenté
+            $_POST['DDP'],
+            $_POST['DDA'],
+            $_POST['Adultes'],
+            $_POST['Enfants'],
+            $_POST['Chambres'],
+            $_POST['hotel_id'],
+            $userId,// Assigner l'ID de l'hôtel à la réservation
+            //$qr_code_link // Chemin de l'image du code QR
+        );
+        
+        // Ajouter la réservation
+        $reservationC->ajouterreservation($reservation);
 
+        // Obtenir l'ID de la dernière réservation insérée
+        /*$lastInsertedId = $reservationC->getLastInsertedId();
+
+        // Construire le lien vers la page de détails de la réservation
+        $lien = 'http://localhost/hotel/reservation_details.php?id=' . $lastInsertedId;
+
+        // Mettre à jour la réservation avec le lien du code QR
+        $reservationC->updateReservationQrCodeLink($lastInsertedId, $lien);
+
+        // Générer le code QR avec le lien dynamique
+        QRcode::png($lien, 'image-qrcode.png');*/
+
+        // Redirection vers la page d'affichage des réservations
+        header('Location: afficher_reservation.php');
+        exit; // Arrêter l'exécution du script après la redirection
+    }
+}
 
 // Vérification si des données sont envoyées depuis le formulaire
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -51,8 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Récupération de l'identifiant de l'hôtel depuis l'URL
-if (isset($_GET['hotel_id'])) 
-{
+if (isset($_GET['hotel_id'])) {
     $hotel_id = $_GET['hotel_id'];
     $pdo = new PDO(
         'mysql:host=localhost;dbname=atelierphp',
@@ -79,9 +96,9 @@ if (isset($_GET['hotel_id']))
     header("Location: erreur.php");
     exit;
 }
-    
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -385,6 +402,8 @@ if (isset($_GET['hotel_id']))
                             <input type="" name="hotel_id" class="" value="<?= isset($hotel_info['id']) ? $hotel_info['id'] : '' ?>">
                            
                     </div>
+                    <!--<for="qr_code_link">Chemin de l'image du code QR :</label>
+                    <input type="" id="" name="qr_code_link">-->
                         
                </div>
                

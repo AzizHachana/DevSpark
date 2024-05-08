@@ -225,7 +225,7 @@ if ($hotels) {
                                     <i class="icon-thumbs-o-down"></i> Dislike
                                 </button>
                                 <span class="dislike-count"><?php echo $hotel['dislikes']; ?></span>
-                            </div>
+                        </div>
                        
                             <div class="d-flex justify-content-center mt-3">
                                 <a href="addreservation.php?hotel_id=<?= $hotel['id']; ?>" class="btn btn-primary mr-2 btn-height availability-button">Check Availability</a>
@@ -242,58 +242,64 @@ if ($hotels) {
     <script src="../js/jquery.min.js"></script>
      <script src="../js/jquery-migrate-3.0.1.min.js"></script>
      <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.like-btn').forEach(function(button) {
-            button.addEventListener('click', function() {
-                var id = this.getAttribute('data-id'); // Vérifiez si id est correct ici
-                console.log("ID de l'hôtel:", id); // Affichez l'ID de l'hôtel dans la console
-                var countSpan = this.nextElementSibling;
+   document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.like-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var id = this.getAttribute('data-id'); // Vérifiez si id est correct ici
+            console.log("ID de l'hôtel:", id); // Affichez l'ID de l'hôtel dans la console
+            var countSpan = this.nextElementSibling;
 
-                fetch('../view/ajax_like.php', {
-                    method: 'POST',
-                    body: JSON.stringify({ id: id }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.text())
-                .then(data => {
-                    // Mettre à jour le nombre de likes affiché
-                    countSpan.textContent = data;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+            // Désactiver le bouton après le clic
+            this.disabled = true;
+            this.classList.add('clicked');
+
+            fetch('../view/ajax_like.php', {
+                method: 'POST',
+                body: JSON.stringify({ id: id }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Mettre à jour le nombre de likes affiché
+                countSpan.textContent = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
         });
     });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.dislike-btn').forEach(function(button) {
-            button.addEventListener('click', function() {
-                var id = this.getAttribute('data-id'); // Vérifiez si id est correct ici
-                console.log("ID de l'hôtel:", id); // Affichez l'ID de l'hôtel dans la console
-                var countSpan = this.nextElementSibling;
 
-                fetch('../view/ajax_dislike.php', {
-                    method: 'POST',
-                    body: JSON.stringify({ id: id }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.text())
-                .then(data => {
-                    // Mettre à jour le nombre de likes affiché
-                    countSpan.textContent = data;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    document.querySelectorAll('.dislike-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var id = this.getAttribute('data-id'); // Vérifiez si id est correct ici
+            console.log("ID de l'hôtel:", id); // Affichez l'ID de l'hôtel dans la console
+            var countSpan = this.nextElementSibling;
+
+            // Désactiver le bouton après le clic
+            this.disabled = true;
+            this.classList.add('clicked');
+
+            fetch('../view/ajax_dislike.php', {
+                method: 'POST',
+                body: JSON.stringify({ id: id }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Mettre à jour le nombre de likes affiché
+                countSpan.textContent = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
         });
     });
+});
+
 </script>
 
     

@@ -30,6 +30,15 @@ $query = "SELECT hotel.Nom AS hotel_nom, COUNT(reservation.id) AS reservation_co
           $statement2 ->execute([$userId]);
           $hotel_stats =   $statement2 ->fetchAll();
 
+          $eventsPerPage = 6; // Nombre d'événements par page
+          $totalEvents = count($reservations); // Nombre total d'événements
+          $totalPages = ceil($totalEvents / $eventsPerPage); // Nombre total de pages
+          $page = isset($_GET['page']) ? $_GET['page'] : 1; // Page actuelle, par défaut la première page
+          
+          $start = ($page - 1) * $eventsPerPage;
+          $end=$start+$eventsPerPage; // Index de début pour extraire les événements de la page actuelle
+          $reservations = array_slice($reservations, $start, $eventsPerPage); 
+
 ?>
 
 <!DOCTYPE html>
@@ -146,7 +155,17 @@ $query = "SELECT hotel.Nom AS hotel_nom, COUNT(reservation.id) AS reservation_co
     /* Styles communs pour le conteneur */
     margin-top: 20px;
 }
-    </style>
+.show-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  height: 45px;
+  box-shadow: 1px 1px 3px 2px #007bff; /* added box shadow for a more modern look */
+  text-shadow: 1px 1px 2px rgba(0, 123, 255, 0.8); /* added text shadow for better readability */
+}  </style>
 </head>
 <body>
 <div class="background">
@@ -190,6 +209,7 @@ $query = "SELECT hotel.Nom AS hotel_nom, COUNT(reservation.id) AS reservation_co
                 <th>Nombre d'enfants</th>
                 <th>Nombre de chambres</th>
                 <th>Nom de l'hôtel</th>
+                <th>Voucher</th>
             </tr>
         </thead>
         <tbody>
@@ -201,10 +221,33 @@ $query = "SELECT hotel.Nom AS hotel_nom, COUNT(reservation.id) AS reservation_co
                     <td><?= $reservation['Enfants'] ?></td>
                     <td><?= $reservation['Chambres'] ?></td>
                     <td><?= $reservation['hotel_nom'] ?></td>
+                    <td>
+                    <a href="voucher.php?reservation_id=<?= $reservation['id']; ?>" class="show-link">
+                        <button class="show-button"><i class="fas fa-eye"></i></button>
+                    </a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
+    <div class="row mt-5">
+    <div class="col text-center">
+        <div class="block-27">
+            <ul>
+                <?php if ($page > 1): ?>
+                    <li><a href="afficher_reservation.php?page=<?php echo $page - 1; ?>">&lt;</a></li>
+                <?php endif; ?>
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <li <?php if($i == $page) echo 'class="active"'; ?>>
+                    <a href="afficher_reservation.php?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+                <?php endfor; ?>
+                <?php if ($page < $totalPages): ?>
+                    <li><a href="afficher_reservation.php?page=<?php echo $page + 1; ?>">&gt;</a></li>
+                <?php endif; ?>
+            </ul>
+        </div>
+    </div>
+</div>
     <div style="width: 50%; margin: 0 auto;">
     <canvas id="hotel-chart"></canvas>
 </div>

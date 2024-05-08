@@ -9,6 +9,7 @@ class Reservation
     private ?string $Enfants = null;
     private ?string $Chambres = null;
     private ?string $hotel_id = null;
+    //private ?string $qr_code_link=null;
     
     
     public function __construct(
@@ -20,6 +21,7 @@ class Reservation
         $Chambres,
         $hotel_id,
         $user_id,
+        //$qr_code_link = null ,
       
     )
     {
@@ -31,6 +33,7 @@ class Reservation
         $this->Chambres = $Chambres ;
         $this->hotel_id = $hotel_id;
         $this->user_id = $user_id;
+        //$this->$qr_code_link = $qr_code_link;
         
     }
     public function getId()
@@ -127,4 +130,14 @@ class Reservation
         $this->user_id = $user_id;
         return $this;
     }
+    /*public function getcode_qr()
+    {
+        return $this->qr_code_link;
+    }
+
+    public function setcode_qr($qr_code_link)
+    {
+        $this->qr_code_link = $qr_code_link;
+        return $this;
+    }*/
 }

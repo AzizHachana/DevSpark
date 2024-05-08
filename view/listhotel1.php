@@ -4,9 +4,24 @@ include '../controller/ReservationC.php';
 
 
 
-
+$pdo = new PDO(
+    'mysql:host=localhost;dbname=atelierphp',
+    'root',
+    '',
+    [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]
+);
 
 // Traitement du formulaire
+$query = "SELECT hotel.ville AS Ville, COUNT(*) AS total
+        FROM hotel
+        GROUP BY hotel.ville";
+      
+          $statement2  = $pdo->prepare($query);
+          $statement2 ->execute();
+          $client_stats =  $statement2 ->fetchAll();
 
 
 
@@ -244,6 +259,63 @@ if ($hotels) {
         </div>
     </div>
 </div>
+<div style="width: 50%; margin: 0 auto;">
+    <canvas id="hotel-chart"></canvas>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+const ctx = document.getElementById('hotel-chart').getContext('2d');
+const hotelData = {
+   
+    labels: <?php echo json_encode(array_column( $client_stats, 'Ville')) ?>,
+    
+    datasets: [{
+        label: 'Nombre de réservations',
+        data: <?php echo json_encode(array_column( $client_stats, 'total'))?>,
+        backgroundColor: [
+            'rgba(155, 49, 91, 0.7)',    // Rouge foncé
+    'rgba(40, 114, 179, 0.7)',   // Bleu foncé
+    'rgba(189, 155, 31, 0.7)',   // Jaune foncé
+    'rgba(47, 141, 141, 0.7)',   // Vert foncé
+    'rgba(113, 47, 141, 0.7)',   // Violet foncé
+    'rgba(189, 114, 40, 0.7)'
+        ],
+        borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+    }]
+};
+const hotelConfig = {
+    type: 'pie',
+    data: hotelData,
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label;
+                        const value = context.formattedValue;
+                        const percentage = context.percentage.toFixed(1) + '%';
+                        return label + ': ' + value + ' (' + percentage + ')';
+                    }
+                }
+            }
+        }
+    }
+};
+
+new Chart(ctx, hotelConfig);
+</script>
 
 
 
