@@ -2,6 +2,8 @@
 include $_SERVER["DOCUMENT_ROOT"] . '/vacation/controller/unityuserU.php';
 include $_SERVER["DOCUMENT_ROOT"] . '/vacation/model/unityuser.php';
 
+
+
 $unityuser = NULL;
 $unityuserU= new unityuserU();
 
@@ -40,7 +42,25 @@ if (
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>unityuser</title>
+    <script>
+        var captchaVerified = false;
+
+        function successCallBack(token) {
+            captchaVerified = true;
+            document.getElementById('captchaError').innerHTML = '';
+        }
+        function onLoadCallBack() {
+            grecaptcha.render('divRecaptcha', {
+                sitekey: '6Lc7XjEpAAAAALvcF8JdM3x2L8_i3ZlZNOvVn5xn',
+                callback: successCallBack,
+            })
+        }
+    </script>
 </head>
+
+    
+    <script src="https://www.google.com/recaptcha/api.js?onload=onLoadCallBack&render=explicit" async defer></script>
+
 <body>
     <?php 
     if($_SERVER['SCRIPT_FILENAME'] == $_SERVER['DOCUMENT_ROOT'] ."/vacation/Admin/pages/samples/register.php"){
@@ -123,14 +143,15 @@ if (
                         ?>
                         <label>
                         <input type="radio" name="etat" value="1">
-                        Im not a robot
+                        
                       </label>
                       <?php 
                     //    }
                         ?>
-                    
                     </div>
-
+                    <div id="divRecaptcha" class="g-recaptcha"></div>
+                <span class="error-message" id="captchaError"></span>
+                    
                   
                   <div class="text-center">
                     <button type="submit" class="btn btn-primary btn-block enter-btn">Register</button>                    
@@ -140,6 +161,9 @@ if (
                     <a href="/vacation/Admin/pages/samples/login.php">Login </a> 
                 </div>
                   </form>
+
+
+
 
     <script>
       // script.js
@@ -193,9 +217,17 @@ function validateForm() {
         alert("Please select to confirm you re not a robot");
         return false;
     }
+    if (!captchaVerified) {
+                document.getElementById('captchaError').textContent = 'Please verify the reCAPTCHA before submitting the form.';
+                hasErrors = true;
+            }
 
     return true;
 }
+
+  
+  
+
 
 // Add event listener to the form
 var form = document.getElementById('votre-formulaire');

@@ -144,4 +144,36 @@ class unityuserU
     {
         $this->dbb = config::getConnexion();
     }
+    function updateEtatUnityuserEtat($id)
+{   
+    try {
+        $db = config::getConnexion();
+        $query = $db->prepare(
+            'UPDATE unityuser 
+            SET etat = :etat
+            WHERE id = :id'
+        );
+        
+        // La valeur par défaut pour l'attribut etat est 2
+        $defaultEtat = 2;
+
+        $query->execute([
+            'id' => $id,
+            'etat' => $defaultEtat
+        ]);
+        
+    } catch (PDOException $e) {
+        // Gérer les exceptions
+        echo $e->getMessage();
+    }
+}
+function hashPassword($password) {
+    // Générez un sel aléatoire
+    $salt = password_hash(random_bytes(32), PASSWORD_DEFAULT);
+    // Hachez le mot de passe avec le sel
+    $hashedPassword = password_hash($password . $salt, PASSWORD_DEFAULT);
+    // Retournez le mot de passe haché et le sel
+    return array('password' => $hashedPassword, 'salt' => $salt);
+}
+
 }
