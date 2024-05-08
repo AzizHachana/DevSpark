@@ -8,6 +8,24 @@ $ReservaC = new ReservationC();
 $Reserva = $ReservaC->listReservation();
 $EventC = new EventC();
 
+$db = config::getConnexion();
+$query = "SELECT id_e, COUNT(*) AS total_reservations FROM reservation GROUP BY id_e";
+$statement = $db->prepare($query);
+$statement->execute();
+$data = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+$PaysNames = [];
+$percentagesReservations = [];
+
+foreach ($data as $row) {
+    $PaysNames[] = $EventC->getEventById($row['id_e'])['Nom']; // Utiliser le nom de l'événement comme libellé
+    $totalReservations = $row['total_reservations'];
+
+    // Calculer les pourcentages de réservations
+    $percentageReservation = ($totalReservations > 0) ? ($totalReservations / count($Reserva)) * 100 : 0;
+
+    $percentagesReservations[] = $percentageReservation;
+}
 // Vérification si un fichier image a été envoyé
 
 ?>
@@ -59,13 +77,7 @@ $EventC = new EventC();
               <p>Dashboard</p>
             </a>
           </li>
-          <li>
-            <a href="../view/addEvent.php">
-              <i class="now-ui-icons users_single-02"></i>
-              <p>Add Event</p>
-            </a>
-          </li>
-
+        
         </ul>
       </div>
     </div>
@@ -170,10 +182,15 @@ $EventC = new EventC();
                                      ?>
                                             <td align="center">
                                                 <a href="../view/updateReservation.php?id_r=<?= $reserv['id_r']; ?>">
-                                                    <img src="../assets/img/editer.png" alt="Update" class="btn-icon" width="50" height="50">
+                                                    <img src="../assets/img/editer.jpeg" alt="Update" class="btn-icon" width="50" height="50">
                                                 </a>
                                                 <a href="../view/deleteReservation.php?id_r=<?= $reserv['id_r']; ?>">
-                                                    <img src="../assets/img/delete.png" alt="Delete" class="btn-icon" width="55" height="55">
+                                                    <img src="../assets/img/delete.jpeg" alt="Delete" class="btn-icon" width="55" height="55">
+                                
+                                                    <form action="export.php" method="post">
+                                <input type="hidden" name="id_r" value="<?= $reserv['id_r']; ?>">
+                                <button type="submit" class="btn btn-primary">Exporter les données de l'offre</button>
+                            </form>
                                                 </a>
                                             </td>
 
@@ -190,7 +207,7 @@ $EventC = new EventC();
         </div>
       </div>
       <!-- Ajout de la section pour afficher le graphique des statistiques -->
-<div class="card card-plain">
+      <div class="card card-plain">
     <div class="d-flex justify-content-between align-items-center pr-4 pl-4">
         <div class="card-header">
             <h4 class="card-title">Statistiques des Réservations par Événement</h4>
@@ -244,7 +261,6 @@ $EventC = new EventC();
         </script>
     </div>
 </div>
-
                         </div>
                     </div>
       <footer class="footer">

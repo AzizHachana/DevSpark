@@ -9,7 +9,9 @@ class Event
     private ?string $description = null;
     private ?string $prix = null;
     private ?string $image = null;
-    private ?int $rating = null;
+    private ?float $latitude = null; // Add latitude attribute
+    private ?float $longitude = null; // Add longitude attribute
+    private ?int $ratings=null;
 
 
     public function __construct(
@@ -20,7 +22,9 @@ class Event
         $description,
         $prix,
         $image,
-        $rating=null
+        $latitude = null,
+        $longitude = null,
+        $ratings=null
     ) {
         $this->id = $id;
         $this->nom = $nom;
@@ -29,7 +33,9 @@ class Event
         $this->description = $description;
         $this->prix = $prix;
         $this->image = $image;
-        $this->rating = $rating;
+        $this->latitude = $latitude; // Initialize latitude
+        $this->longitude = $longitude; // Initialize longitude
+        $this->ratings = $ratings;
 
     }
 
@@ -132,12 +138,12 @@ class Event
     }
     public function getrating()
     {
-        return $this->rating;
+        return $this->ratings;
     }
 
     public function setRating($rating)
     {
-        $this->rating = $rating;
+        $this->ratings = $ratings;
         return $this;
     }
     

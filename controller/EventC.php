@@ -150,6 +150,16 @@ public function updateRating($id, $newAverageRating)
     $query->bindParam(':id', $id);
     $query->execute();
 }
-
+public function setRating($id,$rating)
+{
+    // Assurez-vous d'utiliser une requête SQL sécurisée pour éviter les injections SQL
+    $sql = "UPDATE  events SET  rating=:rating WHERE id=:id";
+    $db = config::getConnexion();
+    $query = $db->prepare($sql);
+    $query->bindParam(':id', $id);
+    $query->bindParam(':rating', $rating);
+    $query->execute();
+    return $query->fetch(PDO::FETCH_ASSOC);
+}
 }
 ?>

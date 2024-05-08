@@ -32,9 +32,9 @@ class ReservationC
         }
     }
 
-    public function ajouterReservation($Reservation)
+    public function ajouterReservation($Reservation,$id_u)
     {
-        $sql = "INSERT INTO reservation VALUES (NULL, :date_check_in, :date_check_out, :nbr_p, :status, :id_e)";
+        $sql = "INSERT INTO reservation VALUES (NULL, :date_check_in, :date_check_out, :nbr_p, :status, :id_e, :id_u)";
         $db = config::getConnexion();
         try {
             $query = $db->prepare($sql);
@@ -43,7 +43,8 @@ class ReservationC
                 'date_check_out' => $Reservation->getDate_out(),
                 'nbr_p' => $Reservation->getnbr(),
                 'status' => $Reservation->getstatus(),
-                'id_e' => $Reservation->getId_e()
+                'id_e' => $Reservation->getId_e(),
+                'id_u' => $id_u
             ]);
             echo "Hotel ajouté avec succès.";
         } catch (Exception $e) {
@@ -95,6 +96,14 @@ class ReservationC
         $db = config::getConnexion();
         $query = $db->prepare($sql);
         $query->bindParam(":id_e", $id_e, PDO::PARAM_INT);
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC); // Retourne un tableau de commentaires
+    }
+    public function getReservationByUser($id_u) {
+        $sql = "SELECT * FROM reservation WHERE id_u = :id_u";
+        $db = config::getConnexion();
+        $query = $db->prepare($sql);
+        $query->bindParam(":id_u", $id_u, PDO::PARAM_INT);
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC); // Retourne un tableau de commentaires
     }

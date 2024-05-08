@@ -4,52 +4,8 @@ include_once '../config.php';
 include 'C:/xampp/htdocs/eventC/controller/EventC.php';
 $c = new EventC();
 $tab = $c->listEvents();
-// Vérification si un fichier image a été envoyé
-if(isset($_FILES['image'])){
-    $errors= array();
-    $file_name = $_FILES['image']['name'];
-    $file_size =$_FILES['image']['size'];
-    $file_tmp =$_FILES['image']['tmp_name'];
-    $file_type=$_FILES['image']['type'];
-    $file_ext=strtolower(end(explode('.',$_FILES['image']['name'])));
-    
-    $extensions= array("jpeg","jpg","png");
-    
-    if(in_array($file_ext,$extensions)=== false){
-       $errors[]="Extension not allowed, please choose a JPEG or PNG file.";
-    }
-    
-    if($file_size > 2097152){
-       $errors[]='File size must be excately 2 MB';
-    }
-    
-    if(empty($errors)==true){
-       move_uploaded_file($file_tmp,"../assets/img/".$file_name);
-       echo "Success";
-    }else{
-       print_r($errors);
-    }
- }
- 
- if (isset($_POST['Nom'], $_POST['Prix'])) {
-  $nom = $_POST['Nom'];
-  $prix = $_POST['Prix'];
-  $filteredTab = $c->searchEvents($nom, $prix);
-  // Utiliser $filteredTab pour afficher les événements filtrés
 
-  // Si des événements correspondants sont trouvés, mettez à jour $tab pour ne contenir que les événements filtrés
-  if (!empty($filteredTab)) {
-      $tab = $filteredTab;
-  }
-}
-$eventsPerPage = 6; // Nombre d'événements par page
-$totalEvents = count($tab); // Nombre total d'événements
-$totalPages = ceil($totalEvents / $eventsPerPage); // Nombre total de pages
-$page = isset($_GET['page']) ? $_GET['page'] : 1; // Page actuelle, par défaut la première page
-
-$start = ($page - 1) * $eventsPerPage;
-$end=$start+$eventsPerPage; // Index de début pour extraire les événements de la page actuelle
-$tab = array_slice($tab, $start, $eventsPerPage); // Extraire les événements de la page actuelle
+// Prepare an array to hold the events data with only the required fields
 $events = array();
 foreach ($tab as $event) {
     $events[] = array(
@@ -58,13 +14,12 @@ foreach ($tab as $event) {
         'latitude' => $event['latitude'],
         'longitude' => $event['longitude']
     );
+    
 }
 
 // Encode the events data to JSON format
 $events_json = json_encode($events);
- ?>
- 
-
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -99,38 +54,6 @@ $events_json = json_encode($events);
             width: 100%;
         }
     </style>
-    <style>
-    /* Style for the countdown timer container */
-.countdown-container {
-    text-align: center;
-    margin-top: 20px; /* Adjust as needed */
-}
-
-/* Style for the countdown timer text */
-.countdown-container p {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-/* Style for the countdown timer */
-#countdown {
-    display: inline-block;
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 24px;
-}
-
-/* Style for the countdown timer digits */
-#countdown span {
-    display: inline-block;
-    width: 50px;
-    text-align: center;
-}
-
-
-    </style>
   </head>
   <body>
 	  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
@@ -146,7 +69,6 @@ $events_json = json_encode($events);
 	          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
 	          <li class="nav-item active"><a href="destination.html" class="nav-link">Destination</a></li>
 	          <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
-            <li class="nav-item"><a href="my_reservations.php" class="nav-link">Mes Réservations</a></li>
 	          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
 	          <li class="nav-item cta"><a href="#" class="nav-link">Book Now</a></li>
 
@@ -254,54 +176,12 @@ $events_json = json_encode($events);
 
 
    
-<section class="ftco-section ftco-no-pt">
-    <div class="container">
-        <div class="row justify-content-center pb-4">
-            <div class="col-md-12 heading-section text-center ftco-animate">
-                <h2 class="mb-4">Tour Destination</h2>
-            </div>
-        </div>
-        <div class="row">
-            <?php foreach ($tab as $event): ?>
-                <div class="col-md-4 ftco-animate">
-                    <div class="project-wrap">
-                        <a href="#" class="img" style="background-image: url(<?php echo "./images/uploads/".$event['image']; ?>);"></a>
-                        <div class="text p-4">
-                            <h3><a href="#"><?= $event['Nom']; ?></a></h3>
-                            <span class="price"><?= $event['Prix']; ?>$</span>
-                            <span class="date"><?= $event['DateE']; ?></span>
-                            <ul class="details">
-                                <li><span class="flaticon-tour"></span> Pays: <?= $event['Lieu']; ?></li>
-                            </ul>
-                            <div class="buttons">
-                                <button type="button" class="btn btn-primary"><a href="../view/review.php?id_e=<?= $event['id']; ?>" style="color: white;">Review</a></button>
-                                <button type="button" class="btn btn-primary"><a href="../view/addreservation.php?id_e=<?= $event['id']; ?>" style="color: white;">Voir Détails</a></button>
-                            </div>
-                            <p class="countdown-info">Hurry up, event starts in</p>
-                            <div class="countdown" data-date="<?= $event['DateE']; ?>"></div>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-
-
-
-<style>
-.rating {
-  unicode-bidi: bidi-override;
-  direction: rtl;
-}
-.star {
-  font-size: 30px;
-  cursor: pointer;
-  display: inline-block;
-}
-</style>
+    
+</script>
 <div id="map"></div>
-
+<script>
+    var events = <?php echo $events_json; ?>;
+</script>
 
 
 </div>
@@ -397,18 +277,7 @@ $events_json = json_encode($events);
 
   <!-- loader -->
   <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
-<script>
-  const stars = document.querySelectorAll('.rating i');
 
-stars.forEach(star => {
-  star.addEventListener('click', () => {
-    const rating = star.id.split('-')[1];
-    document.getElementById('selected-rating').value = rating;
-    // Update the visual display of the selected rating (optional)
-  });
-});
-
-</script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
         var reservationLink = document.getElementById('reservationLink');
@@ -422,33 +291,6 @@ stars.forEach(star => {
         });
     });
 </script>
-<script>
- // Update the countdown for each event
-document.querySelectorAll('.countdown').forEach(function(countdown) {
-    var eventDate = new Date(countdown.dataset.date).getTime();
-
-    var x = setInterval(function() {
-        var now = new Date().getTime();
-        var distance = eventDate - now;
-
-        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        // Display the countdown
-        countdown.innerHTML = days + "d " + hours + "h "
-        + minutes + "m " + seconds + "s ";
-
-        if (distance < 0) {
-            clearInterval(x);
-            countdown.innerHTML = "EXPIRED";
-        }
-    }, 1000);
-});
-
-</script>
-
 <script>
     function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {

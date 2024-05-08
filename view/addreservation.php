@@ -14,14 +14,17 @@ if (
     isset($_POST["date_check_out"]) &&
     isset($_POST["nbr_p"]) &&
     isset($_POST["status"]) &&
-    isset($_POST["id_e"]) 
+    isset($_POST["id_e"])&&
+    isset($_POST["id_u"]) 
+
 ) {
     if (
         !empty($_POST['date_check_in']) &&
         !empty($_POST["date_check_out"]) &&
         !empty($_POST["nbr_p"]) &&
         !empty($_POST["status"]) &&
-        !empty($_POST["id_e"]) 
+        !empty($_POST["id_e"])&&
+        !empty($_POST["id_u"])
     ) {
        
         // Créer une instance de la classe Hotel avec les données fournies
@@ -31,22 +34,48 @@ if (
             $_POST['date_check_out'],
             $_POST['nbr_p'],
             $_POST['status'],
-            $_POST['id_e']
+            $_POST['id_e'],
+            $_POST['id_u']
         );
-
+        $id_u = 7;
         // Ajouter l'hotel
-        $ReservationC->ajouterReservation($Reservation);
+        $ReservationC->ajouterReservation($Reservation,$id_u);
 
         // Rediriger vers une page de succès ou effectuer une autre action en cas d'ajout réussi
         header('Location: ../view/eventFront.php');
         exit;
     } else {
         $error = "Tous les champs doivent être remplis";
+    }}
+    if (isset($_GET['id_e'])) 
+    {
+        $id_e = $_GET['id_e'];
+        $pdo = new PDO(
+            'mysql:host=localhost;dbname=atelierphp',
+            'root',
+            '',
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            ]
+        );
+        $query = "SELECT * FROM events WHERE id = ?";
+        $statement = $pdo->prepare($query);
+        $statement->execute([$id_e]);
+        $event_info = $statement->fetch(PDO::FETCH_ASSOC);
+    
+        // Vérification si l'hôtel existe
+        if (!$event_info) {
+            // Redirection vers une page d'erreur si l'hôtel n'existe pas
+            header("Location: erreur.php");
+            exit;
+        }
+    } else {
+        // Redirection vers une page d'erreur si aucune ID d'hôtel n'est fournie
+        header("Location: erreur.php");
+        exit;
     }
-    $id_event = $_GET['id'];
-    $eventName = isset($_GET['Nom']) ? urldecode($_GET['Nom']) : '';
-    $eventPrice = isset($_GET['Prix']) ? $_GET['Prix'] : '';
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -81,25 +110,31 @@ if (
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
-            <a class="navbar-brand" href="index.html">Vacation<span>AdventureAwaits</span></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="oi oi-menu"></span> Menu
-            </button>
+        <!-- Logo et bouton de bascule pour les petits écrans -->
+        <a class="navbar-brand" href="index.html">Vacation<span>AdventureAwaits</span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="oi oi-menu"></span> Menu
+        </button>
 
-            <div class="collapse navbar-collapse" id="ftco-nav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-                    <li class="nav-item active"><a href="destination.html" class="nav-link">Destination</a></li>
-                    <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-                    <li class="nav-item cta"><a href="#" class="nav-link">Book Now</a></li>
-                </ul>
-            </div>
+        <!-- Contenu de la barre de navigation -->
+        <div class="collapse navbar-collapse" id="ftco-nav">
+            <ul class="navbar-nav ml-auto">
+                <!-- Liens de navigation -->
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                <li class="nav-item active"><a href="destination.html" class="nav-link">Destination</a></li>
+                <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                <!-- Bouton "Mes Réservations" -->
+                <li class="nav-item"><a href="my_reservations.php" class="nav-link">Mes Réservations</a></li>
+                <!-- Bouton de réservation -->
+                <li class="nav-item cta"><a href="#" class="nav-link">Book Now</a></li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
     <!-- END nav -->
 
     <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
@@ -115,12 +150,12 @@ if (
     </section>
 
     <section class="ftco-section bg-light">
-    <div class="container">
-        <div class="row justify-content-center">
-        <div class="col-md-6">
-                <h2 class="heading-section">Make a Reservation</h2>
-                
-                <form action="" method="post">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h2 class="heading-section">Make a Reservation</h2>
+    
+                <form action="" method="post"name="reservationForm">
                     <div class="form-group">
                         <label for="date_check_in">Check-in Date:</label>
                         <input type="date" id="date_check_in" name="date_check_in" class="form-control" required>
@@ -134,24 +169,34 @@ if (
                         <input type="text" id="nbr_p" name="nbr_p" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label for="status">Status:</label>
+                        <label for="status">Remarque:</label>
                         <input type="text" id="status" name="status" class="form-control" required>
                     </div>
-                    <input type="hidden" name="id_e" value="<?= htmlspecialchars($_GET['id']) ?? ''; ?>">
+                    <input type="hidden" name="id_e" value="<?= $event_info['id']; ?>">
+                    <input type="hidden" name="id_u" value="id_u">
 
                         
                     <input type="submit" value="Submit Reservation" class="btn btn-primary">
                 </form>
             </div>
-            <div class="col-md-3">
-                <div class="card">
-                    <img class="card-img-top img-fluid img-thumbnail" src="<?php echo "./images/uploads/".$_GET['image']; ?>" alt="Event Image">
-                    <div class="card-body">
-                        <h5 class="card-title"><?php echo $_GET['Nom'] ?? ''; ?></h5>
-                        <p class="card-text"><strong>Event Price:</strong> <?php echo $_GET['Prix'] ?? ''; ?></p>
+            <div class="col-md-6">
+                    <?php if (isset($event_info)) : ?>
+                    <!-- Affichage des détails de l'événement dans une carte -->
+                    <div class="card">
+                        <img src="./images/uploads/<?= $event_info['image']; ?>" class="card-img-top" alt="Event Image">
+                        <div class="card-body">
+                            <h5 class="card-title"><?= $event_info['Nom']; ?></h5>
+                            <h3>Event Description:</h3>
+                            <p class="card-text"><?= $event_info['DescriptionE']; ?></p>
+                            <h3>Date and Location:</h3>
+                            <p class="card-text"><i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>
+                                <?= $event_info['DateE']; ?>, <?= $event_info['Lieu']; ?></p>
+                            <h3>Price:</h3>
+                            <p class="card-text"><?= $event_info['Prix']; ?></p>
+                        </div>
                     </div>
+                    <?php endif; ?>
                 </div>
-</div>
 
 </div>
 
@@ -230,6 +275,40 @@ if (
     <div id="ftco-loader" class="show fullscreen">
         <svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg>
     </div>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('reservationForm').addEventListener('submit', function(event) {
+        var checkInDate = new Date(document.getElementById('date_check_in').value);
+        var checkOutDate = new Date(document.getElementById('date_check_out').value);
+
+        if (checkOutDate <= checkInDate) {
+            alert('La date de check-out doit être postérieure à la date de check-in.');
+            event.preventDefault(); // Empêche l'envoi du formulaire si la vérification échoue
+        }
+    });
+});
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.event-details-button').click(function() {
+        var eventId = $(this).data('id_event');
+
+        $.ajax({
+            url: 'get_event_description.php',
+            type: 'GET',
+            data: { id: eventId },
+            success: function(response) {
+                // Update the description on the page
+                $('.event-description').html(response);
+            },
+            error: function() {
+                // Handle errors
+            }
+        });
+    });
+});
+</script>
 
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery-migrate-3.0.1.min.js"></script>
