@@ -8,11 +8,7 @@
          <a href="all_posts.php" class="far fa-eye"></a>
          <a href="login.php" class="fas fa-arrow-right-to-bracket"></a>
          <a href="register.php" class="far fa-registered"></a>
-         <?php
-            if($user_id != ''){
-         ?>
-         <div id="user-btn" class="far fa-user"></div>
-         <?php }; ?>
+       
       </nav>
 
       <?php

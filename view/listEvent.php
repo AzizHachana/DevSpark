@@ -1,8 +1,13 @@
 <?php
 include '../config.php';
 include '../controller/EventC.php';
+include '../controller/CommentaireC.php';
+
 $c = new EventC();
 $tab = $c->listEvents();
+$CommentaireC = new CommentaireC();
+$newCommentsNotifications = $CommentaireC->getNewCommentsNotifications();
+$numNotifications = count($newCommentsNotifications);
 
 // Vérification si un fichier image a été envoyé
 if(isset($_FILES['image'])){
@@ -73,23 +78,71 @@ if(isset($_FILES['image'])){
         </a>
       </div>
       <div class="sidebar-wrapper" id="sidebar-wrapper">
-        <ul class="nav">
-          <li class="active ">
-            <a href="./dashboard.html">
-              <i class="now-ui-icons design_app"></i>
-              <p>Dashboard</p>
-            </a>
-          </li>
-          <li>
-            <a href="../view/addEvent.php">
-              <i class="now-ui-icons users_single-02"></i>
-              <p>Add Event</p>
-            </a>
-          </li>
-
-        </ul>
-      </div>
-    </div>
+                <ul class="nav">
+                <li class=>
+                        <a href="../view/Dashboard2.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                <li class=>
+                        <a href="../view/listClient.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Users</p>
+                        </a>
+                    </li>
+                    <li class=>
+                        <a href="../view/listUser.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Comptes Bloqués</p>
+                        </a>
+                    </li>
+                <li class=>
+                        <a href="../view/listhotel1.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Hotels</p>
+                        </a>
+                    </li>
+                    <li class=>
+                        <a href="../view/list_reservation.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Réservations</p>
+                        </a>
+                    </li>
+                    <li class="active ">
+                        <a href="../view/listEvent.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Evènements</p>
+                        </a>
+                    </li>
+                    <li class=>
+                        <a href="../view/listReservation.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Réservations_Events</p>
+                        </a>
+                    </li>
+                    <li class=>
+                        <a href="../view/list_reservation.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Réclamations</p>
+                        </a>
+                    </li>
+                    <li class=>
+                        <a href="../view/dashboard.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Blogs</p>
+                        </a>
+                    </li>
+                   
+                    <li>
+                    <a href="../view/Notifications.php">
+        <i class="now-ui-icons ui-1_bell-53"></i>
+        <p>Notifications <?php echo ($numNotifications > 0) ? '<span class="badge badge-danger">' . $numNotifications . '</span>' : ''; ?></p>
+    </a>
+                     </li>
+                </ul>
+            </div>
+        </div>
     <div class="main-panel" id="main-panel">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent  bg-primary  navbar-absolute">
@@ -210,7 +263,7 @@ if(isset($_FILES['image'])){
           <nav>
             <ul>
               <li>
-                <a href="https://www.learnes.com">
+                <a href="../view/index.php">
                   AdventureAwaits
                 </a>
               </li>

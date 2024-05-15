@@ -1,31 +1,13 @@
 <?php
  // Inclure le fichier config.php
  include '../config.php';
-include '../controller/ReservationC.php';
+include '../controller/ReservationEC.php';
 include '../controller/EventC.php';
-include '../view/stats.php';
 $ReservaC = new ReservationC();
 $Reserva = $ReservaC->listReservation();
 $EventC = new EventC();
 
-$db = config::getConnexion();
-$query = "SELECT id_e, COUNT(*) AS total_reservations FROM reservation GROUP BY id_e";
-$statement = $db->prepare($query);
-$statement->execute();
-$data = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-$PaysNames = [];
-$percentagesReservations = [];
-
-foreach ($data as $row) {
-    $PaysNames[] = $EventC->getEventById($row['id_e'])['Nom']; // Utiliser le nom de l'événement comme libellé
-    $totalReservations = $row['total_reservations'];
-
-    // Calculer les pourcentages de réservations
-    $percentageReservation = ($totalReservations > 0) ? ($totalReservations / count($Reserva)) * 100 : 0;
-
-    $percentagesReservations[] = $percentageReservation;
-}
 // Vérification si un fichier image a été envoyé
 
 ?>
@@ -70,16 +52,71 @@ foreach ($data as $row) {
         </a>
       </div>
       <div class="sidebar-wrapper" id="sidebar-wrapper">
-        <ul class="nav">
-          <li class="active ">
-            <a href="./dashboard.html">
-              <i class="now-ui-icons design_app"></i>
-              <p>Dashboard</p>
-            </a>
-          </li>
-        
-        </ul>
-      </div>
+                <ul class="nav">
+                <li class=>
+                        <a href="../view/Dashboard2.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                <li class=>
+                        <a href="../view/listClient.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Users</p>
+                        </a>
+                    </li>
+                    <li class=>
+                        <a href="../view/listUser.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Comptes Bloqués</p>
+                        </a>
+                    </li>
+                <li class=>
+                        <a href="../view/listhotel1.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Hotels</p>
+                        </a>
+                    </li>
+                    <li class=>
+                        <a href="../view/list_reservation.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Réservations</p>
+                        </a>
+                    </li>
+                    <li class=>
+                        <a href="../view/listEvent.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Evènements</p>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="../view/listReservation.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Réservations_Events</p>
+                        </a>
+                    </li>
+                    <li class=>
+                        <a href="../view/list_reservation.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Réclamations</p>
+                        </a>
+                    </li>
+                    <li class=>
+                        <a href="../view/dashboard.php">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Liste Des Blogs</p>
+                        </a>
+                    </li>
+                   
+                    <li>
+                    <a href="../view/Notifications.php">
+        <i class="now-ui-icons ui-1_bell-53"></i>
+        <p>Notifications <?php echo ($numNotifications > 0) ? '<span class="badge badge-danger">' . $numNotifications . '</span>' : ''; ?></p>
+    </a>
+                     </li>
+                </ul>
+            </div>
+        </div>
     </div>
     <div class="main-panel" id="main-panel">
       <!-- Navbar -->
@@ -207,60 +244,7 @@ foreach ($data as $row) {
         </div>
       </div>
       <!-- Ajout de la section pour afficher le graphique des statistiques -->
-      <div class="card card-plain">
-    <div class="d-flex justify-content-between align-items-center pr-4 pl-4">
-        <div class="card-header">
-            <h4 class="card-title">Statistiques des Réservations par Événement</h4>
-            <p class="category">Pourcentage de réservations par événement</p>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="chart-container">
-            <canvas id="reservationChart"></canvas>
-        </div>
-        <script>
-            const reservationCtx = document.getElementById('reservationChart');
-
-            new Chart(reservationCtx, {
-                type: 'bar',
-                data: {
-                    labels: <?php echo json_encode($PaysNames) ?>,
-                    datasets: [{
-                        label: 'Pourcentage de réservations',
-                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1,
-                        data: <?php echo json_encode($percentagesReservations) ?>,
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: {
-                                color: 'black',
-                                font: {
-                                    weight: 'bold',
-                                    size: 14 // Augmentez la taille de la police
-                                }
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                color: 'black',
-                                font: {
-                                    weight: 'bold',
-                                    size: 14 // Augmentez la taille de la police
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        </script>
-    </div>
-</div>
+    
                         </div>
                     </div>
       <footer class="footer">
@@ -268,7 +252,7 @@ foreach ($data as $row) {
           <nav>
             <ul>
               <li>
-                <a href="https://www.learnes.com">
+                <a href="../view/index.php">
                   AdventureAwaits
                 </a>
               </li>
@@ -278,7 +262,7 @@ foreach ($data as $row) {
                 </a>
               </li>
               <li>
-                <a href="http://blog.learnes.com">
+                <a href="../view/Blog">
                   Blog
                 </a>
               </li>

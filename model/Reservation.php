@@ -1,100 +1,143 @@
 <?php
+
 class Reservation
 {
-    private ?int $id_r = null;
-    private ?int $id_e = null;
-    private ?string $date_check_in = null;
-    private ?string $date_check_out = null;
-    private ?string $status = null;
-    private ?int $nbr_p = null;
-
-
+    private ?int $id = null;
+    private ?string $DDP = null;
+    private ?string $DDA = null;
+    private ?string $Adultes = null;
+    private ?string $Enfants = null;
+    private ?string $Chambres = null;
+    private ?string $hotel_id = null;
+    //private ?string $qr_code_link=null;
+    
+    
     public function __construct(
-        $id_r,
-        $date_check_in,
-        $date_check_out,
-        $nbr_p,
-        $status,
-        $id_e
-    ) {
-        $this->id_r = $id_r;
-        $this->date_check_in = $date_check_in;
-        $this->date_check_out = $date_check_out;
-        $this->nbr_p = $nbr_p;
-        $this->status = $status;
-        $this->id_e = $id_e;
-
-
+        $id,
+        $DDP,
+        $DDA,
+        $Adultes,
+        $Enfants,
+        $Chambres,
+        $hotel_id,
+        $user_id,
+        //$qr_code_link = null ,
+      
+    )
+    {
+        $this->id = $id;
+        $this->DDP = $DDP;
+        $this->DDA = $DDA;
+        $this->Adultes = $Adultes;
+        $this->Enfants= $Enfants;
+        $this->Chambres = $Chambres ;
+        $this->hotel_id = $hotel_id;
+        $this->user_id = $user_id;
+        //$this->$qr_code_link = $qr_code_link;
+        
     }
-
-    // Getters and setters
     public function getId()
     {
-        return $this->id_r;
+        return $this->id;
     }
 
-    public function setId($id_r)
+    public function setId($id)
     {
-        $this->id_r = $id_r;
-        return $this;
-    }
-    public function getId_e()
-    {
-        return $this->id_e;
-    }
-
-    public function setId_e($id_e)
-    {
-        $this->id_e = $id_e;
+        $this->id = $id;
         return $this;
     }
 
-    public function getdate_in()
+    public function getDDP()
     {
-        return $this->date_check_in;
+        return $this->DDP;
     }
 
-    public function setdate_in($date_check_in)
+    public function setDDP($DDP)
     {
-        $this->date_check_in = $date_check_in;
+        $this->DDP = $DDP;
         return $this;
     }
 
-    public function getDate_out()
+    public function getDDA()
     {
-        return $this->date_check_out;
+        return $this->DDA;
     }
 
-    public function setDate_out($date_check_out)
+    public function setDDA($DDA)
     {
-        $this->date_check_out = $date_check_out;
+        $this->DDA = $DDA;
         return $this;
     }
 
-    public function getstatus()
+    public function getAdultes()
     {
-        return $this->status;
+        return $this->Adultes;
     }
 
-    public function settstatus($status)
+    public function setAdultes($Adultes)
     {
-        $this->status = $status;
+        $this->Adultes = $Adultes;
         return $this;
     }
-    public function getnbr()
+
+    public function getEnfants()
     {
-        return $this->nbr_p;
+        return $this->Enfants;
     }
 
-    public function setnbr($nbr_p)
+    public function setEnfants($Enfants)
     {
-        $this->nbr_p = $nbr_p;
+        $this->Enfants = $Enfants;
         return $this;
     }
-    
+    public function getChambres()
+    {
+        return $this->Chambres;
+    }
 
-    
-    
+    public function setChambres($Chambres)
+    {
+        $this->Chambres = $Chambres;
+        return $this;
+    }
+    /*public function getHotel()
+    {
+        return $this->Hotel;
+    }
+
+    public function setHotel($Hotel)
+    {
+        $this->Hotel = $Hotel;
+        return $this;
+    }*/
+    public function getHotelId()
+    {
+        return $this->hotel_id;
+    }
+
+    public function setHotelId($hotel_id)
+    {
+        $this->hotel_id = $hotel_id;
+        return $this;
+    }
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId($user_id)
+    {
+        $this->user_id = $user_id;
+        return $this;
+    }
+    /*public function getcode_qr()
+    {
+        return $this->qr_code_link;
+    }
+
+    public function setcode_qr($qr_code_link)
+    {
+        $this->qr_code_link = $qr_code_link;
+        return $this;
+    }*/
 }
-
-?>

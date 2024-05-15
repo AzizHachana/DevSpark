@@ -1,14 +1,36 @@
 <?php
-include '../model/Reservation.php'; // Inclure le fichier Hotel.php
-include_once '../config.php'; // Inclure le fichier config.php
-
-
+//include '../config.php';
+include_once __DIR__ . '/../config.php';
+include '../Model/Reservation.php';
+include '../phpqrcode/qrlib.php';
 class ReservationC
 {
-    public function listReservation()
+    public function ajouterreservation($reservation)
     {
-        $sql = "SELECT * FROM reservation";
-        $db = config::getConnexion();
+        $sql = "INSERT INTO reservationh VALUES (NULL,  :DDP,   :DDA, :Adultes, :Enfants, :Chambres, :hotel_id, :user_id )";
+    
+        $db = Config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->execute([
+                'DDP' => $reservation->getDDP(),
+                'DDA' => $reservation->getDDA(),
+                'Adultes' => $reservation->getAdultes(),
+                'Enfants' => $reservation->getEnfants(),
+                'Chambres' => $reservation->getChambres(),
+                'hotel_id' => $reservation->getHotelId(),
+                'user_id' => $reservation->getuserId()
+                //'qr_code_link' => $reservation->getcode_qr() // Ajout de l'ID de l'hôtel
+            ]);
+            echo "Réservation ajoutée avec succès.";
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+    public function listreservations()
+    {
+        $sql = "SELECT * FROM reservationh";
+        $db = Config::getConnexion();
         try {
             $stmt = $db->query($sql);
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -17,13 +39,41 @@ class ReservationC
             die('Error:' . $e->getMessage());
         }
     }
-
-    public function deleteReservation($id_r)
+    public function deletereservation($id)
     {
-        $sql = "DELETE FROM reservation WHERE id_r = :id_r";
-        $db = Config::getConnexion();
-        $req = $db->prepare($sql);
-        $req->bindValue(':id_r', $id_r);
+        // Supprimer d'abord les enregistrements liés dans d'autres tables si nécessaire
+        // Par exemple, supprimer les enregistrements dans les tables liées à la réservation (utilisateurs, hôtels, etc.)
+        // Assurez-vous de respecter l'ordre de suppression pour éviter les violations de contraintes de clés étrangères
+    
+        try {
+            // Supprimer la réservation de la table reservation
+            $sql = "DELETE FROM reservationh WHERE id = :id";
+            $db = Config::getConnexion();
+            $req = $db->prepare($sql);
+            $req->bindValue(':id', $id);
+            $req->execute();
+    
+            // Vérifier si des lignes ont été affectées
+            if ($req->rowCount() > 0) {
+                return true; // La suppression a réussi
+            } else {
+                return false; // Aucune ligne supprimée, peut-être que l'ID de réservation était invalide
+            }
+        } catch (PDOException $e) {
+            // Gérer les erreurs de suppression
+            error_log("Erreur lors de la suppression de la réservation : " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    function deleteres($id)
+    {
+         
+
+        $sql = "DELETE FROM 'reservationh' WHERE `reservation`.`id` = :id";
+        $conn = config::getConnexion();
+        $req = $conn->prepare($sql);
+        $req->bindValue(':id', $id);
 
         try {
             $req->execute();
@@ -32,80 +82,76 @@ class ReservationC
         }
     }
 
-    public function ajouterReservation($Reservation,$id_u)
+    public function listreservation()
     {
-        $sql = "INSERT INTO reservation VALUES (NULL, :date_check_in, :date_check_out, :nbr_p, :status, :id_e, :id_u)";
-        $db = config::getConnexion();
+        $sql = "SELECT * FROM reservationh";
+        $db = Config::getConnexion();
         try {
-            $query = $db->prepare($sql);
-            $query->execute([
-                'date_check_in' => $Reservation->getdate_in(),
-                'date_check_out' => $Reservation->getDate_out(),
-                'nbr_p' => $Reservation->getnbr(),
-                'status' => $Reservation->getstatus(),
-                'id_e' => $Reservation->getId_e(),
-                'id_u' => $id_u
-            ]);
-            echo "Hotel ajouté avec succès.";
+            $stmt = $db->query($sql);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $data;
         } catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
+            die('Error:' . $e->getMessage());
         }
     }
-
-
-    public function updateReservation($id_r,$date_check_in,$date_check_out,$nbr_p,$status,$id_e)
-    {
-        $sql = "UPDATE reservation SET date_check_in=:date_check_in, date_check_out=:date_check_out, nbr_p=:nbr_p, status=:status, id_e=:id_e WHERE id_r=:id_r";
-        $db = config::getConnexion();
-        try {
-            $query = $db->prepare($sql);
-            $query->bindParam(':id_r', $id_r);
-            $query->bindParam(':date_check_in', $date_check_in);
-            $query->bindParam(':date_check_in', $date_check_out);
-            $query->bindParam(':nbr_p', $nbr_p);
-            $query->bindParam(':status', $status);
-            $query->bindParam(':id_e', $id_e);
-
-            $query->execute();
-        } catch (Exception $e) {
-            die('Error: ' . $e->getMessage());
-        }
-    }
-    public function getReservationById($id_r)
-    {
-        $sql = "SELECT * FROM reservation WHERE id_r = :id_r";
-        $db = config::getConnexion();
+    public function updatereservation($id, $DDP, $DDA, $Adultes, $Enfants, $Chambres)
+{
+    $db = config::getConnexion();
+    try {
+        // Définir la requête SQL
+        $sql = "UPDATE reservationh SET DDP = :DDP, DDA = :DDA, Adultes = :Adultes, Enfants = :Enfants, Chambres = :Chambres WHERE id = :id";
+        
+        // Préparer la requête SQL
         $query = $db->prepare($sql);
-        $query->bindParam(':id_r', $id_r);
+        
+        // Binder les paramètres
+        $query->bindParam(':id', $id);
+        $query->bindParam(':DDP', $DDP);
+        $query->bindParam(':DDA', $DDA);
+        $query->bindParam(':Adultes', $Adultes);
+        $query->bindParam(':Enfants', $Enfants);
+        $query->bindParam(':Chambres', $Chambres);
+        
+        // Exécuter la requête
         $query->execute();
-        return $query->fetch(PDO::FETCH_ASSOC);
-    }
-    public function getReservation($id_r)
-    {
-        $sql = "SELECT * FROM reservation WHERE id_r = :id_r";
-        $db = config::getConnexion();
-        $query = $db->prepare($sql);
-        $query->bindParam(':id_r', $id_r);
-        $query->execute();
-        return $query->fetch(PDO::FETCH_ASSOC);
-    }
-
-
-    public function getReservationByEvent($id_e) {
-        $sql = "SELECT * FROM reservation WHERE id_e = :id_e";
-        $db = config::getConnexion();
-        $query = $db->prepare($sql);
-        $query->bindParam(":id_e", $id_e, PDO::PARAM_INT);
-        $query->execute();
-        return $query->fetchAll(PDO::FETCH_ASSOC); // Retourne un tableau de commentaires
-    }
-    public function getReservationByUser($id_u) {
-        $sql = "SELECT * FROM reservation WHERE id_u = :id_u";
-        $db = config::getConnexion();
-        $query = $db->prepare($sql);
-        $query->bindParam(":id_u", $id_u, PDO::PARAM_INT);
-        $query->execute();
-        return $query->fetchAll(PDO::FETCH_ASSOC); // Retourne un tableau de commentaires
+        
+        echo $query->rowCount() . " enregistrements mis à jour avec succès";
+    } catch (Exception $e) {
+        die('Erreur: ' . $e->getMessage());
     }
 }
-?>
+
+        public function affichereservation($id) {
+        try {
+        $pdo = config::getConnexion();
+        $query = $pdo->prepare("SELECT * FROM reservationh WHERE hotel_id = :id");
+        $query->execute(['id' => $id]);
+        return $query->fetchAll();
+        } catch (PDOException $e) 
+      {
+        echo $e->getMessage();
+      }
+    }
+        
+        public function afficherhotel() {
+        try {
+        $pdo = config::getConnexion();
+        $query = $pdo->prepare("SELECT * FROM hotel");
+        $query->execute();
+        return $query->fetchAll();
+        } catch (PDOException $e) {
+        echo $e->getMessage();
+    }    
+        }
+        public function getreservation($id) 
+        {
+            // Assurez-vous d'utiliser une requête SQL sécurisée pour éviter les injections SQL
+            $sql = "SELECT * FROM reservation WHERE id = :id";
+            $db = config::getConnexion();
+            $query = $db->prepare($sql);
+            $query->bindParam(':id', $id);
+            $query->execute();
+            return $query->fetch(PDO::FETCH_ASSOC);
+        }
+      }
+        

@@ -1,97 +1,105 @@
 <?php
-include '../config.php';
-include '../controller/ReservationC.php';
-include '../controller/EventC.php';
-
-
- // Inclure le fichier contenant la classe HotelC
-$ReservationC = new ReservationC(); // Créer une instance de HotelC
+include '../Controller/ReservationC.php'; // Inclure le fichier contenant la classe ReservationC
+$reservationC = new ReservationC(); // Créer une instance de ReservationC
 
 $error = "";
 
 if (
-    isset($_POST["date_check_in"]) &&
-    isset($_POST["date_check_out"]) &&
-    isset($_POST["nbr_p"]) &&
-    isset($_POST["status"]) &&
-    isset($_POST["id_e"])&&
-    isset($_POST["id_u"]) 
+    isset($_POST["DDP"]) &&
+    isset($_POST["DDA"]) &&
+    isset($_POST["Adultes"]) &&
+    isset($_POST["Enfants"]) &&
+    isset($_POST["Chambres"])&&
+    isset($_POST["hotel_id"])
+  
 
 ) {
     if (
-        !empty($_POST['date_check_in']) &&
-        !empty($_POST["date_check_out"]) &&
-        !empty($_POST["nbr_p"]) &&
-        !empty($_POST["status"]) &&
-        !empty($_POST["id_e"])&&
-        !empty($_POST["id_u"])
-    ) {
-       
-        // Créer une instance de la classe Hotel avec les données fournies
-        $Reservation = new Reservation(
-            null, // Laissez null pour que l'ID soit auto-incrémenté
-            $_POST['date_check_in'],
-            $_POST['date_check_out'],
-            $_POST['nbr_p'],
-            $_POST['status'],
-            $_POST['id_e'],
-            $_POST['id_u']
-        );
-        $id_u = 7;
-        // Ajouter l'hotel
-        $ReservationC->ajouterReservation($Reservation,$id_u);
-
-        // Rediriger vers une page de succès ou effectuer une autre action en cas d'ajout réussi
-        header('Location: ../view/eventFront.php');
-        exit;
-    } else {
-        $error = "Tous les champs doivent être remplis";
-    }}
-    if (isset($_GET['id_e'])) 
+        !empty($_POST['DDP']) &&
+        !empty($_POST["DDA"]) &&
+        !empty($_POST["Adultes"]) &&
+        !empty($_POST["Enfants"]) &&
+        !empty($_POST["Chambres"])&&
+        !empty($_POST["hotel_id"])
+  
+    ) 
     {
-        $id_e = $_GET['id_e'];
-        $pdo = new PDO(
-            'mysql:host=localhost;dbname=atelierphp',
-            'root',
-            '',
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-            ]
+        // Vérification si l'hôtel existe 
+       
+        $reservation = new Reservation(
+            null, 
+            $_POST['DDP'],
+            $_POST['DDA'],
+            $_POST['Adultes'],
+            $_POST['Enfants'],
+            $_POST['Chambres'],
+            $_POST['hotel_id'],
+            $_POST['user_id'],
+           
         );
-        $query = "SELECT * FROM events WHERE id = ?";
-        $statement = $pdo->prepare($query);
-        $statement->execute([$id_e]);
-        $event_info = $statement->fetch(PDO::FETCH_ASSOC);
-    
-        // Vérification si l'hôtel existe
-        if (!$event_info) {
-            // Redirection vers une page d'erreur si l'hôtel n'existe pas
-            header("Location: erreur.php");
-            exit;
-        }
-    } else {
-        // Redirection vers une page d'erreur si aucune ID d'hôtel n'est fournie
+        
+        // Ajouter la réservation
+        $reservationC->ajouterreservation($reservation);
+
+        
+        header('Location: login.php');
+        exit; 
+    }
+}
+
+// Vérification si des données sont envoyées depuis le formulaire
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    header("");
+    exit;
+}
+
+// Récupération de l'identifiant de l'hôtel depuis l'URL
+if (isset($_GET['hotel_id'])) {
+    $hotel_id = $_GET['hotel_id'];
+    $pdo = new PDO(
+        'mysql:host=localhost;dbname=atelierphp',
+        'root',
+        '',
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]
+    );
+    $query = "SELECT * FROM hotel WHERE id = ?";
+    $statement = $pdo->prepare($query);
+    $statement->execute([$hotel_id]);
+    $hotel_info = $statement->fetch(PDO::FETCH_ASSOC);
+
+    // Vérification si l'hôtel existe
+    if (!$hotel_info) {
+        // Redirection vers une page d'erreur si l'hôtel n'existe pas
         header("Location: erreur.php");
         exit;
     }
+} else {
+    // Redirection vers une page d'erreur si aucune ID d'hôtel n'est fournie
+    header("Location: erreur.php");
+    exit;
+}
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>AdventureAwaits</title>
+<title>Vacation - Free Bootstrap 4 Template by Colorlib</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Metas, links, and stylesheets -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">        
 
     <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="css/animate.css">
-
+    
     <link rel="stylesheet" href="css/owl.carousel.min.css">
     <link rel="stylesheet" href="css/owl.theme.default.min.css">
     <link rel="stylesheet" href="css/magnific-popup.css">
@@ -103,231 +111,437 @@ if (
     <link rel="stylesheet" href="css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="css/jquery.timepicker.css">
 
-
+    
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/icomoon.css">
     <link rel="stylesheet" href="css/style.css">
+    <title>Réserver</title>
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	    <div class="container">
+	      <a class="navbar-brand" href="index.php">Adventure Awaits<span>Travel Agency</span></a>
+		 
+
+	     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
+
+	      <div class="collapse navbar-collapse" id="ftco-nav">
+	        <ul class="navbar-nav ml-auto">
+            <li class="nav-item "><a href="index.php" class="nav-link">Home</a></li>
+	          <li class="nav-item"><a href="eventFront.php" class="nav-link">Destination</a></li>
+              <li class="nav-item active"><a href="listV.php" class="nav-link">Hébèrgement</a></li>
+	          <li class="nav-item "><a href="Blog.php" class="nav-link">Blog</a></li>
+              <li class="nav-item "><a href="#" class="nav-link">Réclamations</a></li>
+	          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+			  <li class="nav-item cta"><a href="login.php" class="nav-link">Login</a></li>
+
+	        </ul>
+	      </div>
+	    </div>
+	  </nav>
+    <style>
+         .title-container {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.8); /* Fond de la boîte de titre */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre douce */
+            height:75px;
+        }
+        .custom-beach {
+            margin: 0;
+            padding: 0;
+            background-color:  #4FA8FF;
+           /* Couleur bleu ciel */
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+            width:125px
+        }
+        .custom-beach .umbrella {
+            font-size: 18px; /* Taille de l'icône de parasol */
+            margin-right: 5px;
+            color: #FFD700;
+        }
+        .custom-beach .text {
+            font-size: 14px; /* Taille du texte "Plage privée" */
+            font-weight: bold;
+            color: #FFFFFF; /* Couleur blanche pour le texte */
+        }
+       
+    
+       #map {
+    position: relative;
+    width: 360px; /* taille initiale de la carte */
+    height: 200px; /* taille initiale de la carte */
+    right: 20px; 
+    top: 80px;
+}
+
+#big-map {
+    display: none; /* carte de grande taille cachée par défaut */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40%; /* Largeur de la carte de grande taille */
+    height: 40%; /* Hauteur de la carte de grande taille */
+    z-index: 1000; /* Assure que la carte est affichée au-dessus des autres éléments */
+}
+        #open-button {
+            position: absolute;
+            top: 680px;
+            right: 320px;
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+       .container1 {
+    max-width: 1200px;
+    height:100;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0); /* Fond transparent */
+    border: 0px solid #ccc;
+    text-align: center;
+    position: relative;
+}
+.container3 {
+    max-width: 360px;
+    height: 420px;
+    margin: 10px auto;
+    padding: 20px;
+    background-color:#FEBA33; /* Fond transparent */
+    
+    border: 0px solid #ccc;
+   
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    margin-right: 20px;
+    bottom: 165px;
+   
+}
+.container0 {
+    max-width: 1200px;
+    height:150;
+    margin: 20px auto;
+    padding: 20px;
+    background-color:  #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden; /* Pour contenir les éléments floats enfants */
+}
+.containerd {
+    bottom:100px;
+}
+.container img {
+    float: left; /* Faire flotter l'image à gauche */
+    margin-right: 20px; /* Marge à droite pour séparer l'image du formulaire */
+}
+
+.container2 {
+    overflow: hidden; /* Pour contenir les éléments floats enfants */
+}
+
+.hotel-image {
+    float: left;
+    margin-right: 20px; /* Ajoute une marge à gauche pour séparer l'image du texte */
+}
+.reservation-box {
+    cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color:  #f2f2f2;
+}
+
+#form-container {
+    display: none;
+}
+
+#form-container.visible {
+    display: block;
+}
+
+
+
+
+
+    </style>
 </head>
-
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-    <div class="container">
-        <!-- Logo et bouton de bascule pour les petits écrans -->
-        <a class="navbar-brand" href="index.html">Vacation<span>AdventureAwaits</span></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="oi oi-menu"></span> Menu
-        </button>
+<div id="big-map"></div>
 
-        <!-- Contenu de la barre de navigation -->
-        <div class="collapse navbar-collapse" id="ftco-nav">
-            <ul class="navbar-nav ml-auto">
-                <!-- Liens de navigation -->
-                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-                <li class="nav-item active"><a href="destination.html" class="nav-link">Destination</a></li>
-                <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
-                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-                <!-- Bouton "Mes Réservations" -->
-                <li class="nav-item"><a href="my_reservations.php" class="nav-link">Mes Réservations</a></li>
-                <!-- Bouton de réservation -->
-                <li class="nav-item cta"><a href="#" class="nav-link">Book Now</a></li>
-            </ul>
+
+    <button id="open-button" onclick="showBigMap()">Voir sur la carte</button>
+    
+      
+<div class="background">
+        <img src="bg_2.jpg" alt="Background Image" class="background-image">
+    </div>
+
+       <!-- END nav -->
+      <div class="overlay"></div>
+        <div class="container1" >
+        
+            <div class="hotel-info">
+            <div class="container0" style="height: 950px;">
+            <div class="custom-beach">
+        <span class="umbrella">☂️</span>
+        <span class="text">Plage privée</span>
+    </div>
+            <h2 style="text-align: left;"><strong><?= $hotel_info['Nom']; ?></strong></h2>
+
+            <p style="text-align: left;color: black;">
+    <i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>
+    <strong><?= $hotel_info['Adresse']; ?></strong>,<?= $hotel_info['Code_postal']; ?>
+    <?= $hotel_info['Ville']; ?>, <?= $hotel_info['Pays']; ?></span>
+    - <a href="javascript:showBigMap()"  style="color: navy;"><strong>Trés bon emplacement - voir sur la carte</a>
+</p>
+<img src="./images/uploads/<?= $hotel_info['image']; ?>" alt="" class="hotel-image">*
+
+
+
+
+    <div class="container3">
+    <div class="title-container">
+        <h4 ><strong>Passer une réservation</h4>
+    </div>
+        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        
+        
+            <input type="hidden" name="hotel_id" value="<?= $hotel_id; ?>">
+            <label for="date_départ">Date de départ :</label>
+            <input type="date"  name="DDP" required><br><br>
+            <label for="date_arrivée">Date d'arrivée :</label>
+            <input type="date" name="DDA" required><br><br>
+            <div class="reservation-box" onclick="toggleForm()">
+    <div id="guests-info">2 adultes · 0 enfant · 1 chambre</div>
+    <div id="form-container" class="hidden">
+        <div>
+            <label for="adults">Adultes :</label>
+            <button onclick="decreaseValue('adults')">-</button>
+            <input type="text" id="adults"  name="Adultes" value="2" readonly style="width: 30px;">
+            <button onclick="increaseValue('adults')">+</button>
+        </div>
+        <div>
+            <label for="children">Enfants :</label>
+            <button onclick="decreaseValue('children')">-</button>
+            <input type="text" id="children"  name="Enfants" value="0" readonly style="width: 30px;" >
+            <button onclick="increaseValue('children')">+</button>
+        </div>
+        <div>
+            <label for="rooms">Chambres :</label>
+            <button onclick="decreaseValue('rooms')">-</button>
+            <input type="text" id="rooms"  name="Chambres"value="1" readonly style="width: 30px;">
+            <button onclick="increaseValue('rooms')">+</button>
         </div>
     </div>
-</nav>
-    <!-- END nav -->
-
-    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
-    <div class="overlay"></div>
-        <div class="container">
-            <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
-                <div class="col-md-9 ftco-animate pb-5 text-center">
-                    <h1 class="mb-3 bread">Places to Travel</h1>
-                    <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>About us <i class="ion-ios-arrow-forward"></i></span></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="ftco-section bg-light">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <h2 class="heading-section">Make a Reservation</h2>
     
-                <form action="" method="post"name="reservationForm">
-                    <div class="form-group">
-                        <label for="date_check_in">Check-in Date:</label>
-                        <input type="date" id="date_check_in" name="date_check_in" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="date_check_out">Check-out Date:</label>
-                        <input type="date" id="date_check_out" name="date_check_out" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nbr_p">Number of People:</label>
-                        <input type="text" id="nbr_p" name="nbr_p" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Remarque:</label>
-                        <input type="text" id="status" name="status" class="form-control" required>
-                    </div>
-                    <input type="hidden" name="id_e" value="<?= $event_info['id']; ?>">
-                    <input type="hidden" name="id_u" value="id_u">
-
-                        
-                    <input type="submit" value="Submit Reservation" class="btn btn-primary">
-                </form>
-            </div>
-            <div class="col-md-6">
-                    <?php if (isset($event_info)) : ?>
-                    <!-- Affichage des détails de l'événement dans une carte -->
-                    <div class="card">
-                        <img src="./images/uploads/<?= $event_info['image']; ?>" class="card-img-top" alt="Event Image">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= $event_info['Nom']; ?></h5>
-                            <h3>Event Description:</h3>
-                            <p class="card-text"><?= $event_info['DescriptionE']; ?></p>
-                            <h3>Date and Location:</h3>
-                            <p class="card-text"><i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>
-                                <?= $event_info['DateE']; ?>, <?= $event_info['Lieu']; ?></p>
-                            <h3>Price:</h3>
-                            <p class="card-text"><?= $event_info['Prix']; ?></p>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-                </div>
-
+              
 </div>
 
+          <input type="submit" value="Réserver">
+          <div id="map"></div>
+
+    
+    
+
+        </form> 
+               </div>
+               <div>
+                    <<p  style="text-align: left;"></p>
+                    <p  style="text-align: left;"></p>
+                    <p style="text-align: left;color: black;"><?= $hotel_info['Description']; ?>
+                    </div>
+                    </div>
+                </div>
+                
+                <div class="">
+                    <div class="">
+                        <for="hotel_id" style="display: none;">ID</label>
+                            <input type="" name="hotel_id" class="" value="<?= isset($hotel_info['id']) ? $hotel_info['id'] : '' ?>">
+                           
+                    </div>
+                    <div class="">
+                        <for="user_id" style="display: none;">ID</label>
+                            <input type="" name="user_id" class="" value="7" >
+                           
+                    </div>
+                    <!--<for="qr_code_link">Chemin de l'image du code QR :</label>
+                    <input type="" id="" name="qr_code_link">-->
+                        
+               </div>
+               
+              
+       
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center" data-scrollax-parent="true">
+          <div class="col-md-9 text text-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
+          	
+           
+            <h1 data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Explorez le monde avec nous !</h1>
+          </div>
         </div>
-        </div>
+      </div>
     </div>
-</section>
-
-
-    <footer class="ftco-footer bg-bottom" style="background-image: url(images/footer-bg.jpg);">
-    <div class="container">
-            <div class="row mb-5">
-                <div class="col-md">
-                    <div class="ftco-footer-widget mb-4">
-                        <h2 class="ftco-heading-2">Vacation</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
-                            <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-                            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-                            <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="ftco-footer-widget mb-4 ml-md-5">
-                        <h2 class="ftco-heading-2">Information</h2>
-                        <ul class="list-unstyled">
-                            <li><a href="#" class="py-2 d-block">Online Enquiry</a></li>
-                            <li><a href="#" class="py-2 d-block">General Enquiries</a></li>
-                            <li><a href="#" class="py-2 d-block">Booking Conditions</a></li>
-                            <li><a href="#" class="py-2 d-block">Privacy and Policy</a></li>
-                            <li><a href="#" class="py-2 d-block">Refund Policy</a></li>
-                            <li><a href="#" class="py-2 d-block">Call Us</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="ftco-footer-widget mb-4">
-                        <h2 class="ftco-heading-2">Experience</h2>
-                        <ul class="list-unstyled">
-                            <li><a href="#" class="py-2 d-block">Adventure</a></li>
-                            <li><a href="#" class="py-2 d-block">Hotel and Restaurant</a></li>
-                            <li><a href="#" class="py-2 d-block">Beach</a></li>
-                            <li><a href="#" class="py-2 d-block">Nature</a></li>
-                            <li><a href="#" class="py-2 d-block">Camping</a></li>
-                            <li><a href="#" class="py-2 d-block">Party</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="ftco-footer-widget mb-4">
-                        <h2 class="ftco-heading-2">Have a Question?</h2>
-                        <div class="block-23 mb-3">
-                            <ul>
-                                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
-                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
-                                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <p>
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        Copyright &copy;<script>document.write(new Date().getFullYear());</script>
-                        All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <div id="ftco-loader" class="show fullscreen">
-        <svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg>
-    </div>
+    
+    
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('reservationForm').addEventListener('submit', function(event) {
-        var checkInDate = new Date(document.getElementById('date_check_in').value);
-        var checkOutDate = new Date(document.getElementById('date_check_out').value);
+        var map = L.map('map').setView([36.417991244632184, 10.657854141815537], 13);
 
-        if (checkOutDate <= checkInDate) {
-            alert('La date de check-out doit être postérieure à la date de check-in.');
-            event.preventDefault(); // Empêche l'envoi du formulaire si la vérification échoue
-        }
-    });
-});
-</script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('.event-details-button').click(function() {
-        var eventId = $(this).data('id_event');
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
 
-        $.ajax({
-            url: 'get_event_description.php',
-            type: 'GET',
-            data: { id: eventId },
-            success: function(response) {
-                // Update the description on the page
-                $('.event-description').html(response);
-            },
-            error: function() {
-                // Handle errors
-            }
+        // Ajouter la fonction de recherche
+        L.Control.geocoder().addTo(map);
+
+        // Liste des emplacements avec leurs coordonnées géographiques
+        var locations = [
+            { name: 'Location 3', coordinates: [36.920418600953155, 10.294004607895895]},
+            { name: 'Location 4', coordinates: [36.4066820811439, 10.648944014801348]},
+            { name: 'Location 5', coordinates: [36.420148778616735, 10.666770211285563]},
+            { name: 'Location 6', coordinates: [36.42663289952416, 10.677397821021687]},
+            { name: 'Location 7', coordinates: [36.41626420128574, 10.661314871551633]},
+            { name: 'Location 8', coordinates: [36.41956973849154, 10.666316475041786]},
+            { name: 'Location 8', coordinates: [36.44233934876374, 10.730926840282505]},
+            { name: 'Location 8', coordinates: [36.42371582283454, 10.671823348586972]},
+            { name: 'Location 8', coordinates: [36.427674443513425, 10.683206455127879]}
+        ];
+
+
+        // Ajouter chaque emplacement à la carte avec un marqueur personnalisé
+        locations.forEach(function(location) {
+            L.marker(location.coordinates, {
+                icon: L.icon({
+                    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34]
+                })
+            }).addTo(map).bindPopup(location.name);
         });
-    });
-});
+
+        function showBigMap() {
+            var containerSize = document.querySelector('.container1').getBoundingClientRect();
+            var containerWidth = containerSize.width;
+            var containerHeight = containerSize.height;
+
+        // Réglez la taille de la carte agrandie pour correspondre à celle de container1
+        document.getElementById('big-map').style.width = containerWidth *(0.8) + 'px';
+        document.getElementById('big-map').style.height = containerHeight *(0.62) + 'px';
+        document.getElementById('big-map').style.width = containerWidth * 2 + 'px';
+        
+        document.getElementById('big-map').style.width = '1200px';
+       
+           document.getElementById('open-button').style.display = 'none';
+            document.getElementById('map').style.display = 'none'; // cacher la carte de petite taille
+            document.getElementById('big-map').style.display = 'block'; // afficher la carte de grande taille
+            var bigMap = L.map('big-map').setView([36.417991244632184, 10.657854141815537], 13); // créer une nouvelle carte de grande taille
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(bigMap);
+
+            // Ajouter la fonction de recherche à la carte de grande taille
+            L.Control.geocoder().addTo(bigMap);
+
+            // Ajouter chaque emplacement à la carte de grande taille avec un marqueur personnalisé
+            locations.forEach(function(location) {
+                L.marker(location.coordinates, {
+                    icon: L.icon({
+                        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34]
+                    })
+                }).addTo(bigMap).bindPopup(location.name);
+            });
+
+            // Ajouter l'événement pour revenir à la taille initiale de la carte en appuyant sur la touche "Échap"
+            document.addEventListener('keyup', function(event) {
+                if (event.key === 'Escape') {
+                    document.getElementById('map').style.display = 'block'; // afficher la carte de petite taille
+                    document.getElementById('big-map').style.display = 'none'; // cacher la carte de grande taille
+                    bigMap.remove();
+                    document.getElementById('open-button').style.display = 'block';
+                    
+                     // supprimer la carte de grande taille
+                }
+            });
+        }
+    </script>
+    <script>
+       function toggleForm() {
+    var formContainer = document.getElementById('form-container');
+    formContainer.classList.toggle('visible');
+}
+
+
+    
+function increaseValue(field) {
+    event.preventDefault();
+    event.stopPropagation(); 
+    var input = document.getElementById(field);
+    input.value = parseInt(input.value) + 1;
+    updateDefaultValue();
+}
+
+function decreaseValue(field) {
+    event.preventDefault();
+    event.stopPropagation(); 
+    var input = document.getElementById(field);
+    if (parseInt(input.value) > 0) {
+        input.value = parseInt(input.value) - 1;
+        updateDefaultValue();
+    }
+}
+function updateGuestsInfo() {
+    var adults = document.getElementById('adults').value;
+    var children = document.getElementById('children').value;
+    var rooms = document.getElementById('rooms').value;
+    var guestsInfo = adults + " adultes · " + children + " enfant" + (children != 1 ? 's' : '') + " · " + rooms + " chambre" + (rooms != 1 ? 's' : '');
+    document.getElementById('guests-info').textContent = guestsInfo;
+}   
+function updateDefaultValue() {
+    var adultsDefault = document.getElementById('adults').value;
+    var childrenDefault = document.getElementById('children').value;
+    var roomsDefault = document.getElementById('rooms').value;
+    var defaultInfo = adultsDefault + " adultes · " + childrenDefault + " enfant" + (childrenDefault != 1 ? 's' : '') + " · " + roomsDefault + " chambre" + (roomsDefault != 1 ? 's' : '');
+    document.getElementById('guests-info').textContent = defaultInfo;
+}
+
+    
+    
+  
+
+  
+
 </script>
-
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-migrate-3.0.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.easing.1.3.js"></script>
-    <script src="js/jquery.waypoints.min.js"></script>
-    <script src="js/jquery.stellar.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/aos.js"></script>
-    <script src="js/jquery.animateNumber.min.js"></script>
-    <script src="js/bootstrap-datepicker.js"></script>
-    <script src="js/scrollax.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="js/google-map.js"></script>
-    <script src="js/main.js"></script>
+  
+    
 </body>
-
 </html>
-
-

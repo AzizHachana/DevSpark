@@ -114,22 +114,33 @@ public function getEventsByPriceAndLocation($Prix, $Lieu)
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function searchEvents($Nom, $Prix)
-{
-    $sql = "SELECT * FROM events WHERE Nom = :Nom AND Prix <= :Prix";
-    $db = config::getConnexion();
-    try {
-        $query = $db->prepare($sql);
-        $query->execute([
-            'Nom' => $Nom,
-            'Prix' => $Prix
-        ]);
-        $data = $query->fetchAll(PDO::FETCH_ASSOC);
-        return $data;
-    } catch (Exception $e) {
-        die('Error: ' . $e->getMessage());
+    public function searchEvents($Nom = null, $Prix = null)
+    {
+        $sql = "SELECT * FROM events WHERE 1"; // Start with a basic query
+    
+        // Add conditions based on the provided parameters
+        $params = [];
+        if ($Nom !== null) {
+            $sql .= " AND Nom LIKE :Nom";
+            $params['Nom'] = '%' . $Nom . '%'; // Add wildcards for partial name match
+        }
+        if ($Prix !== null) {
+            $sql .= " AND Prix <= :Prix";
+            $params['Prix'] = $Prix;
+        }
+    
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->execute($params);
+            $data = $query->fetchAll(PDO::FETCH_ASSOC);
+            return $data;
+        } catch (Exception $e) {
+            die('Error: ' . $e->getMessage());
+        }
     }
-}
+    
+
 public function getRating($id)
 {
     // Assurez-vous d'utiliser une requête SQL sécurisée pour éviter les injections SQL

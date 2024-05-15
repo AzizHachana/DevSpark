@@ -21,10 +21,10 @@ if(isset($_GET['id_e'])){
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>View Event</title>
+   <title>View Rating</title>
 
    <!-- custom css file link  -->
-   <link rel="stylesheet" href="../css/style.css">
+   <link rel="stylesheet" href="../view/style2.css">
 
 </head>
 <body>
@@ -127,7 +127,7 @@ if(isset($_GET['id_e'])){
          </div>
       </div>
    </div>
-   <div class="heading"><h1>User's Reviews</h1> <a href="addreview.php?event_id=<?= $fetch_event['id']; ?>" class="inline-btn" style="margin-top: 0;">Add Review</a></div>
+   <div class="heading"><h1>User's Reviews</h1> <a href="login.php?event_id=<?= $fetch_event['id']; ?>" class="inline-btn" style="margin-top: 0;">Add Review</a></div>
    <?php
          }
       }else{
@@ -155,7 +155,7 @@ if(isset($_GET['id_e'])){
    ?>
    <div class="box" <?php if($fetch_review['user_id'] == 7){echo 'style="order: -1;"';}; ?>>
       <?php
-         $select_user = $conn->prepare("SELECT * FROM `unityuser` WHERE id_u = ?");
+         $select_user = $conn->prepare("SELECT * FROM `unityuser` WHERE id = ?");
          $select_user->execute([$fetch_review['user_id']]);
          while($fetch_user = $select_user->fetch(PDO::FETCH_ASSOC)){
       ?>
@@ -168,8 +168,20 @@ if(isset($_GET['id_e'])){
       </div>
       <?php }; ?>
       <div class="ratings">
-         <?php for($i = 1; $i <= 5; $i++){ ?>
-            <p <?php if($fetch_review['rating'] >= $i){echo 'style="background:var(--main-color);"';}; ?>><i class="fas fa-star"></i> <span><?= $fetch_review['rating']; ?></span></p>
+         <?php if($fetch_review['rating'] == 1){ ?>
+            <p style="background:var(--red);"><i class="fas fa-star"></i> <span><?= $fetch_review['rating']; ?></span></p>
+         <?php }; ?> 
+         <?php if($fetch_review['rating'] == 2){ ?>
+            <p style="background:var(--orange);"><i class="fas fa-star"></i> <span><?= $fetch_review['rating']; ?></span></p>
+         <?php }; ?>
+         <?php if($fetch_review['rating'] == 3){ ?>
+            <p style="background:var(--orange);"><i class="fas fa-star"></i> <span><?= $fetch_review['rating']; ?></span></p>
+         <?php }; ?>   
+         <?php if($fetch_review['rating'] == 4){ ?>
+            <p style="background:var(--main-color);"><i class="fas fa-star"></i> <span><?= $fetch_review['rating']; ?></span></p>
+         <?php }; ?>
+         <?php if($fetch_review['rating'] == 5){ ?>
+            <p style="background:var(--main-color);"><i class="fas fa-star"></i> <span><?= $fetch_review['rating']; ?></span></p>
          <?php }; ?>
       </div>
       <h3 class="title"><?= $fetch_review['title']; ?></h3>

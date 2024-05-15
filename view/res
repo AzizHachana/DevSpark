@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation</title>
+    <style>
+        /* Styles pour le formulaire */
+        * {
+            margin: 0px;
+            padding: 0px;
+            outline: none 0px;
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            font-family: muliregular;
+            font-size: 14px;
+            color: rgb(56, 56, 56);
+            line-height: 24px;
+            background-color: #5989c4
+        }
+
+        #reservation {
+            position: absolute;
+            left: 20px;
+            top: 17px;
+            z-index: 11;
+        }
+
+        #reservation .res-text {
+            color: rgb(255, 255, 255);
+            display: block;
+            font-size: 22px;
+            position: relative;
+            text-align: left;
+            text-transform: capitalize;
+            width: 100%;
+            font-family: playfair_displayregular;
+            margin-bottom: 12px;
+            letter-spacing: 0.7px;
+        }
+
+        #reservationtable {
+            position: relative;
+            width: auto;
+        }
+
+        #reservationtable ul {
+            list-style: none;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #reservationtable ul li {
+            display: block;
+            float: left;
+            padding-bottom: 0px;
+            padding-right: 6px;
+            position: relative;
+        }
+
+        .rtitle {
+            color: rgb(102, 102, 102);
+            display: block;
+            font-size: 12px;
+            line-height: 11px;
+            padding-bottom: 3px;
+        }
+
+        input,
+        select,
+        textarea {
+            border: 1px solid rgb(190, 190, 190);
+            box-sizing: border-box;
+            color: rgb(119, 119, 119);
+            font-family: muliregular;
+            font-size: 13px;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        input {
+            height: 32px;
+            line-height: 32px;
+            padding: 0px 8px;
+        }
+
+        .resinputbox {
+            border: 1px solid rgb(127, 158, 186);
+            height: 34px;
+            line-height: 34px;
+            margin: 0px;
+            padding: 0px 0px 0px 8px;
+            vertical-align: top;
+            width: 120px;
+            background-image: url("/images_noindex/sprite.png");
+            background-position: 100% -181px;
+            background-repeat: no-repeat;
+        }
+
+        .hasDatepicker {
+            cursor: pointer;
+        }
+
+        .resdropdown {
+            border: 1px solid rgb(127, 158, 186);
+            cursor: pointer;
+            height: 34px;
+            line-height: 34px;
+            margin: 0px;
+            padding: 0px 0px 0px 8px;
+            vertical-align: top;
+            width: 80px;
+            background-image: url("/images_noindex/sprite.png");
+            background-position: 100% -218px;
+            background-repeat: no-repeat;
+        }
+
+        #reservationtable ul .last-child {
+            padding-right: 0px !important;
+        }
+
+        a.button:link,
+        a.button:visited,
+        #goog-wm-sb,
+        .viewlargermap,
+        .button {
+            cursor: pointer;
+            display: block;
+            font-size: 19px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            text-transform: uppercase;
+            font-family: playfair_displayregular;
+            border-radius: 0px;
+            color: rgb(255, 255, 255) !important;
+            background-color: rgb(197, 119, 53);
+        }
+
+        #reservationtable a.button {
+            display: block;
+            height: 34px;
+            left: 0px;
+            line-height: 34px;
+            margin: 0px auto 0px 6px;
+            position: relative;
+            text-align: center;
+            text-transform: uppercase;
+            width: 95px;
+        }
+
+        .clear {
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <div id="reservation">
+        <span class="res-text">Réservations</span>
+        <div id="reservationtable">
+            <form enctype="application/x-www-form-urlencoded" target="_blank" action="http://new-aahoa-gold-temp-1.cms.milestoneinternet.com/tracking/click-reservation.aspx" method="post" name="resform">
+                <ul>
+                    <li>
+                        <label class="rtitle" for="checkindate" style="display:none">Check-in</label>
+                        <input class="resinputbox" readonly id="checkindate" name="checkindate" type="text">
+                    </li>
+                    <li>
+                        <label class="rtitle" for="checkoutdate" style="display:none">Check-out</label>
+                        <input class="resinputbox" readonly id="checkoutdate" name="checkoutdate" type="text">
+                    </li>
+                    <li>
+                        <label class="rtitle" for="NumberOfRooms" style="display:none">Rooms</label>
+                        <input readonly class="resdropdown" value="Rooms" onfocus="initMilestoneInputTypeSelect(this)" name="Rooms" id="NumberOfRooms" type="text">
+                    </li>
+                    <li>
+                        <label class="rtitle" for="NumberOfAdults" style="display:none">Adults</label>
+                        <input readonly class="resdropdown" value="Adults" onfocus="initMilestoneInputTypeSelect(this)" name="Adults" id="NumberOfAdults" type="text">
+                    </li>
+                    <li class="last-child">
+                        <label class="rtitle" for="NumberOfChildrens" style="display:none">Children</label>
+                        <input readonly class="resdropdown" name="Children" value="Children" onfocus="initMilestoneInputTypeSelect(this)" id="NumberOfChildrens" type="text">
+                    </li>
+                    <li class="last-child booklastbtn">
+                        <a href="javascript:{}" onkeypress="reservation_validation();" onclick="reservation_validation();" class="button"><span>Book</span></a>
+                    </li>
+                </ul>
+            </form>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <script>
+        // JavaScript ici
+        if (document.getElementById('checkindate')) {
+            $('#checkindate').val(getTodayDateFromPC("mm/dd/yyyy"));
+        }
+        if (document.getElementById('checkoutdate')) {
+            $('#checkoutdate').val(getTodayDateFromPC("mm/dd/yyyy", 1));
+        }
+        $('#checkindate').datepicker({
+            altFormat: 'mm/dd/yy',
+            minDate: 0,
+            beforeShow: function() {
+                $('#ui-datepicker-div').addClass('resdatepicker');
+            },
+            onClose: function() {
+                var minDate = $("#checkindate").datepicker('getDate');
+                minDate.setDate(minDate.getDate() + 1); //add two days
+                $("#checkoutdate").datepicker("option", "minDate", minDate);
+                if (this.id == "checkindate" && this.value != '')
+                    / * setNextDate("checkindate","checkoutdate"); */
+                    $('#ui-datepicker-div').removeClass('resdatepicker');
+            },
+            onSelect: function() {
+                if (this.id == "checkindate" && this.value != '')
+                    setNextDate("checkindate", "checkoutdate");
+            }
+        });
+
+        $('#checkoutdate').datepicker({
+            altFormat: 'mm/dd/yy',
+            minDate: 0,
+            beforeShow: function() {
+                var minDate = $("#checkindate").datepicker('getDate');
+                minDate.setDate(minDate.getDate() + 1);
+                $('#ui-datepicker-div').addClass('resdatepicker');
+            },
+            onSelect: function(selectedDate) {
+
+            },
+            onClose: function() {
+                $('#ui-datepicker-div').removeClass('resdatepicker');
+            }
+        });
+
+        /* = ============================= DropDown ===================== */
+
+        var currentDropDownElementId;
+        var defaultstartfrom = 1;
+
+        var mout = 0;
+
+        function initMilestoneInputTypeSelect(object) {
+            $('#' + object.id).click(function() {
+                currentDropDownElementId = $('#' + object.id).attr('id');
+                if (currentDropDownElementId == "NumberOfChildrens" || currentDropDownElementId == "NumberOfChildrens1")
+                    defaultstartfrom = 0;
+                else
+                    defaultstartfrom = 1;
+                drawInputTypeSelect(currentDropDownElementId);
+            });
+            $(".resdropdowninner").click(function() {
+                $(".DropDownItems.out.enterleave .DropDownItem.in.enterleave").addClass("contactdropdownlistwidth");
+                $("#TempInputTypeSelect").addClass("contactdropdownlist");
+            });
+        }
+
+        var nMouseOut = 0;
+
+        function drawInputTypeSelect(currentElementId) {
+            if (document.getElementById('TempInputTypeSelect')) {
+                $("#TempInputTypeSelect").remove();
+            }
+            if (!document.getElementById('TempInputTypeSelect')) {
+                $("body").append("<div class='DropDownItems out enterleave' id='TempInputTypeSelect' style=''></div>");
+                for (i = defaultstartfrom; i < 10; i++) {
+                    $("#TempInputTypeSelect").append("<div class='DropDownItem in enterleave' onClick='SetDropDownValue(" + i + ")' id='SetDropDownValue" + i + "' style=''>" + i + "</div>");
+                }
+
+                $(".enterleave").bind("mouseenter", function() {
+                    nMouseOut--;
+                    /* alert(nMouseOut); */
+                }).bind("mouseleave", function() {
+                    nMouseOut++;
+                    /* alert(nMouseOut); */
+                    if (nMouseOut == 0) {
+                        $("#TempInputTypeSelect").css("display", "none");
+                        $("#TempInputTypeSelect").css("position", "absolute");
+                    }
+                });
+            }
+
+            var p = $("#" + currentDropDownElementId);
+            var offset = p.offset();
+            $("#TempInputTypeSelect").css("left", offset.left);
+            $("#TempInputTypeSelect").css("top", offset.top + 34);
+            $("#TempInputTypeSelect").css("zIndex", 1002);
+
+            /* in Special cash diffrent width for dropdown); */
+
+            /*if(currentDropDownElementId == 'NumberOfAdults1'){
+            	$("#TempInputTypeSelect div").css("width","100px");
+            	$("#TempInputTypeSelect").css("margin-top","4px");
+            }
+
+            if(currentDropDownElementId == 'NumberOfChildrens1'){
+            	$("#TempInputTypeSelect div").css("width","101px");
+            	$("#TempInputTypeSelect").css("margin-top","4px");
+            }*/
+
+            vis = $("#TempInputTypeSelect").css("display");
+            if (vis = "none") {
+                $("#TempInputTypeSelect").css("display", "block");
+                $("#TempInputTypeSelect").css("position", "absolute");
+            } else {
+                $("#TempInputTypeSelect").css("display", "none");
+                $("#TempInputTypeSelect").css("position", "absolute");
+
+            }
+        }
+
+        function SetDropDownValue(i) {
+            $("#TempInputTypeSelect").css("display", "none");
+            document.getElementById(currentDropDownElementId).value = i;
+        }
+
+        var mouse_is_inside = false;
+        $(document).ready(function() {
+            $('#TempInputTypeSelect').hover(function() {
+                mouse_is_inside = true;
+            }, function() {
+                mouse_is_inside = false;
+            });
+            $("body").mouseup(function() {
+                if (!mouse_is_inside) $('#TempInputTypeSelect').hide();
+            });
+        });
+    </script>
+</body>
+</html>

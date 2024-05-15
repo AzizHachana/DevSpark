@@ -6,7 +6,7 @@ if(isset($_GET['event_id'])){
    $event_id = $_GET['event_id'];
 }else{
    $event_id = '';
-   header('location:all_events.php');
+   header('location:../view/review2.php');
 }
 
 if(isset($_POST['submit'])){
@@ -31,6 +31,8 @@ if(isset($_POST['submit'])){
          $add_review->execute([$id,$event_id, $user_id, $rating, $title, $description]);
          $success_msg[] = 'Review added!';
       }
+      header('location:../view/review2.php');
+
 
    }else{
       $warning_msg[] = 'Please login first!';
@@ -49,7 +51,7 @@ if(isset($_POST['submit'])){
    <title>Add Review</title>
 
    <!-- custom css file link  -->
-   <link rel="stylesheet" href="../css/style.css">
+   <link rel="stylesheet" href="../view/style2.css">
 
 </head>
 <body>
@@ -78,8 +80,8 @@ if(isset($_POST['submit'])){
          <option value="4">4</option>
          <option value="5">5</option>
       </select>
-      <input type="submit" value="Submit Review" name="submit" class="btn">
-      <a href="review.php?event_id=<?= $event_id; ?>" class="option-btn">Go Back</a>
+      <input type="submit" value="Submit Review" name="submit" class="btn" >
+      <a href="../view/review2.php" class="option-btn">Go Back</a>
    </form>
 
 </section>
@@ -92,7 +94,6 @@ if(isset($_POST['submit'])){
 <!-- custom js file link  -->
 <script src="../js/script.js"></script>
 
-<?php include '../components/alerts.php'; ?>
 
 </body>
 </html>

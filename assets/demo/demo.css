@@ -50,7 +50,7 @@
 }
 
 @media all and (min-width: 992px) {
-  .sidebar .nav>li.active-pro {
+  .sidebar .nav > li.active-pro {
     position: absolute;
     width: 100%;
     bottom: 10px;
@@ -60,4 +60,97 @@
 .card.card-upgrade .card-category {
   max-width: 530px;
   margin: 0 auto;
+}
+
+body {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  line-height: 1.4;
+  background: #61575f;
+  color: #333;
+  margin: 0 1em;
+}
+
+.container {
+  width: 90%; /* Largeur de la boîte */
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: #fff; /* Couleur blanc */
+  text-align: center;
+  margin-top: 20px;
+  font-weight: bold;
+  background-color: #ff69b4; /* Arrière-plan rose */
+  padding: 10px;
+  border-radius: 10px;
+  display: inline-block; /* Affichage en ligne pour s'adapter au contenu */
+  width: 100%;
+}
+
+h2 {
+  color: #ff69b4; /* Couleur rose */
+  text-align: center;
+  margin-top: 20px;
+}
+
+a {
+  color: #0e0c0e; /* Couleur rose */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px; /* Espace entre le titre et le tableau */
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+th {
+  background-color: #0c2646;
+  color: #fff;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.btn-primary {
+  background-color: #049d1d;
+  padding: 8px;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.btn-primary:hover,
+.btn-danger:hover {
+  text-decoration: none;
+  background-color: #a09f9f;
+}
+
+.btn-danger {
+  padding: 8px;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.preview_img {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  object-fit: cover;
 }
