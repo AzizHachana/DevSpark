@@ -146,7 +146,7 @@ class ReservationC
         public function getreservation($id) 
         {
             // Assurez-vous d'utiliser une requête SQL sécurisée pour éviter les injections SQL
-            $sql = "SELECT * FROM reservation WHERE id = :id";
+            $sql = "SELECT * FROM reservationh WHERE id = :id";
             $db = config::getConnexion();
             $query = $db->prepare($sql);
             $query->bindParam(':id', $id);
