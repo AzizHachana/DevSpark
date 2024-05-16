@@ -15,14 +15,14 @@ if (is_array($user)) {
       
       if($user['tache']==1){
       //$url = "/vacation/Admin/pages/samples/ListeUsers.php";//
-      $url = 'http://localhost/user/utulisateur/view/listClient.php';
+      $url = '/vacation/view/listClient.php';
       echo "<script>window.location.replace('$url');</script>";
     //header('Location: http://localhost/user/utulisateur/view/listClient.php'); 
   }
   else if($user['tache']==2){
     if($user['etat']==1)
     {
-    $url = "/vacation/view/index copy.html";
+    $url = "/vacation/view/index copy.php";
     echo "<script>window.location.replace('$url');</script>";
   }
   else{

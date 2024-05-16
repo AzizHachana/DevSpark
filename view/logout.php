@@ -3,7 +3,7 @@
     session_unset();
     session_destroy();
  
-    $url = "/vacation/Admin/pages/samples/login.php";
+    $url = "../view/index.php";
     echo "<script>window.location.replace('$url');</script>";
 
     ?>

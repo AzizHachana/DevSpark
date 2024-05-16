@@ -61,6 +61,7 @@ if (!isset($_SESSION['id'])) {
             cursor: pointer;
         }
     </style>
+    
 </head>
 
 <body>
@@ -78,26 +79,35 @@ if (!isset($_SESSION['id'])) {
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="../view/index copy.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../view/about.html">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/..view/destination.html">Destination</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="blog.html">Blog>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../view/contact.html">contact us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Book now</a>
-                </li>
-            </ul>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+            <a class="nav-link" href="../view/index copy.php">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="../view/eventFront2.php">Destination</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="../view/listV2.php">Hébèrgements</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="../view/Blog2.php">Blog</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="../view/contact2.php">Réclamations</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Mes reservations
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="../view/afficher_reservation.php">Reservation hotel</a>
+                <a class="dropdown-item" href="../view/my_reservations.php">Reservation event</a>
+            </div>
+        </li>
+    </ul>
             <form class="form-inline my-2 my-lg-0">
                 <button class="donate_btn" type="submit"><a href="../view/logout.php">Logout</a></button>
             </form>

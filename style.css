@@ -1,0 +1,157 @@
+/* Ajoutez des styles CSS selon vos préférences */
+body {
+    
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.alert {
+    margin-top: 20px;
+}
+/* Quantity Container */
+.quantity {
+    display: flex;
+    align-items: center;
+}
+
+/* Plus and Minus Buttons */
+.plus-btn,
+.minus-btn {
+    background-color: #007bff; /* Blue color, you can change it to your desired color */
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+/* Quantity Input */
+input[name="name"] {
+    width: 40px;
+    text-align: center;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    margin: 0 5px;
+    padding: 5px;
+}
+
+/* Delete Button */
+.delete-btn-item {
+    background-color: #dc3545; /* Red color, you can change it to your desired color */
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.box {
+    display: flex;
+  }
+  
+  #checkbox {
+    width: 65px;
+    height: 65px;
+    cursor: pointer;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    background: white;
+    position: relative;
+  }
+  #checkbox:hover {
+    background: rgba(255, 255, 255, .7);
+  }
+  #checkbox::before {
+    content: '\f1e0';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'font awesome 5 free';
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: rgb(41, 41, 41);
+    transition: all 1.5s;
+  }
+  #checkbox:checked::before {
+    content: '\f00d';
+  }
+  #checkbox:checked ~ .menu {
+    width: 264px; /* 4 * 65 + 4 * 1 pour la bordure */
+  }
+
+  .menu {
+    width: 0;
+     display: flex;
+    overflow: hidden;
+    transition: all .5s;
+  }
+  .menu .menuItems {
+    width: 65px;
+    height: 65px;
+    background: white;
+    border-left: 1px solid rgb(165, 165, 165);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .menu .menuItems:hover {
+    background: rgba(255, 255, 255, .7);
+  }
+  .menu .menuItems i {
+    font-size: 1.8rem;
+  }
+  .fa-whatsapp {
+    color: #25d366;
+  }
+  .fa-instagram {
+    color: #c32aa3;
+  }
+  .fa-facebook {
+    color: #273c75;
+  }
+  .fa-twitter {
+    color: #1da1f2;
+  }
